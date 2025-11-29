@@ -3592,10 +3592,10 @@
                             data-target="#family_medium"
                             style="background-color:#ecfdf5; color:#017F36; border:none; border-radius:8px; cursor:pointer; width:10%;">
                         <t t-if="user_lang and user_lang.startswith('en')">
-                            <strong>Sierra Families</strong>
+                            <strong>Sierra Leone Families</strong>
                         </t>
                         <t t-elif="user_lang and user_lang.startswith('de')">
-                            <strong>Sierra Familien</strong>
+                            <strong>Sierra Leone Familien</strong>
                         </t>
                     </button>
 

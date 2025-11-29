@@ -10,15 +10,15 @@
           <!-- ✅ PAGE 1: Graph + Legend -->
           <div class="row mt-4">
             <div class="col-md-8">
-              <h3 class="mb-3">Score Graph</h3>
+              <h3 class="mb-3">Your Global Impact Graph</h3>
               <canvas id="gdfhChart"></canvas>
             </div>
             <div class="col-md-3">
-              <h3 class="mb-3">Legend</h3>
-              <p><span style="color: green; font-weight: bold;">85-100 🌟 Progressive Visionary</span></p>
-              <p><span style="color: #28a745; font-weight: bold;">70-84 ✅ Strong Contributor</span></p>
-              <p><span style="color: orange; font-weight: bold;">50-69 ⚠️ Emerging Contributor</span></p>
-              <p><span style="color: red; font-weight: bold;">Below 50 💡 Needs Focused Engagement</span></p>
+              <h6 class="mb-3" style="font-size: 20px;">Score Percentage (%) Description</h6>
+              <p><span style="color: green; font-weight: bold;">85-100:  Top Contributor</span></p>
+              <p><span style="color: #28a745; font-weight: bold;">70-84: Strong Contributor</span></p>
+              <p><span style="color: orange; font-weight: bold;">50-69:  Emerging Contributor</span></p>
+              <p><span style="color: red; font-weight: bold;">Below 50:  Reburies Contribution</span></p>
             </div>
           </div>
 
@@ -105,10 +105,10 @@
               ],
               datasets: [
                 {
-                  label: "Score",
+                  label: "",
                   data: scores,
                   backgroundColor: colors,
-                  borderColor: "rgba(0,0,0,0.2)",
+                  borderColor: "rgba(2,2,2,2.2)",
                   borderWidth: 1
                 },
                 {
