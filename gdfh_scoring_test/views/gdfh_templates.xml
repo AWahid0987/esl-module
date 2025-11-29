@@ -1,0 +1,1624 @@
+<odoo>
+    <template id="form_template1" name="GDfH Scoring Test">
+        <t t-call="website.layout">
+            <style>
+                /* Modern color scheme*/
+                /* Modern variables */
+                :root {
+                    --primary-color: #00B800;
+                    --secondary-color: #00B800;
+                    --danger-color: #e74c3c;
+                    --text-dark: #2c3e50;
+                    --text-light: #7f8c8d;
+                    --border-color: #dfe6e9;
+                    --background-light: #f8f9fa;
+                    --success-green: #00B800;
+                }
+
+                /* Global form styling */
+                .gdfh-container {
+                    background: white;
+                    min-height: 100vh;
+                    padding: 40px 0;
+                }
+
+                .gdfh-main-card {
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                    padding: 40px;
+                    margin-bottom: 30px;
+                }
+
+                .gdfh-header {
+                    text-align: center;
+                    margin-bottom: 40px;
+                    padding-bottom: 20px;
+                    border-bottom: 3px solid var(--primary-color);
+                }
+
+                .gdfh-header h2 {
+                    color: var(--text-dark);
+                    font-weight: 700;
+                    font-size: 2.5rem;
+                    margin-bottom: 10px;
+                }
+
+                .gdfh-header p {
+                    color: var(--text-light);
+                    font-size: 1.1rem;
+                }
+
+                /* Form input styling */
+                .gdfh-form-group {
+                    margin-bottom: 25px;
+                }
+
+                .gdfh-form-group label {
+                    font-weight: 600;
+                    color: var(--text-dark);
+                    margin-bottom: 8px;
+                    display: block;
+                    font-size: 1rem;
+                }
+
+                .gdfh-input {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 2px solid var(--border-color);
+                    border-radius: 10px;
+                    font-size: 1rem;
+                    transition: all 0.3s ease;
+                    background-color: #fff;
+                }
+
+                .gdfh-input:focus {
+                    outline: none;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 3px rgba(0, 184, 0, 0.1);
+                }
+
+                .gdfh-input.valid {
+                    border-color: var(--success-green) !important;
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%2300B800' d='M7 10l2 2 4-4'/%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 12px center;
+                }
+
+                .gdfh-input.invalid {
+                    border-color: var(--danger-color) !important;
+                }
+
+                /* Score table styling */
+                .gdfh-section {
+                    margin-top: 40px;
+                    margin-bottom: 30px;
+                }
+
+                .gdfh-section-title {
+                    font-size: 1.3rem;
+                    font-weight: 700;
+                    color: var(--text-dark);
+                    margin-bottom: 20px;
+                    padding: 15px 20px;
+                    background: linear-gradient(135deg, #00B800 0%, #008000 100%);
+                    color: white;
+                    border-radius: 10px;
+                    text-align: center;
+                }
+
+                .gdfh-category-card {
+                    background: white;
+                    border: 2px solid var(--border-color);
+                    border-radius: 15px;
+                    padding: 25px;
+                    margin-bottom: 25px;
+                    transition: all 0.3s ease;
+                }
+
+                .gdfh-category-card:hover {
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+                    transform: translateY(-2px);
+                }
+
+                .gdfh-category-title {
+                    font-size: 1.4rem;
+                    font-weight: 700;
+                    color: #00B800;
+                    margin-bottom: 20px;
+                    padding-bottom: 10px;
+                    border-bottom: 2px solid #00B800;
+                }
+
+                .gdfh-question-item {
+                display: grid;
+                grid-template-columns: 90% 10%; /* Left: question, Right: score section */
+                align-items: start;
+                gap: 10px;
+                margin-bottom: 15px;
+                padding: 15px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                border-left: 4px solid #00B800;
+                }
+
+                .gdfh-question-text {
+                font-size: 0.95rem;
+                color: var(--text-dark);
+                line-height: 1.5;
+                text-align: justify;
+                }
+
+                /* Score box (right side) */
+                .gdfh-score-box {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 5px;
+                }
+                .gdfh-score-input {
+                    width: 100%;
+                    max-width: 70px;
+                    padding: 6px;
+                    border: 2px solid var(--border-color);
+                    border-radius: 6px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                }
+                .gdfh-score-input:focus {
+                    outline: none;
+                    border-color: #00B800;
+                    box-shadow: 0 0 0 3px rgba(0, 184, 0, 0.1);
+                }
+
+                .gdfh-score-label {
+                    font-size: 0.85rem;
+                    color: var(--text-light);
+                    font-weight: 600;
+                    display: block;
+                }
+
+                /* Submit button */
+                .gdfh-submit-btn {
+                    width: 100%;
+                    max-width: 300px;
+                    padding: 15px 40px;
+                    background: linear-gradient(135deg, #00B800 0%, #008000 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 50px;
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 184, 0, 0.4);
+                    margin: 30px auto;
+                    display: block;
+                }
+
+                .gdfh-submit-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 184, 0, 0.6);
+                }
+
+                /* Sidebar styling */
+                .gdfh-sidebar-card {
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                    padding: 30px;
+                    position: sticky;
+                    top: 20px;
+                }
+
+                .gdfh-sidebar-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: var(--text-dark);
+                    margin-bottom: 20px;
+                    text-align: center;
+                    padding-bottom: 15px;
+                    border-bottom: 2px solid #00B800;
+                }
+
+                .gdfh-result-item {
+                    padding: 8px 0;
+                    font-size: 0.95rem;
+                }
+
+                .gdfh-result-item strong {
+                    color: var(--text-dark);
+                    font-weight: 600;
+                }
+
+                /* Responsive design */
+                @media (max-width: 768px) {
+                    .gdfh-header h2 {
+                        font-size: 1.8rem;
+                    }
+
+                .gdfh-main-card {
+                padding: 25px;
+                }
+
+                .gdfh-category-card {
+                padding: 20px;
+                }
+
+                .gdfh-sidebar-card {
+                position: static;
+                margin-top: 30px;
+                }
+                .gdfh-question-item {
+                grid-template-columns: 1fr;
+                }
+                .gdfh-score-box {
+                align-items: flex-start;
+                margin-top: 8px;
+                }
+                }
+
+                /* Divider */
+                .gdfh-divider {
+                    height: 2px;
+                    background: linear-gradient(to right, transparent, var(--primary-color), transparent);
+                    margin: 30px 0;
+                }
+                .gdfh-compact-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                width: 100%;
+                }
+
+                .gdfh-grid-row {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                align-items: center;
+                }
+
+                .gdfh-grid-label {
+                font-weight: 600;
+                }
+
+                .gdfh-grid-input {
+                width: 100%;
+                padding: 6px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                }
+                .lang-en, lang-de { display: none; }
+
+
+            </style>
+            <div class="lang-en">
+            <div class="gdfh-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="gdfh-main-card">
+                               <div class="container mb-3">
+                                   <h1 class="text-center" style="color: green; font-size: 32px; margin-bottom: 1px;">
+                                       <strong> Global Impact Test </strong>
+                                   </h1>
+
+                                   <p style="text-align: justify; margin-top: 10px;">
+                                       This self-assessment invites you to reflect on your actions and how they shape
+                                       the world around you. It evaluates your engagement across the following key six
+                                       attributes that are essential for a developed, peaceful, and sustainable planet.
+                                   </p>
+                                   <div
+                                       style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+
+                                   <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/1.png" alt="Global Awareness"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Global Awareness</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/2.png"
+                                                 alt="Active Civic Participation"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Active Civic Participation</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/3.png" alt="Ethical Consumption"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Ethical Consumption</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/4.png" alt="Environment Protection"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Environment Protection</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/5.png"
+                                                 alt="Peace and Conflict Management"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Peace and Conflict Management</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/6.png"
+                                                 alt="Intercultural Competence"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Intercultural Competence</p>
+                                        </div>
+
+                                    </div>
+                                   <div>
+                                       <p style="text-align: justify;  margin-top: 20px;">
+                                           For each of these attributes, you’ll find examples of practical actions that
+                                           demonstrate engagement in that area. Read each description carefully and rate
+                                           yourself from 0 to 10 based on your current level of involvement.
+                                       </p>
+                                       <p>
+                                           A <strong> higher score </strong> reflects a strong personal commitment and contribution toward
+                                           a progressive world.
+
+
+                                       </p>
+                                    <p style="text-align: justify;">
+                                       A lower score highlights areas where you can grow, learn, and take new action.
+
+
+                                    </p>
+                                       <p style="text-align: justify;">
+                                           At the end, you’ll receive a clear overview of your performance, showing where you already shine and where you can further deepen your impact
+                                       </p>
+
+
+<!--                                    <p>Please fill in the following boxes to compare your current results with your-->
+<!--                                        previous ones-->
+<!--                                    </p>-->
+                                       <p style="font-size: 16px; background: #1ba14b; color: white; padding: 6px;">
+                                           Please fill in the following boxes. The test results will be saved to allow a comparison with your previous score the next time you take the test.
+
+                                       </p>
+                                       </div>
+                                </div>
+
+<!--                              <div class="gdfh-header">-->
+<!--                                    <h2 style="color: green;">GDfH Survary</h2>-->
+<!--                                 -->
+
+<!--                                </div>-->
+
+                                <form action="/GDfH_Scoring_Test/submit" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                    <!-- Personal Information Section -->
+                                    <div class="gdfh-compact-grid">
+                                        <!-- Row 1: labels -->
+                                        <div class="gdfh-grid-row">
+                                            <label for="name" class="gdfh-grid-label">Name</label>
+                                            <label for="input_email" class="gdfh-grid-label">Email</label>
+                                            <label for="input_country" class="gdfh-grid-label">Country</label>
+                                        </div>
+
+                                        <!-- Row 2: inputs -->
+                                        <div class="gdfh-grid-row">
+                                            <input id="name" name="name" type="text" class="gdfh-grid-input"
+                                                   placeholder="Enter Name" required="required"/>
+                                            <input id="input_email" name="email" type="email" class="gdfh-grid-input"
+                                                   placeholder="Enter Email" required="required"
+                                                   onblur="fetchPreviousResult()"/>
+                                            <select name="country" id="input_country" class="gdfh-input">
+                                                <option value="">-- Select Country --</option>
+                                                <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Albania">Albania</option>
+                                                <option value="Algeria">Algeria</option>
+                                                <option value="Andorra">Andorra</option>
+                                                <option value="Angola">Angola</option>
+                                                <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                                                <option value="Argentina">Argentina</option>
+                                                <option value="Armenia">Armenia</option>
+                                                <option value="Australia">Australia</option>
+                                                <option value="Austria">Austria</option>
+                                                <option value="Azerbaijan">Azerbaijan</option>
+                                                <option value="Bahamas">Bahamas</option>
+                                                <option value="Bahrain">Bahrain</option>
+                                                <option value="Bangladesh">Bangladesh</option>
+                                                <option value="Barbados">Barbados</option>
+                                                <option value="Belarus">Belarus</option>
+                                                <option value="Belgium">Belgium</option>
+                                                <option value="Belize">Belize</option>
+                                                <option value="Benin">Benin</option>
+                                                <option value="Bhutan">Bhutan</option>
+                                                <option value="Bolivia">Bolivia</option>
+                                                <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                                                <option value="Botswana">Botswana</option>
+                                                <option value="Brazil">Brazil</option>
+                                                <option value="Brunei">Brunei</option>
+                                                <option value="Bulgaria">Bulgaria</option>
+                                                <option value="Burkina Faso">Burkina Faso</option>
+                                                <option value="Burundi">Burundi</option>
+                                                <option value="Cabo Verde">Cabo Verde</option>
+                                                <option value="Cambodia">Cambodia</option>
+                                                <option value="Cameroon">Cameroon</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="Central African Republic">Central African Republic
+                                                </option>
+                                                <option value="Chad">Chad</option>
+                                                <option value="Chile">Chile</option>
+                                                <option value="China">China</option>
+                                                <option value="Colombia">Colombia</option>
+                                                <option value="Comoros">Comoros</option>
+                                                <option value="Congo (Congo-Brazzaville)">Congo (Congo-Brazzaville)
+                                                </option>
+                                                <option value="Costa Rica">Costa Rica</option>
+                                                <option value="Croatia">Croatia</option>
+                                                <option value="Cuba">Cuba</option>
+                                                <option value="Cyprus">Cyprus</option>
+                                                <option value="Czechia (Czech Republic)">Czechia (Czech Republic)
+                                                </option>
+                                                <option value="Democratic Republic of the Congo">Democratic Republic of
+                                                    the Congo
+                                                </option>
+                                                <option value="Denmark">Denmark</option>
+                                                <option value="Djibouti">Djibouti</option>
+                                                <option value="Dominica">Dominica</option>
+                                                <option value="Dominican Republic">Dominican Republic</option>
+                                                <option value="Ecuador">Ecuador</option>
+                                                <option value="Egypt">Egypt</option>
+                                                <option value="El Salvador">El Salvador</option>
+                                                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                                                <option value="Eritrea">Eritrea</option>
+                                                <option value="Estonia">Estonia</option>
+                                                <option value="Eswatini (fmr. 'Swaziland')">Eswatini (fmr.
+                                                    'Swaziland')
+                                                </option>
+                                                <option value="Ethiopia">Ethiopia</option>
+                                                <option value="Fiji">Fiji</option>
+                                                <option value="Finland">Finland</option>
+                                                <option value="France">France</option>
+                                                <option value="Gabon">Gabon</option>
+                                                <option value="Gambia">Gambia</option>
+                                                <option value="Georgia">Georgia</option>
+                                                <option value="Germany">Germany</option>
+                                                <option value="Ghana">Ghana</option>
+                                                <option value="Greece">Greece</option>
+                                                <option value="Grenada">Grenada</option>
+                                                <option value="Guatemala">Guatemala</option>
+                                                <option value="Guinea">Guinea</option>
+                                                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                                                <option value="Guyana">Guyana</option>
+                                                <option value="Haiti">Haiti</option>
+                                                <option value="Honduras">Honduras</option>
+                                                <option value="Hungary">Hungary</option>
+                                                <option value="Iceland">Iceland</option>
+                                                <option value="India">India</option>
+                                                <option value="Indonesia">Indonesia</option>
+                                                <option value="Iran">Iran</option>
+                                                <option value="Iraq">Iraq</option>
+                                                <option value="Ireland">Ireland</option>
+                                                <option value="Israel">Israel</option>
+                                                <option value="Italy">Italy</option>
+                                                <option value="Jamaica">Jamaica</option>
+                                                <option value="Japan">Japan</option>
+                                                <option value="Jordan">Jordan</option>
+                                                <option value="Kazakhstan">Kazakhstan</option>
+                                                <option value="Kenya">Kenya</option>
+                                                <option value="Kiribati">Kiribati</option>
+                                                <option value="Kuwait">Kuwait</option>
+                                                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                                                <option value="Laos">Laos</option>
+                                                <option value="Latvia">Latvia</option>
+                                                <option value="Lebanon">Lebanon</option>
+                                                <option value="Lesotho">Lesotho</option>
+                                                <option value="Liberia">Liberia</option>
+                                                <option value="Libya">Libya</option>
+                                                <option value="Liechtenstein">Liechtenstein</option>
+                                                <option value="Lithuania">Lithuania</option>
+                                                <option value="Luxembourg">Luxembourg</option>
+                                                <option value="Madagascar">Madagascar</option>
+                                                <option value="Malawi">Malawi</option>
+                                                <option value="Malaysia">Malaysia</option>
+                                                <option value="Maldives">Maldives</option>
+                                                <option value="Mali">Mali</option>
+                                                <option value="Malta">Malta</option>
+                                                <option value="Marshall Islands">Marshall Islands</option>
+                                                <option value="Mauritania">Mauritania</option>
+                                                <option value="Mauritius">Mauritius</option>
+                                                <option value="Mexico">Mexico</option>
+                                                <option value="Micronesia">Micronesia</option>
+                                                <option value="Moldova">Moldova</option>
+                                                <option value="Monaco">Monaco</option>
+                                                <option value="Mongolia">Mongolia</option>
+                                                <option value="Montenegro">Montenegro</option>
+                                                <option value="Morocco">Morocco</option>
+                                                <option value="Mozambique">Mozambique</option>
+                                                <option value="Myanmar (Burma)">Myanmar (Burma)</option>
+                                                <option value="Namibia">Namibia</option>
+                                                <option value="Nauru">Nauru</option>
+                                                <option value="Nepal">Nepal</option>
+                                                <option value="Netherlands">Netherlands</option>
+                                                <option value="New Zealand">New Zealand</option>
+                                                <option value="Nicaragua">Nicaragua</option>
+                                                <option value="Niger">Niger</option>
+                                                <option value="Nigeria">Nigeria</option>
+                                                <option value="North Korea">North Korea</option>
+                                                <option value="North Macedonia">North Macedonia</option>
+                                                <option value="Norway">Norway</option>
+                                                <option value="Oman">Oman</option>
+                                                <option value="Pakistan">Pakistan</option>
+                                                <option value="Palau">Palau</option>
+                                                <option value="Palestine State">Palestine State</option>
+                                                <option value="Panama">Panama</option>
+                                                <option value="Papua New Guinea">Papua New Guinea</option>
+                                                <option value="Paraguay">Paraguay</option>
+                                                <option value="Peru">Peru</option>
+                                                <option value="Philippines">Philippines</option>
+                                                <option value="Poland">Poland</option>
+                                                <option value="Portugal">Portugal</option>
+                                                <option value="Qatar">Qatar</option>
+                                                <option value="Romania">Romania</option>
+                                                <option value="Russia">Russia</option>
+                                                <option value="Rwanda">Rwanda</option>
+                                                <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                                                <option value="Saint Lucia">Saint Lucia</option>
+                                                <option value="Saint Vincent and the Grenadines">Saint Vincent and the
+                                                    Grenadines
+                                                </option>
+                                                <option value="Samoa">Samoa</option>
+                                                <option value="San Marino">San Marino</option>
+                                                <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                                <option value="Senegal">Senegal</option>
+                                                <option value="Serbia">Serbia</option>
+                                                <option value="Seychelles">Seychelles</option>
+                                                <option value="Sierra Leone">Sierra Leone</option>
+                                                <option value="Singapore">Singapore</option>
+                                                <option value="Slovakia">Slovakia</option>
+                                                <option value="Slovenia">Slovenia</option>
+                                                <option value="Solomon Islands">Solomon Islands</option>
+                                                <option value="Somalia">Somalia</option>
+                                                <option value="South Africa">South Africa</option>
+                                                <option value="South Korea">South Korea</option>
+                                                <option value="South Sudan">South Sudan</option>
+                                                <option value="Spain">Spain</option>
+                                                <option value="Sri Lanka">Sri Lanka</option>
+                                                <option value="Sudan">Sudan</option>
+                                                <option value="Suriname">Suriname</option>
+                                                <option value="Sweden">Sweden</option>
+                                                <option value="Switzerland">Switzerland</option>
+                                                <option value="Syria">Syria</option>
+                                                <option value="Taiwan">Taiwan</option>
+                                                <option value="Tajikistan">Tajikistan</option>
+                                                <option value="Tanzania">Tanzania</option>
+                                                <option value="Thailand">Thailand</option>
+                                                <option value="Timor-Leste">Timor-Leste</option>
+                                                <option value="Togo">Togo</option>
+                                                <option value="Tonga">Tonga</option>
+                                                <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                                                <option value="Tunisia">Tunisia</option>
+                                                <option value="Turkey">Turkey</option>
+                                                <option value="Turkmenistan">Turkmenistan</option>
+                                                <option value="Tuvalu">Tuvalu</option>
+                                                <option value="Uganda">Uganda</option>
+                                                <option value="Ukraine">Ukraine</option>
+                                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                                <option value="United Kingdom">United Kingdom</option>
+                                                <option value="United States of America">United States of America
+                                                </option>
+                                                <option value="Uruguay">Uruguay</option>
+                                                <option value="Uzbekistan">Uzbekistan</option>
+                                                <option value="Vanuatu">Vanuatu</option>
+                                                <option value="Vatican City">Vatican City</option>
+                                                <option value="Venezuela">Venezuela</option>
+                                                <option value="Vietnam">Vietnam</option>
+                                                <option value="Yemen">Yemen</option>
+                                                <option value="Zambia">Zambia</option>
+                                                <option value="Zimbabwe">Zimbabwe</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="gdfh-divider"></div>
+
+                                    <!-- Assessment Categories Section -->
+                                    <div class="gdfh-section">
+
+                                        <!-- Category 1: Global Awareness -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                 <img t-att-src="'/gdfh_scoring_test/static/img/global_awareness.png'"
+                                                     alt="Global Awareness"
+                                                     style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Global Awareness</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I read different sourcing about ecological, social, economic and political issues.
+                                                </div>
+                                                 <input type="number" name="score_1" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                                  </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    When encountering a global problem (e.g., poverty, climate change), I consistently seek to understand its implication and underlying causes.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_2" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I volunteer time to support organizations working systematically on sustainable development and poverty eradication in disadvantaged regions.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_3" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 2: Active Civic Participation -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Active_Civic_Participation.png'"
+                                                    alt="Global Awareness"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Active Civic Participation</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I vote after thoughtful research into political parties, candidates, and their policies and chose based on ethical principles.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_4" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I participate in public discourses, hold political representative accountable, meet regularly with civil society representatives.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_5" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I actively support  local or international organizations  working for global issues such as human rights, global justice, women empowerment etc.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_6" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 3: Ethical Consumption -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                 <img t-att-src="'/gdfh_scoring_test/static/img/Ethical_Consumption.png'"
+                                                     alt="Global Awareness"
+                                                     style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Ethical Consumption</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I avoid overconsumption, prioritize durable and recyclable items and support local producers.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_7" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I buy from companies who support destitute communities and adhere to ethical practices including environmental sustainability.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_8" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I avoid consuming animal products linked to harmful or unethical practices. I reject all kinds of  entertainment that harms animals and actively support animal rights campaigns.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_9" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 4: Environment -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Environment_Protection.png'"
+                                                    alt="Environment"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Environment</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                   I use renewable energy sources such as solar, wind, and hydroelectric power instead of fossil fuels
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_10" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I reduce CO2 footprint through energy efficient appliances and environment friendly transportation.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_11" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I contribute to environmental projects through volunteering or practical actions such as forestation, conservation, clean water initiatives etc.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_12" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 5: Peace and conflict management -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                 <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Peace_and_Conflict_Management.png'"
+                                                    alt="Peace and Conflict Management"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+
+                                                Peace and Conflict Management</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I achieve inner peace by meditation, sports, Gratitude, purposeful work and quality ethical relationships.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_13" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I approach conflicts with respectful dialogue, actively listening to understand differing views and seek effective solutions.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_14" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I support local and international communities engaging for peace and  resolving conflicts and keep active network to  exchange ideas and share resources.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_15" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 6: Intercultural competence -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Intercultural_Competence.png'"
+                                                    alt="Global Awareness"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+
+                                                 Intercultural Competence</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                   I travel to seek direct engagement with people of different cultures and faith. My horizon is built on reality, not on news report headlines.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_16" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I understand how my own cultural background can bias or influence my views; therefore, I seek knowledge and build respectful relationships with people of different culture.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_17" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    I actively solve problems and work to make communities more inclusive and fairer such as speaking out against racism, discrimination, or xenophobia.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_18" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+                                    </div>
+<!--                                    <div class="form-group mt-3 d-flex justify-content-center">-->
+<!--                                        <div class="g-recaptcha" data-sitekey="6Ldq3OkrAAAAAKQzdbi-2eb5NpPH_IGd0iOvOtQf"></div>-->
+<!--                                    </div>-->
+
+
+                                        <div class="text-center mt-2">
+                                            <button type="submit" class="btn btn-primary gdfh-submit-btn">Submit &amp; Check your Results</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+
+<!--                        <div class="col-lg-3 col-md-4" id="previous_result">-->
+<!--                            <div class="gdfh-sidebar-card">-->
+<!--                                <h4 class="gdfh-sidebar-title">Previous Result</h4>-->
+<!--                                <div id="result_output" style="color: var(&#45;&#45;text-light); font-size: 0.9rem;"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="lang-de">
+            <div class="gdfh-container">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="gdfh-main-card">
+                               <div class="container mb-3">
+                                   <h1 class="text-center" style="color: green; font-size: 32px; margin-bottom: 1px;">
+                                       <strong>Globaler Impact Tests</strong>
+                                   </h1>
+
+                                   <p style="text-align: justify; margin-top: 10px;">
+                                       Dieser Selbsteinschätzungstest lädt Sie dazu ein, über Ihr eigenes Handeln und
+                                       dessen Einfluss auf die Welt um Sie herum nachzudenken. Er bewertet, wie stark Sie sich in sechs entscheidenden Bereichen engagieren, die für eine gerechte, friedliche und nachhaltige Welt wichtig sind.
+                                   </p>
+                                   <div
+                                       style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+
+                                   <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/1.png" alt="Globales Bewusstsein"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Globales Bewusstsein</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/2.png"
+                                                 alt="Aktive Bürgerbeteiligung"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Aktive Bürgerbeteiligung</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/3.png" alt="Ethischer Konsum"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Ethischer Konsum</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/4.png" alt="Umweltschutz"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Umweltschutz</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/5.png"
+                                                 alt="Friedensförderung und Konfliktlösung"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Friedensförderung und Konfliktlösung</p>
+                                        </div>
+
+                                        <div style="flex: 1 1 calc(33% - 20px); display: flex; align-items: center;">
+                                            <img src="/gdfh_scoring_test/static/img/6.png"
+                                                 alt="Interkulturelle Kompetenz"
+                                                 style="height: 20px; margin-right: 10px;"/>
+                                            <p style="margin: 0;">Interkulturelle Kompetenz</p>
+                                        </div>
+
+                                    </div>
+                                   <div>
+                                       <p style="text-align: justify;  margin-top: 20px;">
+                                           Zu jedem dieser Bereiche finden Sie Beispiele für praktische Handlungen, die Ihr Engagement in diesem Bereich widerspiegeln. Lesen Sie die Beschreibungen aufmerksam durch und bewerten Sie sich selbst auf einer Skala von 0 bis 10 – je nachdem, wie stark Sie sich aktuell in diesem Bereich einbringen.
+
+
+                                       </p>
+                                    <p style="text-align: justify;">
+                                      Eine höhere Punktzahl zeigt ein starkes persönliches Engagement und einen aktiven Beitrag zu einer fortschrittlichen Welt.
+                                    </p>
+                                       <p>
+                                        Eine niedrigere Punktzahl weist auf Bereiche hin, in denen Sie wachsen, lernen und neue Maßnahmen ergreifen können.
+
+                                    </p>
+                                       <p style="text-align: justify;">
+                                           Am Ende erhalten Sie eine klare Übersicht über Ihre Ergebnisse – sie zeigt, in welchen Bereichen Sie bereits herausragend sind und wo Sie Ihr Wirken noch vertiefen können.
+
+                                       </p>
+
+
+<!--                                    <p>Please fill in the following boxes to compare your current results with your-->
+<!--                                        previous ones-->
+<!--                                    </p>-->
+                                       <p style="font-size: 16px; background: #1ba14b; color: white; padding: 6px;">
+                                           Bitte füllen Sie die folgenden Felder aus. Die Testergebnisse werden gespeichert, damit Sie beim nächsten Mal einen Vergleich mit Ihrem vorherigen Ergebnis anstellen können.
+
+                                       </p>
+                                       </div>
+                                </div>
+
+<!--                              <div class="gdfh-header">-->
+<!--                                    <h2 style="color: green;">GDfH Survary</h2>-->
+<!--                                 -->
+
+<!--                                </div>-->
+
+                                <form action="/GDfH_Scoring_Test/submit" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                    <!-- Personal Information Section -->
+                                    <div class="gdfh-compact-grid">
+                                        <!-- Row 1: labels -->
+                                        <div class="gdfh-grid-row">
+                                            <label for="name" class="gdfh-grid-label">Name</label>
+                                            <label for="input_email" class="gdfh-grid-label">Email</label>
+                                            <label for="input_Land" class="gdfh-grid-label">Land</label>
+                                        </div>
+
+                                        <!-- Row 2: inputs -->
+                                        <div class="gdfh-grid-row">
+                                            <input id="name" name="name" type="text" class="gdfh-grid-input"
+                                                   placeholder="Enter Name" required="required"/>
+                                            <input id="input_email" name="email" type="email" class="gdfh-grid-input"
+                                                   placeholder="Enter Email" required="required"
+                                                   onblur="fetchPreviousResult()"/>
+                                            <select name="land" id="input_land" class="gdfh-input">
+                                                <option value="">-- Select Land --</option>
+                                                <option value="Afghanistan">Afghanistan</option>
+                                                <option value="Albania">Albania</option>
+                                                <option value="Algeria">Algeria</option>
+                                                <option value="Andorra">Andorra</option>
+                                                <option value="Angola">Angola</option>
+                                                <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+                                                <option value="Argentina">Argentina</option>
+                                                <option value="Armenia">Armenia</option>
+                                                <option value="Australia">Australia</option>
+                                                <option value="Austria">Austria</option>
+                                                <option value="Azerbaijan">Azerbaijan</option>
+                                                <option value="Bahamas">Bahamas</option>
+                                                <option value="Bahrain">Bahrain</option>
+                                                <option value="Bangladesh">Bangladesh</option>
+                                                <option value="Barbados">Barbados</option>
+                                                <option value="Belarus">Belarus</option>
+                                                <option value="Belgium">Belgium</option>
+                                                <option value="Belize">Belize</option>
+                                                <option value="Benin">Benin</option>
+                                                <option value="Bhutan">Bhutan</option>
+                                                <option value="Bolivia">Bolivia</option>
+                                                <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+                                                <option value="Botswana">Botswana</option>
+                                                <option value="Brazil">Brazil</option>
+                                                <option value="Brunei">Brunei</option>
+                                                <option value="Bulgaria">Bulgaria</option>
+                                                <option value="Burkina Faso">Burkina Faso</option>
+                                                <option value="Burundi">Burundi</option>
+                                                <option value="Cabo Verde">Cabo Verde</option>
+                                                <option value="Cambodia">Cambodia</option>
+                                                <option value="Cameroon">Cameroon</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="Central African Republic">Central African Republic
+                                                </option>
+                                                <option value="Chad">Chad</option>
+                                                <option value="Chile">Chile</option>
+                                                <option value="China">China</option>
+                                                <option value="Colombia">Colombia</option>
+                                                <option value="Comoros">Comoros</option>
+                                                <option value="Congo (Congo-Brazzaville)">Congo (Congo-Brazzaville)
+                                                </option>
+                                                <option value="Costa Rica">Costa Rica</option>
+                                                <option value="Croatia">Croatia</option>
+                                                <option value="Cuba">Cuba</option>
+                                                <option value="Cyprus">Cyprus</option>
+                                                <option value="Czechia (Czech Republic)">Czechia (Czech Republic)
+                                                </option>
+                                                <option value="Democratic Republic of the Congo">Democratic Republic of
+                                                    the Congo
+                                                </option>
+                                                <option value="Denmark">Denmark</option>
+                                                <option value="Djibouti">Djibouti</option>
+                                                <option value="Dominica">Dominica</option>
+                                                <option value="Dominican Republic">Dominican Republic</option>
+                                                <option value="Ecuador">Ecuador</option>
+                                                <option value="Egypt">Egypt</option>
+                                                <option value="El Salvador">El Salvador</option>
+                                                <option value="Equatorial Guinea">Equatorial Guinea</option>
+                                                <option value="Eritrea">Eritrea</option>
+                                                <option value="Estonia">Estonia</option>
+                                                <option value="Eswatini (fmr. 'Swaziland')">Eswatini (fmr.
+                                                    'Swaziland')
+                                                </option>
+                                                <option value="Ethiopia">Ethiopia</option>
+                                                <option value="Fiji">Fiji</option>
+                                                <option value="Finland">Finland</option>
+                                                <option value="France">France</option>
+                                                <option value="Gabon">Gabon</option>
+                                                <option value="Gambia">Gambia</option>
+                                                <option value="Georgia">Georgia</option>
+                                                <option value="Germany">Germany</option>
+                                                <option value="Ghana">Ghana</option>
+                                                <option value="Greece">Greece</option>
+                                                <option value="Grenada">Grenada</option>
+                                                <option value="Guatemala">Guatemala</option>
+                                                <option value="Guinea">Guinea</option>
+                                                <option value="Guinea-Bissau">Guinea-Bissau</option>
+                                                <option value="Guyana">Guyana</option>
+                                                <option value="Haiti">Haiti</option>
+                                                <option value="Honduras">Honduras</option>
+                                                <option value="Hungary">Hungary</option>
+                                                <option value="Iceland">Iceland</option>
+                                                <option value="India">India</option>
+                                                <option value="Indonesia">Indonesia</option>
+                                                <option value="Iran">Iran</option>
+                                                <option value="Iraq">Iraq</option>
+                                                <option value="Ireland">Ireland</option>
+                                                <option value="Israel">Israel</option>
+                                                <option value="Italy">Italy</option>
+                                                <option value="Jamaica">Jamaica</option>
+                                                <option value="Japan">Japan</option>
+                                                <option value="Jordan">Jordan</option>
+                                                <option value="Kazakhstan">Kazakhstan</option>
+                                                <option value="Kenya">Kenya</option>
+                                                <option value="Kiribati">Kiribati</option>
+                                                <option value="Kuwait">Kuwait</option>
+                                                <option value="Kyrgyzstan">Kyrgyzstan</option>
+                                                <option value="Laos">Laos</option>
+                                                <option value="Latvia">Latvia</option>
+                                                <option value="Lebanon">Lebanon</option>
+                                                <option value="Lesotho">Lesotho</option>
+                                                <option value="Liberia">Liberia</option>
+                                                <option value="Libya">Libya</option>
+                                                <option value="Liechtenstein">Liechtenstein</option>
+                                                <option value="Lithuania">Lithuania</option>
+                                                <option value="Luxembourg">Luxembourg</option>
+                                                <option value="Madagascar">Madagascar</option>
+                                                <option value="Malawi">Malawi</option>
+                                                <option value="Malaysia">Malaysia</option>
+                                                <option value="Maldives">Maldives</option>
+                                                <option value="Mali">Mali</option>
+                                                <option value="Malta">Malta</option>
+                                                <option value="Marshall Islands">Marshall Islands</option>
+                                                <option value="Mauritania">Mauritania</option>
+                                                <option value="Mauritius">Mauritius</option>
+                                                <option value="Mexico">Mexico</option>
+                                                <option value="Micronesia">Micronesia</option>
+                                                <option value="Moldova">Moldova</option>
+                                                <option value="Monaco">Monaco</option>
+                                                <option value="Mongolia">Mongolia</option>
+                                                <option value="Montenegro">Montenegro</option>
+                                                <option value="Morocco">Morocco</option>
+                                                <option value="Mozambique">Mozambique</option>
+                                                <option value="Myanmar (Burma)">Myanmar (Burma)</option>
+                                                <option value="Namibia">Namibia</option>
+                                                <option value="Nauru">Nauru</option>
+                                                <option value="Nepal">Nepal</option>
+                                                <option value="Netherlands">Netherlands</option>
+                                                <option value="New Zealand">New Zealand</option>
+                                                <option value="Nicaragua">Nicaragua</option>
+                                                <option value="Niger">Niger</option>
+                                                <option value="Nigeria">Nigeria</option>
+                                                <option value="North Korea">North Korea</option>
+                                                <option value="North Macedonia">North Macedonia</option>
+                                                <option value="Norway">Norway</option>
+                                                <option value="Oman">Oman</option>
+                                                <option value="Pakistan">Pakistan</option>
+                                                <option value="Palau">Palau</option>
+                                                <option value="Palestine State">Palestine State</option>
+                                                <option value="Panama">Panama</option>
+                                                <option value="Papua New Guinea">Papua New Guinea</option>
+                                                <option value="Paraguay">Paraguay</option>
+                                                <option value="Peru">Peru</option>
+                                                <option value="Philippines">Philippines</option>
+                                                <option value="Poland">Poland</option>
+                                                <option value="Portugal">Portugal</option>
+                                                <option value="Qatar">Qatar</option>
+                                                <option value="Romania">Romania</option>
+                                                <option value="Russia">Russia</option>
+                                                <option value="Rwanda">Rwanda</option>
+                                                <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
+                                                <option value="Saint Lucia">Saint Lucia</option>
+                                                <option value="Saint Vincent and the Grenadines">Saint Vincent and the
+                                                    Grenadines
+                                                </option>
+                                                <option value="Samoa">Samoa</option>
+                                                <option value="San Marino">San Marino</option>
+                                                <option value="Sao Tome and Principe">Sao Tome and Principe</option>
+                                                <option value="Saudi Arabia">Saudi Arabia</option>
+                                                <option value="Senegal">Senegal</option>
+                                                <option value="Serbia">Serbia</option>
+                                                <option value="Seychelles">Seychelles</option>
+                                                <option value="Sierra Leone">Sierra Leone</option>
+                                                <option value="Singapore">Singapore</option>
+                                                <option value="Slovakia">Slovakia</option>
+                                                <option value="Slovenia">Slovenia</option>
+                                                <option value="Solomon Islands">Solomon Islands</option>
+                                                <option value="Somalia">Somalia</option>
+                                                <option value="South Africa">South Africa</option>
+                                                <option value="South Korea">South Korea</option>
+                                                <option value="South Sudan">South Sudan</option>
+                                                <option value="Spain">Spain</option>
+                                                <option value="Sri Lanka">Sri Lanka</option>
+                                                <option value="Sudan">Sudan</option>
+                                                <option value="Suriname">Suriname</option>
+                                                <option value="Sweden">Sweden</option>
+                                                <option value="Switzerland">Switzerland</option>
+                                                <option value="Syria">Syria</option>
+                                                <option value="Taiwan">Taiwan</option>
+                                                <option value="Tajikistan">Tajikistan</option>
+                                                <option value="Tanzania">Tanzania</option>
+                                                <option value="Thailand">Thailand</option>
+                                                <option value="Timor-Leste">Timor-Leste</option>
+                                                <option value="Togo">Togo</option>
+                                                <option value="Tonga">Tonga</option>
+                                                <option value="Trinidad and Tobago">Trinidad and Tobago</option>
+                                                <option value="Tunisia">Tunisia</option>
+                                                <option value="Turkey">Turkey</option>
+                                                <option value="Turkmenistan">Turkmenistan</option>
+                                                <option value="Tuvalu">Tuvalu</option>
+                                                <option value="Uganda">Uganda</option>
+                                                <option value="Ukraine">Ukraine</option>
+                                                <option value="United Arab Emirates">United Arab Emirates</option>
+                                                <option value="United Kingdom">United Kingdom</option>
+                                                <option value="United States of America">United States of America
+                                                </option>
+                                                <option value="Uruguay">Uruguay</option>
+                                                <option value="Uzbekistan">Uzbekistan</option>
+                                                <option value="Vanuatu">Vanuatu</option>
+                                                <option value="Vatican City">Vatican City</option>
+                                                <option value="Venezuela">Venezuela</option>
+                                                <option value="Vietnam">Vietnam</option>
+                                                <option value="Yemen">Yemen</option>
+                                                <option value="Zambia">Zambia</option>
+                                                <option value="Zimbabwe">Zimbabwe</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="gdfh-divider"></div>
+
+                                    <!-- Assessment Categories Section -->
+                                    <div class="gdfh-section">
+
+                                        <!-- Category 1: Globales Bewusstsein -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                 <img t-att-src="'/gdfh_scoring_test/static/img/global_awareness.png'"
+                                                     alt="Globales Bewusstsein"
+                                                     style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Globales Bewusstsein</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich lese verschiedene Quellen zu ökologischen, sozialen, wirtschaftlichen und politischen Themen.
+                                                </div>
+                                                 <input type="number" name="score_1" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                                  </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Wenn ich auf ein globales Problem stoße (z. B. Armut, Klimawandel), versuche ich stets, dessen Auswirkungen und zugrunde liegende Ursachen zu verstehen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_2" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich engagiere mich ehrenamtlich für Organisationen, die sich systematisch für nachhaltige Entwicklung und Armutsbekämpfung in benachteiligten Regionen einsetzen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_3" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 2: Aktive Bürgerbeteiligung -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Active_Civic_Participation.png'"
+                                                    alt="Aktive Bürgerbeteiligung"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Aktive Bürgerbeteiligung</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich wähle nach sorgfältiger Recherche über politische Parteien, Kandidaten und deren Politik und treffe meine Wahl auf der Grundlage ethischer Prinzipien.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_4" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich beteilige mich an öffentlichen Debatten, ziehe politische Vertreter zur Rechenschaft und treffe mich regelmäßig mit Vertretern der Zivilgesellschaft.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_5" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich unterstütze aktiv lokale oder internationale Organisationen, die sich für globale Themen wie Menschenrechte, globale Gerechtigkeit, Frauenförderung usw. einsetzen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_6" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 3: Ethischer Konsum
+ -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                 <img t-att-src="'/gdfh_scoring_test/static/img/Ethical_Consumption.png'"
+                                                     alt="Ethischer Konsum"
+                                                     style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Ethischer Konsum
+                                            </h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich vermeide übermäßigen Konsum, bevorzuge langlebige und recycelbare Produkte und unterstütze lokale Produzenten.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_7" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich kaufe bei Unternehmen, die bedürftige Gemeinschaften unterstützen und sich an ethische Praktiken halten, einschließlich ökologischer Nachhaltigkeit.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_8" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich vermeide den Konsum tierischer Produkte, die mit schädlichen oder unethischen Praktiken in Verbindung stehen. Ich lehne jede Art von Unterhaltung ab, die Tieren schadet, und unterstütze aktiv Tierschutzkampagnen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_9" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 4: Umweltschutz -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Environment_Protection.png'"
+                                                    alt="Umweltschutz"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+                                                Umweltschutz</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                   Ich nutze erneuerbare Energiequellen wie Solar-, Wind- und Wasserkraft anstelle von fossilen Brennstoffen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_10" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich reduziere meinen CO2-Fußabdruck durch energieeffiziente Geräte und umweltfreundliche Verkehrsmittel.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_11" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich engagiere mich für Umweltprojekte durch Freiwilligenarbeit oder praktische Maßnahmen wie Aufforstung, Naturschutz, Initiativen für sauberes Wasser usw.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_12" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 5: Frieden und Konfliktmanagement -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                 <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Peace_and_Conflict_Management.png'"
+                                                    alt="Frieden und Konfliktmanagement"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+
+                                                Frieden und Konfliktmanagement</h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich erreiche inneren Frieden durch Meditation, Sport, Dankbarkeit, sinnvolle Arbeit und hochwertige ethische Beziehungen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_13" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich gehe Konflikte mit respektvollem Dialog an, höre aktiv zu, um unterschiedliche Ansichten zu verstehen, und suche gemeinsam nach effektiven Lösungen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_14" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich unterstütze lokale und internationale Organisationen, die sich für Frieden und Konfliktlösung einsetzen, und pflege ein aktives Netzwerk für den Austausch von Ideen und Ressourcen.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_15" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Category 6: Interkulturelle Kompetenz  -->
+                                        <div class="gdfh-category-card">
+                                            <h3 class="gdfh-category-title">
+                                                <img
+                                                    t-att-src="'/gdfh_scoring_test/static/img/Intercultural_Competence.png'"
+                                                    alt="Interkulturelle Kompetenz"
+                                                    style="max-height: 50px; margin-bottom: 10px;"/>
+
+                                                 Interkulturelle Kompetenz
+                                            </h3>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                   Ich reise, um direkt mit Menschen unterschiedlicher Kulturen und Glaubensrichtungen in Kontakt zu treten. Mein Horizont basiert auf der Realität, nicht auf Schlagzeilen in den Nachrichten.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_16" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich verstehe, wie mein eigener kultureller Hintergrund meine Ansichten beeinflussen kann, daher suche ich nach Wissen und baue respektvolle Beziehungen zu Menschen anderer Kulturen auf.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_17" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+
+                                            <div class="gdfh-question-item">
+                                                <div class="gdfh-question-text">
+                                                    Ich löse aktiv Probleme und setze mich dafür ein, Gemeinschaften integrativer und fairer zu gestalten, indem ich mich beispielsweise gegen Rassismus, Diskriminierung oder Fremdenfeindlichkeit ausspreche.
+                                                </div>
+<!--                                                <span class="gdfh-score-label">Score (0-10)</span>-->
+                                                <input type="number" name="score_18" min="0" max="10" class="gdfh-score-input" required="1" oninput="if (this.value &gt; 10) this.value = 10; if (this.value &lt; 0) this.value = 0;" placeholder="0-10"/>
+                                            </div>
+                                        </div>
+                                    </div>
+<!--                                    <div class="form-group mt-3 d-flex justify-content-center">-->
+<!--                                        <div class="g-recaptcha" data-sitekey="6Ldq3OkrAAAAAKQzdbi-2eb5NpPH_IGd0iOvOtQf"></div>-->
+<!--                                    </div>-->
+
+
+                                        <div class="text-center mt-2">
+                                            <button type="submit" class="btn btn-primary gdfh-submit-btn">Senden Sie Ihre Ergebnisse ab und prüfen Sie sie.</button>
+                                        </div>
+                                </form>
+                            </div>
+                        </div>
+
+<!--                        <div class="col-lg-3 col-md-4" id="previous_result">-->
+<!--                            <div class="gdfh-sidebar-card">-->
+<!--                                <h4 class="gdfh-sidebar-title">Previous Result</h4>-->
+<!--                                <div id="result_output" style="color: var(&#45;&#45;text-light); font-size: 0.9rem;"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+            </div>
+            <script src="https://www.google.com/recaptcha/api.js" async="true" defer="true"></script>
+
+            <script>
+
+</script>
+
+
+ <script type="text/javascript">
+     document.addEventListener("DOMContentLoaded", function () {
+    let htmlLang = document.documentElement.lang || 'en';
+
+    if (htmlLang.startsWith('de')) {
+        document.querySelector('.lang-de').style.display = 'block';
+        document.querySelector('.lang-en').style.display = 'none';
+    } else {
+        document.querySelector('.lang-en').style.display = 'block';
+        document.querySelector('.lang-de').style.display = 'none';
+    }
+});
+                <![CDATA[
+                // Input validation
+                document.addEventListener('DOMContentLoaded', function() {
+                    const inputs = document.querySelectorAll('.gdfh-input');
+
+                    inputs.forEach(input => {
+                        input.addEventListener('input', function() {
+                            if (input.checkValidity() && input.value.trim() !== '') {
+                                input.classList.add('valid');
+                                input.classList.remove('invalid');
+                            } else if (!input.checkValidity() && input.value.trim() !== '') {
+                                input.classList.add('invalid');
+                                input.classList.remove('valid');
+                            } else {
+                                input.classList.remove('valid', 'invalid');
+                            }
+                        });
+                    });
+                });
+
+                // Fetch previous result
+                function fetchPreviousResult() {
+                    var email = document.getElementById("input_email").value;
+                    if (email) {
+                        fetch("/GDfH_Scoring_Test/fetch_result?email=" + encodeURIComponent(email))
+                            .then(res => res.json())
+                            .then(data => {
+                                let output = "";
+                                if (data.found) {
+                                    output += "<div class='gdfh-result-item'><strong>Name:</strong><br/>" + data.name + "</div>";
+                                    output += "<div class='gdfh-result-item'><strong>Email:</strong><br/>" + data.email + "</div>";
+                                    output += "<div class='gdfh-result-item'><strong>Country:</strong><br/>" + data.country + "</div>";
+                                    output += "<div class='gdfh-result-item'><strong>Total Score:</strong><br/><span style='font-size:1.5rem; color:#00B800; font-weight:700;'>" + data.total_score + "/180</span></div>";
+                                    output += "<div class='gdfh-result-item' style='margin-top:15px; padding:10px; background:#f8f9fa; border-radius:8px;'><strong>Level:</strong><br/><span style='color:#00B800;'>" + data.level + "</span></div>";
+                                } else {
+                                    output = "<div style='text-align:center; padding:20px; color:#7f8c8d;'>No previous result found.</div>";
+                                }
+                                document.getElementById("result_output").innerHTML = output;
+                            })
+                            .catch(error => {
+                                console.error('Error fetching result:', error);
+                            });
+                    }
+                }
+                ]]>
+
+            </script>
+
+        </t>
+    </template>
+
+    <template id="result_template" name="GDfH Result">
+        <t t-call="website.layout">
+            <style>
+                .gdfh-result-container {
+                    background: white;
+                    min-height: 100vh;
+                    padding: 60px 0;
+                }
+
+                .gdfh-result-card {
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+                    padding: 50px;
+                    max-width: 700px;
+                    margin: 0 auto;
+                    text-align: center;
+                }
+
+                .gdfh-result-header {
+                    color: #2c3e50;
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    margin-bottom: 30px;
+                }
+
+                .gdfh-result-info {
+                    background: #f8f9fa;
+                    border-radius: 15px;
+                    padding: 25px;
+                    margin: 20px 0;
+                    text-align: left;
+                }
+
+                .gdfh-result-info-item {
+                    padding: 12px 0;
+                    border-bottom: 1px solid #dfe6e9;
+                    font-size: 1.1rem;
+                }
+
+                .gdfh-result-info-item:last-child {
+                    border-bottom: none;
+                }
+
+                .gdfh-result-info-item strong {
+                    color: #00B800;
+                    font-weight: 600;
+                }
+
+                .gdfh-result-score {
+                    background: linear-gradient(135deg, #00B800 0%, #008000 100%);
+                    color: white;
+                    border-radius: 15px;
+                    padding: 30px;
+                    margin: 25px 0;
+                }
+
+                .gdfh-result-score-value {
+                    font-size: 4rem;
+                    font-weight: 700;
+                    margin: 15px 0;
+                }
+
+                .gdfh-result-level {
+                    background: #e8f5e9;
+                    border-left: 5px solid #00B800;
+                    border-radius: 10px;
+                    padding: 25px;
+                    margin: 25px 0;
+                    text-align: justify;
+                    line-height: 1.7;
+                }
+
+                .gdfh-result-level strong {
+                    color: #00B800;
+                    font-size: 1.2rem;
+                }
+
+                .gdfh-result-btn {
+                    display: inline-block;
+                    padding: 15px 50px;
+                    background: linear-gradient(135deg, #00B800 0%, #008000 100%);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 50px;
+                    font-size: 1.2rem;
+                    font-weight: 700;
+                    margin-top: 30px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 184, 0, 0.4);
+                }
+
+                .gdfh-result-btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 184, 0, 0.6);
+                    color: white;
+                    text-decoration: none;
+                }
+
+                .gdfh-success-icon {
+                    font-size: 5rem;
+                    margin-bottom: 20px;
+                }
+            </style>
+
+            <div class="gdfh-result-container">
+                <div class="container">
+                    <div class="gdfh-result-card">
+                        <div class="gdfh-success-icon">✅</div>
+                        <h2 class="gdfh-result-header">Thank you, <t t-esc="name"/>!</h2>
+                        <p style="color: #7f8c8d; font-size: 1.2rem;">Your assessment has been successfully submitted</p>
+
+                        <div class="gdfh-result-info">
+                            <div class="gdfh-result-info-item">
+                                <strong>Email:</strong> <t t-esc="email"/>
+                            </div>
+                            <div class="gdfh-result-info-item">
+                                <strong>Country:</strong> <t t-esc="country"/>
+                            </div>
+                        </div>
+
+                        <div class="gdfh-result-score">
+                            <div style="font-size: 1.5rem; margin-bottom: 10px;">Your Total Score</div>
+                            <div class="gdfh-result-score-value"><t t-esc="total_score"/><span style="font-size: 2rem;">/180</span></div>
+                        </div>
+
+                        <div class="gdfh-result-level">
+                            <strong>Assessment:</strong><br/><br/>
+                            <t t-esc="level"/>
+                        </div>
+
+                        <a href="/GDfH_Scoring_Test" class="gdfh-result-btn">Take Assessment Again</a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

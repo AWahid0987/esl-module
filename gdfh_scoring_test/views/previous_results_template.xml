@@ -1,0 +1,37 @@
+<odoo>
+    <template id="previous_results_template" name="GDfH Previous Results">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <h2>Previous Results</h2>
+                <t t-if="results">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Date</th>
+                                <th>View</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="results" t-as="r">
+                                <tr>
+                                    <td><t t-esc="r.name"/></td>
+                                    <td><t t-esc="r.email"/></td>
+                                    <td><t t-esc="r.submitted_on.strftime('%Y-%m-%d %H:%M') if r.submitted_on else ''"/></td>
+
+                                    <td><a t-att-href="'/GDfH_Scoring_Test/view_result/' + str(r.id)" class="btn btn-info">View</a></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-if="not results">
+                    <p>No results found for <t t-esc="email"/></p>
+                </t>
+                <a href="/GDfH_Scoring_Test" class="btn btn-secondary mt-3">Back to Form</a>
+            </div>
+        </t>
+    </template>
+</odoo>

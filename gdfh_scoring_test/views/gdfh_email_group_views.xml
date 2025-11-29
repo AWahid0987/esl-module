@@ -1,0 +1,50 @@
+<odoo>
+    <record id="view_gdfh_email_group_tree" model="ir.ui.view">
+        <field name="name">gdfh.email.group.tree</field>
+        <field name="model">gdfh.email.group</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="email"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_gdfh_email_group_form" model="ir.ui.view">
+        <field name="name">gdfh.email.group.form</field>
+        <field name="model">gdfh.email.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="email"/>
+                    </group>
+                    <notebook>
+                        <page string="Results">
+                            <field name="result_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="country"/>
+                                    <field name="total_score"/>
+                                    <field name="level"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gdfh_email_group" model="ir.actions.act_window">
+        <field name="name">Grouped Results</field>
+        <field name="res_model">gdfh.email.group</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_gdfh_root" name="GDfH" sequence="10"/>
+    <menuitem id="menu_gdfh_result_grouped" 
+              name="Results (Grouped)" 
+              parent="menu_gdfh_root" 
+              action="action_gdfh_email_group"/>
+</odoo>

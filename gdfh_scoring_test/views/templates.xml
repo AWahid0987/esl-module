@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="gdfh_result_table" name="GDfH Grouped Results Page">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <h1>GDfH Scoring Results (Grouped by Email)</h1>
+                <t t-foreach="grouped_results.items()" t-as="group">
+                    <div class="mt-4">
+                        <h3>Email: <t t-esc="group[0]"/></h3>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Country</th>
+                                    <th>Total Score</th>
+                                    <th>Level</th>
+                                    <th>score_1</th>
+                                    <th>score_2</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="group[1]" t-as="res" t-index="i">
+                                    <tr>
+                                        <td><t t-esc="i + 1"/></td>
+                                        <td><t t-esc="res.name"/></td>
+                                        <td><t t-esc="res.country"/></td>
+                                        <td><t t-esc="res.total_score"/></td>
+                                        <td><t t-esc="res.level"/></td>
+                                        <td><t t-esc="res.score_1"/></td>
+                                        <td><t t-esc="res.score_2"/></td>
+                                        <td><t t-esc="res.create_date.strftime('%Y-%m-%d %H:%M')"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr/>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

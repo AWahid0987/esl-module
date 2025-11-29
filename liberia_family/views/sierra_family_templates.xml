@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================= -->
+    <!-- Sierra Family List Template -->
+    <!-- ============================= -->
+    <template id="family_list_sierra" name="Sierra Family List">
+        <t t-call="website.layout">
+            <div class="container py-5">
+                <h2 class="mb-4 text-center fw-bold text-success">Sierra Families</h2>
+
+                <div class="row">
+                    <t t-foreach="families" t-as="f">
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm border-0 rounded-4 h-100">
+                                <div class="row g-0 h-100">
+
+                                    <!-- Left Side -->
+                                    <div class="col-md-4 text-center p-4 rounded-start"
+                                         style="background-color:#ecfdf5; color:#065f46;">
+                                        <t t-if="f.photo">
+                                            <img t-att-src="'/web/image/sierra.family/%d/photo' % f.id"
+                                                 class="img-fluid rounded-circle shadow-sm mb-3"
+                                                 style="width:120px;height:120px;object-fit:cover;"
+                                                 alt="Family Photo"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-3"
+                                                 style="width:120px;height:120px;">No Photo
+                                            </div>
+                                        </t>
+
+                                        <h4 class="fw-bold text-success"><t t-esc="f.name"/></h4>
+                                        <p class="small mb-1 text-muted">📍 <t t-esc="f.location or ''"/></p>
+                                        <p class="small text-dark">Age: <t t-esc="f.age or '-'"/> years</p>
+                                        <p class="text-success small mb-0">Current Income: $<t t-esc="f.current_income or 0.0"/></p>
+                                        <p class="text-success small">Additional: +$<t t-esc="f.additional_income or 0.0"/></p>
+                                    </div>
+
+                                    <!-- Right Side -->
+                                    <div class="col-md-8 p-4">
+                                        <h4 class="fw-bold text-success mb-3"><t t-esc="f.project_title or ''"/></h4>
+                                        <p class="text-muted mb-4"><t t-raw="f.project_description or ''"/></p>
+
+                                        <div class="alert rounded-3 py-2" style="background-color:#1ba14b; color:white;">
+                                            <strong>Investment Needed:</strong> $<t t-esc="f.investment_needed or 0.0"/>
+                                        </div>
+
+                                        <div class="alert rounded-3 py-2"
+                                             style="background-color:#ecfdf5; color:#065f46; border-left:6px solid #1ba14b;">
+                                            <strong>What You’ll Receive:</strong><br/>
+                                            <t t-esc="f.receivew or ''"/>
+                                        </div>
+
+                                        <a t-att-href="'/Sierra-family/%d' % f.id"
+                                           class="btn btn-success rounded-pill px-4">View Details</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Pagination -->
+                <t t-if="pager and pager.get('page_count', 0) > 1">
+                    <div class="text-center mt-4">
+                        <t t-raw="pager['html']"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================= -->
+    <!-- Sierra Family Detail Template -->
+    <!-- ============================= -->
+    <template id="family_page_sierra" name="Sierra Family Detail">
+        <t t-call="website.layout">
+            <div class="container py-5">
+                <h2 class="mb-4 text-center fw-bold text-success">Family Details</h2>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="row g-0">
+
+                                <!-- Left Side -->
+                                <div class="col-md-4 text-center bg-dark text-white p-4 rounded-start">
+                                    <t t-if="record.photo">
+                                        <img t-att-src="'/web/image/sierra.family/%d/photo' % record.id"
+                                             class="img-fluid rounded-circle shadow-sm mb-3"
+                                             style="width:120px;height:120px;object-fit:cover;"
+                                             alt="Family Photo"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-3"
+                                             style="width:120px;height:120px;">No Photo</div>
+                                    </t>
+
+                                    <h4><t t-esc="record.name"/></h4>
+                                    <p class="small text-light mb-1">📍 <t t-esc="record.location or ''"/></p>
+                                    <p class="small">Age: <t t-esc="record.age or '-'"/></p>
+                                    <p class="text-success small mb-0">Current Income: $<t t-esc="record.current_income or 0.0"/></p>
+                                    <p class="text-success small">Additional: +$<t t-esc="record.additional_income or 0.0"/></p>
+                                </div>
+
+                                <!-- Right Side -->
+                                <div class="col-md-8 p-4">
+                                    <h4 class="fw-bold text-success mb-3"><t t-esc="record.project_title or ''"/></h4>
+                                    <p class="text-muted mb-4"><t t-raw="record.project_description or ''"/></p>
+
+                                    <div class="alert alert-success rounded-3">
+                                        <strong>Investment Needed:</strong> $<t t-esc="record.investment_needed or 0.0"/>
+                                    </div>
+
+                                    <div class="alert alert-warning bg-light rounded-3">
+                                        <strong>What You’ll Receive:</strong><br/>
+                                        <t t-esc="record.receivew or ''"/>
+                                    </div>
+
+                                    <a href="#" class="btn btn-success rounded-pill px-4">Fund This Project</a>
+                                    <a href="/Sierra-family" class="btn btn-outline-secondary rounded-pill px-4 ms-2">Back</a>
+                                </div>
+                            </div>
+
+                            <div class="card-footer small bg-light text-center">
+                                Thank you for supporting families in Sierra ❤️
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

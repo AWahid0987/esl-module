@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Top-level menu (parent is False) -->
+    <menuitem id="menu_gdfh_root" 
+              name="GDfH Scoring Test" 
+              parent="base.menu_custom" 
+              sequence="10" />
+
+    <!-- Action to show GDfH Members -->
+    <record id="action_gdfh_members" model="ir.actions.act_window">
+        <field name="name">GDfH Members</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('category_id.name', '=', 'GDfH Member')]</field>
+        <field name="context">{'search_default_filter_my_contacts': 1}</field>
+    </record>
+
+    <!-- Link action to menu -->
+    <menuitem id="menu_gdfh_members" 
+              name="GDfH Members"
+              parent="menu_gdfh_root"
+              action="action_gdfh_members"
+              sequence="1" />
+</odoo>
