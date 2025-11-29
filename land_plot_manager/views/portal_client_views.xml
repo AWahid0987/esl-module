@@ -1,0 +1,115 @@
+<odoo>
+  <!-- Dashboard Form -->
+  <record id="view_portal_client_dashboard" model="ir.ui.view">
+    <field name="name">portal.client.dashboard</field>
+    <field name="model">res.partner</field>
+    <field name="arch" type="xml">
+      <form string="Client Portal" create="0" edit="0">
+        <sheet>
+          <group>
+            <h1>Welcome <field name="name"/></h1>
+            <group string="Summary">
+              <field name="total_payments" readonly="1"/>
+              <field name="invoice_ids"/>
+              <field name="property_ids" widget="many2many_tags"/>
+            </group>
+          </group>
+
+          <notebook>
+            <!-- Plots Tab -->
+            <page string="Plots">
+              <field name="property_ids">
+                <list>
+                  <field name="name"/>
+                  <field name="list_price"/>
+                  <field name="type"/>
+                  <field name="marla"/>
+                </list>
+                <form string="Plot Details">
+                  <sheet>
+                    <group>
+                      <field name="name"/>
+                      <field name="list_price"/>
+                      <field name="type"/>
+                      <field name="notebook_name"/>
+                    </group>
+
+                    <group string="Dimensions (ft)">
+                      <field name="north"/>
+                      <field name="south"/>
+                      <field name="east"/>
+                      <field name="west"/>
+                      <field name="marla" readonly="1"/>
+                    </group>
+
+                    <group string="Directional Places">
+                      <field name="north_place"/>
+                      <field name="south_place"/>
+                      <field name="east_place"/>
+                      <field name="west_place"/>
+                    </group>
+
+                    <group string="Directional Images" colspan="2">
+                      <field name="north_image" widget="image"/>
+                      <field name="south_image" widget="image"/>
+                      <field name="east_image" widget="image"/>
+                      <field name="west_image" widget="image"/>
+                    </group>
+
+                    <group string="Nearby Plots">
+                      <field name="near_plot_ids">
+                        <list editable="bottom">
+                          <field name="name"/>
+                      <field name="product_id"/>
+                        </list>
+                      </field>
+                    </group>
+                  </sheet>
+                </form>
+              </field>
+            </page>
+
+            <!-- Invoices Tab -->
+            <page string="Invoices">
+              <field name="invoice_ids">
+                <list default_order="invoice_date desc">
+                  <field name="name"/>
+                  <field name="invoice_date"/>
+                  <field name="state"/>
+                  <field name="amount_total"/>
+                  <field name="move_type"/>
+                </list>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Server Action: Open my dashboard -->
+  <record id="action_portal_client_dashboard_server" model="ir.actions.server">
+    <field name="name">Open My Client Dashboard</field>
+    <field name="model_id" ref="base.model_res_partner"/>
+    <field name="state">code</field>
+    <field name="code">
+action = {
+    "type": "ir.actions.act_window",
+    "name": "Client Portal",
+    "res_model": "res.partner",
+    "res_id": env.user.partner_id.id or False,
+    "view_mode": "form",
+    "views": [(env.ref("land_plot_manager.view_portal_client_dashboard").id, "form")],
+    "target": "current",
+}
+    </field>
+  </record>
+
+  <!-- Backend menu -->
+  <menuitem id="menu_portal_client_dashboard"
+            name="Client Portal"
+            parent="contacts.menu_contacts"
+            action="action_portal_client_dashboard_server"
+            sequence="95"
+            groups="base.group_user"/>
+</odoo>

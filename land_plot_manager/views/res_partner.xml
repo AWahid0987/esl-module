@@ -1,0 +1,107 @@
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit_father_cnic_right" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.father.cnic.right</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Insert after NTN field on the right side -->
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="member_id"/>
+                    <field name="relation"/>
+                    <span class="o_form_label">
+                        <field name="relation_label" readonly="1" nolabel="1"/>
+                    </span>
+
+                    <field name="relative_name" nolabel="1" placeholder="Enter Name"/>>
+
+
+                    <!-- pattern set directly on the field (use [0-9] to avoid backslash escaping issues) -->
+                    <field name="cnic" placeholder="35202-1234567-1"
+                           pattern="^[0-9]{5}-[0-9]{7}-[0-9]{1}$"/>
+                    <field name="mobile" placeholder="xxxx-xxxxxxx"/>
+                    <!--                    <field name="res_number" placeholder="xxxx-xxxxxxx"/>-->
+                </xpath>
+                <xpath expr="//field[@name='street']" position="attributes">
+                    <!-- Use an attribute tag to set the new placeholder value -->
+                    <attribute name="placeholder">Mailing Address (Current)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='street2']" position="attributes">
+                    <!-- Use an attribute tag to set the new placeholder value -->
+                    <attribute name="placeholder">Mailing Address (Permanent)</attribute>
+                </xpath>
+
+                <!-- Add new tab (page) inside the existing notebook -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Nominee Information">
+                        <group>
+                            <group string="Nominee 1">
+                                <field name="nominee_name"/>
+                                <field name="relation_1"/>
+                                <span class="o_form_label">
+                                    <field name="relation_label_1" readonly="1" nolabel="1"/>
+                                </span>
+
+                                <field name="relative_name_1" nolabel="1" placeholder="Enter Name"/>>
+                                <field name="nominee_cnic" placeholder="35202-1234567-1"
+                                       pattern="^[0-9]{5}-[0-9]{7}-[0-9]{1}$"/>
+                                <field name="application"/>
+                            </group>
+                            <group string="Nominee 2">
+                                <field name="nominee_name_2"/>
+                                <field name="relation_2"/>
+                                <span class="o_form_label">
+                                    <field name="relation_label_2" readonly="1" nolabel="1"/>
+                                </span>
+
+                                <field name="relative_name_2" nolabel="1" placeholder="Enter Name"/>>
+                                <field name="nominee_cnic_2" placeholder="35202-1234567-1"
+                                       pattern="^[0-9]{5}-[0-9]{7}-[0-9]{1}$"/>
+                                <field name="application_2"/>
+                            </group>
+                            <group string="Nominee 3">
+                                <field name="nominee_name_3"/>
+                                <field name="relation_3"/>
+                                <span class="o_form_label">
+                                    <field name="relation_label_3" readonly="1" nolabel="1"/>
+                                </span>
+
+                                <field name="relative_name_3" nolabel="1" placeholder="Enter Name"/>>
+                                <field name="nominee_cnic_3" placeholder="35202-1234567-1"
+                                       pattern="^[0-9]{5}-[0-9]{7}-[0-9]{1}$"/>
+                                <field name="application_3"/>
+                            </group>
+                            <group string="Nominee 4">
+                                <field name="nominee_name_4"/>
+                                <field name="relation_4"/>
+                                <span class="o_form_label">
+                                    <field name="relation_label_4" readonly="1" nolabel="1"/>
+                                </span>
+
+                                <field name="relative_name_4" nolabel="1" placeholder="Enter Name"/>>
+                                <field name="nominee_cnic_4" placeholder="35202-1234567-1"
+                                       pattern="^[0-9]{5}-[0-9]{7}-[0-9]{1}$"/>
+                                <field name="application_4"/>
+                            </group>
+                            <group string="Nominee 5">
+                                <field name="nominee_name_5"/>
+                                <field name="relation_5"/>
+                                <span class="o_form_label">
+                                    <field name="relation_label_5" readonly="1" nolabel="1"/>
+                                </span>
+
+                                <field name="relative_name_5" nolabel="1" placeholder="Enter Name"/>>
+                                <field name="nominee_cnic_5" placeholder="35202-1234567-1"
+                                       pattern="^[0-9]{5}-[0-9]{7}-[0-9]{1}$"/>
+                                <field name="application_5"/>
+                            </group>
+
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="report_invoice_document_inherit_custom" inherit_id="account.report_invoice_document">
+
+    <!-- Add customer name and invoice date at top of page -->
+    <xpath expr="//div[@class='page']" position="inside">
+      <div style="margin-bottom:10px; font-size:14px;">
+        <strong>Customer Name:</strong>
+        <span t-esc="o.partner_id.name or ''"/><br/>
+        <strong>Invoice Date:</strong>
+        <span t-esc="o.invoice_date or ''"/>
+      </div>
+    </xpath>
+
+  </template>
+</odoo>

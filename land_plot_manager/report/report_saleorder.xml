@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--  Paperformat for Installment Letter  -->
+        <record id="paperformat_no_header_installment" model="report.paperformat">
+            <field name="name">No Header Installment</field>
+            <field name="default" eval="False"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">8</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">8</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+        <!--  Report Action for Installment Letter  -->
+        <record id="action_report_installment_letter" model="ir.actions.report">
+            <field name="name">Installment Letter</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">land_plot_manager.report_installment_letter</field>
+            <field name="report_file">land_plot_manager.report_installment_letter</field>
+            <field name="print_report_name">'Installment_Letter_' + object.name</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="land_plot_manager.paperformat_no_header_installment"/>
+        </record>
+    </data>
+    <template id="report_installment_letter">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <style>
+                        @page { size: A4; margin: 0; }
+                        html, body {
+                        margin: 0;
+                        padding: 0;
+                        top: 0;
+                        font-family: Arial, sans-serif;
+                        font-size: 12px;
+                        color: #000;
+                        }
+                        .container {
+                        width: 100%;
+                        padding: 0 0mm; /* Only horizontal padding */
+                        box-sizing: border-box;
+                        position: relative;
+                        }
+                        /* HEADER SECTION */
+                        .header-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 0;
+                        padding: 0;
+                        }
+                        .header-table td {
+                        vertical-align: top;
+                        width: 33%;
+                        text-align: center;
+                        padding: 0;
+                        }
+                        .header-table img {
+                        height: 80px;
+                        width: auto;
+                        }
+                        .heading h1 {
+                        font-size: 22px;
+                        margin: 0;
+                        font-weight: bold;
+                        }
+                        .heading h2 {
+                        font-size: 14px;
+                        margin: 2px 0;
+                        font-weight: normal;
+                        }
+                        .sub-heading {
+                        font-size: 10px;
+                        margin-top: 3px;
+                        }
+                        /* PHOTO */
+                        .photo-box img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        }
+                        /* PERSONAL INFO */
+                        h3 {
+                        text-align: center;
+                        margin: 0;
+                        }
+                        table.personal-info {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 5mm;
+                        }
+                        table.personal-info td {
+                        padding: 3px 5px;
+                        vertical-align: top;
+                        }
+                        table.personal-info td.label {
+                        width: 35%;
+                        font-weight: bold;
+                        }
+                        table.payment-detail {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 5mm;
+                        }
+                        table.payment-detail td {
+                        padding: 3px 5px;
+                        vertical-align: top;
+                        }
+                        table.payment-detail td.label {
+                        width: 35%;
+                        font-weight: bold;
+                        }
+                        table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-family: Arial, sans-serif;
+                        }
+                        th, td {
+                        border: 1px;
+                        padding: 8px;
+                        }
+                        th {
+                        background-color: #f2f2f2;
+                        font-weight: bold;
+                        }
+                        h2 {
+                        text-align: center;
+                        font-family: Arial, sans-serif;
+                        margin-bottom: 20px;
+                        }
+                        .declaration {
+                        margin-top: 40px;
+                        padding: 20px;
+                        border: 1px solid #ddd;
+                        background-color: #f9f9f9;
+                        }
+                        .signature-block {
+                        margin-top: 50px;
+                        display: flex;
+                        justify-content: space-between;
+                        }
+                        .signature-block div {
+                        width: 45%;
+                        }
+                        .signature-line {
+                        border-bottom: 1px solid black;
+                        padding-top: 20px;
+                        margin-bottom: 5px;
+                        }
+
+                        /* Character boxes: inline-block so wkhtmltopdf wraps to multi rows */
+                        .char-box-container {
+                        max-width: 100%;
+                        font-size: 0; /* remove spaces between inline-blocks */
+                        white-space: normal;
+                        }
+                        .char-box {
+                        display: inline-block;
+                        border: 1px solid #000;
+                        width: 20px;
+                        height: 20px;
+                        text-align: center;
+                        font-size: 10px;
+                        line-height: 20px;
+                        box-sizing: border-box;
+                        margin: 0 2px 2px 0;
+                        vertical-align: top;
+                        }
+                    </style>
+
+                    <div class="container">
+                        <!--  HEADER  -->
+                        <table class="header-table" style="width:100%; border-collapse:none;  border: 0px solid #fff;">
+                            <tr style="border:0;">
+                                <td style="border:0;">
+                                    <img src="/land_plot_manager/static/src/img/leftlogo.png"
+                                         style="width:120%; max-width:100px; height:100px;"/>
+                                </td>
+                                <td class="heading" style="border:0; text-align:center;">
+                                    <h1>ANCHORAGE LAHORE</h1>
+                                    <h2>A PROJECT OF PAKISTAN NAVY BENEVOLENT ASSOCIATION</h2>
+                                    <div class="sub-heading">
+                                        <span style="font-size:14px;">APPLICATION FORM</span>
+                                        <br/>
+                                    </div>
+                                </td>
+                                <td style="border:0;">
+                                    <img src="/land_plot_manager/static/src/img/rightlogo.png"
+                                         style="width:120%; max-width:100px; height:100px;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!--  APP INFO + PHOTO SIDE BY SIDE  -->
+                        <table style="width:100%; border-collapse:none;  border: 0px solid #fff; margin-top:6px;">
+                            <tr style="border:0;">
+                                <td style="width:70%; font-size:14px; vertical-align:top; padding:10px; border:0;">
+                                    <p>
+                                        <strong>APP NO.</strong>
+                                        _____________________
+                                    </p>
+
+                                    <t t-if="o.reg_number">
+                                        <p>
+                                            <strong>Registration Number:</strong>
+                                            <span t-esc="o.reg_number"/>
+                                        </p>
+                                    </t>
+                                </td>
+
+                                <td style="width:30%; text-align:right; vertical-align:top; padding:10px; border:0;">
+                                    <div style="display:inline-block; border:1px solid #000; padding:5px; text-align:center;">
+                                        <t t-if="o.partner_id.image_1920">
+                                            <img t-att-src="'data:image/png;base64,%s' % (o.partner_id.image_1920.decode() if isinstance(o.partner_id.image_1920, bytes) else o.partner_id.image_1920)"
+                                                 style="max-width:120px; max-height:140px; object-fit:contain;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="font-size:10px; padding:20px;">No Photo</div>
+                                        </t>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!--  PERSONAL INFORMATION  -->
+                        <h3>PERSONAL INFORMATION</h3>
+
+                        <div style="border:2px solid #000; padding:10px; border-radius:5px;">
+                            <table class="personal-info"
+                                   style="width:100%; border-collapse: none; border: 1px solid #000;">
+                                <!-- Name of Applicant -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Name of Applicant:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.name or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Relation & Relative Name -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">
+                                        <t t-set="relation" t-value="o.partner_id.relation"/>
+                                        <t t-esc="relation"/>
+                                    </td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.relative_name or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- CNIC -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">CNIC:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.cnic or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- E-mail -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">E-mail:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.email or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Mailing Address (Current) -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Mailing Address (Current):</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.street or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Mailing Address (Permanent) -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Mailing Address (Permanent):</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.street or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Phone No (Office) -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Phone No (Office):</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.phone or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Mobile -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Mobile:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.mobile or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- NOMINEE INFORMATION -->
+                        <h3>NOMINEE INFORMATION</h3>
+                        <div style="border:2px solid #000; padding:10px; border-radius:5px;">
+                            <table class="personal-info"
+                                   style="width:100%; border-collapse: collapse; border: 1px solid #000;">
+                                <!-- Nominee Name -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Nominee Name</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.nominee_name or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Nominee Relation + Relative Name -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">
+                                        <t t-set="relation_1" t-value="o.partner_id.relation_1"/>
+                                        <t t-esc="relation_1"/>
+                                    </td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.relative_name_1 or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Nominee CNIC -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Nominee CNIC:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.nominee_cnic or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Relationship with applicant -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Relationship with applicant:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name"
+                                               t-value="(o.partner_id.application or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!--  RESIDENTIAL PLOT DETAILS  -->
+                        <h3 style="margin-top:0px; border-bottom:1px solid #000;">PLOT DETAILS</h3>
+
+                        <div style="border:2px solid #000; padding:10px; border-radius:5px;">
+                            <table class="personal-info"
+                                   style="width:100%; border-collapse: collapse; border: 1px solid #000;">
+                                <!-- Plot No -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Plot No:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name" t-value="(o.allotment_no or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Plot Size -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Plot Size:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-foreach="o.order_line" t-as="line">
+                                                <t t-if="line.product_id.size_marla">
+                                                    <t t-set="size_chars" t-value="list(line.product_id.size_marla)"/>
+                                                    <t t-foreach="size_chars" t-as="ch">
+                                                        <div class="char-box">
+                                                            <span t-esc="ch"/>
+                                                        </div>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- PAYMENT DETAILS (first page) -->
+                        <h3>PAYMENT DETAILS</h3>
+                        <table style="width:100%; border:1px solid #000; border-collapse:collapse; font-size:13px;">
+                            <tr>
+                                <!--  Left Column  -->
+                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
+                                    <div style="margin-bottom:6px;">
+                                        <strong style="margin-right:10px;">Mode of payment:</strong>
+                                        <label style="margin-right:20px;">
+                                            <input type="checkbox" style="transform:scale(1.1); margin-right:5px;"/>
+                                            Installment Plan
+                                        </label>
+                                    </div>
+                                    <!-- DD/Pay Order -->
+                                    <div style="display:inline-block; margin-bottom:6px;">
+                                        <strong>DD/Pay Order #:</strong>
+                                        <div>
+                                            <t t-foreach="list(range(12))" t-as="dummy">
+                                                <div class="char-box"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <!-- Date -->
+                                    <div style="display:inline-block; margin-bottom:6px;">
+                                        <strong>Date:</strong>
+                                        <div>
+                                            <t t-foreach="list(range(8))" t-as="dummy">
+                                                <div class="char-box"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <!-- Total Amount -->
+                                    <div>
+                                        <strong>Total Amount (PKR):</strong>
+                                        <t t-esc="o.amount_total"/>
+                                    </div>
+                                </td>
+
+                                <!--  Right Column  -->
+                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
+                                    <div style="margin-bottom:8px;">
+                                        <strong style="white-space:nowrap;">Drawn on Bank Branch:</strong>
+                                        <div>
+                                            <t t-foreach="list(range(12))" t-as="dummy">
+                                                <div class="char-box"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Signatures (first page) -->
+                        <table style="width:100%; border-collapse:none; margin-top:20px; font-size:13px; border: 0px solid #fff;">
+                            <tr>
+                                <td style="width:33%; text-align:center; padding:20px 10px;">
+                                    <div style="border-top:1px solid #000; width:80%; margin:0 auto; height:1px;"/>
+                                    <div style="margin-top:5px;">
+                                        <strong>Applicant’s Signature</strong>
+                                    </div>
+                                </td>
+                                <td style="width:33%; text-align:center; padding:20px 10px;">
+                                    <div style="border-top:1px solid #000; width:80%; margin:0 auto; height:1px;"/>
+                                    <div style="margin-top:5px;">
+                                        <strong>Officer’s Signature</strong>
+                                    </div>
+                                </td>
+                                <td style="width:33%; text-align:center; padding:20px 10px;">
+                                    <div style="border-top:1px solid #000; width:80%; margin:0 auto; height:1px;"/>
+                                    <div style="margin-top:5px;">
+                                        <strong>Authorized Signatory</strong>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="page-break-after: always;"/>
+
+                        <!-- SECOND PAGE: Applicant Receipt + Plot details + Payment + Invoices -->
+
+                        <table style="width:100%; border-collapse:none; font-family:Arial, sans-serif; font-size:13px; border: 0px solid #fff;">
+                            <tr>
+                                <!--  Left Section  -->
+                                <td style="width:25%; vertical-align:top; padding:5px;">
+                                    <strong>Applicant Receipt</strong>
+                                    <div style="margin-top:5px;">APP NO. __________________</div>
+                                    <div style="margin-top:3px;">Name: _____________________</div>
+                                </td>
+                                <!--  Center Section (Black Header)  -->
+                                <td style="width:75%; text-align:center; vertical-align:top; padding:5px;">
+                                    <div style="background:#000; color:#fff; padding:6px 0; font-weight:bold; text-align:center; font-size:14px;">
+                                        ANCHORAGE LAHORE
+                                    </div>
+                                    <div style="font-size:11px; text-align:center; font-weight:bold;">
+                                        A PROJECT OF PAKISTAN NAVY BENEVOLENT ASSOCIATION.
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <!--  Name on the left  -->
+                                <td style="width:70%; padding:4px;">
+                                    <strong>Name:</strong>
+                                    <span style="border-bottom:1px solid #000; display:inline-block; width:70%;">
+                                        <t t-esc="o.partner_id.name"/>
+                                    </span>
+                                </td>
+                                <!--  CNIC on the right  -->
+                                <td style="width:30%; padding:4px;">
+                                    <strong>CNIC No:</strong>
+                                    <span style="border-bottom:1px solid #000; display:inline-block; width:70%;">
+                                        <t t-esc="o.partner_id.cnic"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h3 style="margin-top:0px; border-bottom:1px solid #000;">PLOT DETAILS</h3>
+
+                        <div style="border:2px solid #000; padding:10px; border-radius:5px;">
+                            <table class="personal-info"
+                                   style="width:100%; border-collapse: collapse; border: 1px solid #000;">
+                                <!-- Plot No (second page) -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Plot No:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-set="partner_name" t-value="(o.allotment_no or '').replace(' ', '')"/>
+                                            <t t-foreach="list(partner_name)" t-as="ch">
+                                                <div class="char-box">
+                                                    <span t-esc="ch"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Plot Size (second page) -->
+                                <tr>
+                                    <td class="label" style="border: 1px solid #fff;">Plot Size:</td>
+                                    <td style="border: 1px solid #fff;">
+                                        <div class="char-box-container">
+                                            <t t-foreach="o.order_line" t-as="line">
+                                                <t t-if="line.product_id.size_marla">
+                                                    <t t-set="size_chars" t-value="list(line.product_id.size_marla)"/>
+                                                    <t t-foreach="size_chars" t-as="ch">
+                                                        <div class="char-box">
+                                                            <span t-esc="ch"/>
+                                                        </div>
+                                                    </t>
+                                                </t>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- PAYMENT DETAILS (second page) -->
+                        <h3>PAYMENT DETAILS</h3>
+                        <table style="width:100%; border:1px solid #000; border-collapse:collapse; font-size:13px;">
+                            <tr>
+                                <!--  Left Column  -->
+                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
+                                    <div style="margin-bottom:6px;">
+                                        <strong style="margin-right:10px;">Mode of payment:</strong>
+                                        <label style="margin-right:20px;">
+                                            <input type="checkbox" style="transform:scale(1.1); margin-right:5px;"/>
+                                            Installment Plan
+                                        </label>
+                                    </div>
+                                    <!-- DD/Pay Order -->
+                                    <div style="margin-bottom:6px;">
+                                        <strong>DD/Pay Order #:</strong>
+                                        <div>
+                                            <t t-foreach="list(range(12))" t-as="dummy">
+                                                <div class="char-box"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <!-- Date -->
+                                    <div style="margin-bottom:6px;">
+                                        <strong>Date:</strong>
+                                        <div>
+                                            <t t-foreach="list(range(8))" t-as="dummy">
+                                                <div class="char-box"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <!-- Total Amount -->
+                                    <div>
+                                        <strong>Total Amount (PKR):</strong>
+                                        <t t-esc="o.amount_total"/>
+                                    </div>
+                                </td>
+
+                                <!--  Right Column  -->
+                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
+                                    <div style="margin-bottom:8px;">
+                                        <strong style="white-space:nowrap;">Drawn on Bank Branch:</strong>
+                                        <div>
+                                            <t t-foreach="list(range(12))" t-as="dummy">
+                                                <div class="char-box"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CUSTOMER INVOICES: only this Sale Order main invoice (amount_total == order total) -->
+                        <h3>Customer Invoices</h3>
+                        <t t-set="invoices"
+                           t-value="o.env['account.move'].search([                         ('sale_id', '=', o.id),                         ('move_type', 'in', ['out_invoice','out_refund'])                     ], order='invoice_date asc', limit=50)"/>
+                        <table style="width:100%; border-collapse:collapse; margin-top:10px; border:1px solid #000; font-size:11px;">
+                            <thead>
+                                <tr>
+                                    <th style="border:1px solid #000; padding:4px;">Invoice Number</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:center;">Invoice Date</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:center;">Due Date</th>
+                                    <th style="border:1px solid #000; padding:4px;">Label (Journal Items)</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:right;">Amount (PKR)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="invoices and len(invoices) &gt; 0">
+                                    <t t-foreach="invoices" t-as="inv">
+                                        <tr>
+                                            <td style="border:1px solid #000; padding:3px;">
+                                                <t t-esc="inv.name or ''"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:3px; text-align:center;">
+                                                <t t-esc="inv.invoice_date or ''"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:3px; text-align:center;">
+                                                <t t-esc="inv.invoice_date_due or ''"/>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:3px;">
+                                                <t t-if="inv.invoice_line_ids">
+                                                    <t t-esc="inv.invoice_line_ids[0].name or ''"/>
+                                                </t>
+                                            </td>
+                                            <td style="border:1px solid #000; padding:3px; text-align:right;">
+                                                <t t-esc="'{:,.2f}'.format(inv.amount_untaxed or 0.0)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <tr>
+                                        <td colspan="5"
+                                            style="border:1px solid #000; text-align:center; color:#888; padding:4px;">
+                                            No invoices found for this sale order.
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div style="page-break-after: always;"/>
+
+                        <!-- TERMS & CONDITIONS + DECLARATION -->
+                        <h3>TERMS &amp; CONDITIONS</h3>
+                        <div style="font-size:12px;">
+
+                            <h3 style="font-size:12px; font-weight:bold; margin-top:10px;">TERMS &amp; CONDITIONS</h3>
+
+                            <table style="width:100%; border-collapse:none; border:0px solid #fff; font-size:12px;">
+                                <tr>
+                                    <th style="text-align:left; font-size:12px;">No.</th>
+                                    <th style="text-align:left; font-size:12px;">Description</th>
+                                </tr>
+
+                                <tr>
+                                    <td>1.</td>
+                                    <td>All payments are to be made according to the category/size of the plot, as per
+                                        schedule of payments, through Bank Draft/Pay Order, in
+                                        <span style="font-weight:bold;">favour</span>
+                                        of A &amp; A Associates.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Installments received after the due date from the allottees/applicants will only
+                                        be accepted with surcharge @ 1.5% per month (which will be taken as @ 0.05%
+                                        daily).
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>3.</td>
+                                    <td>Plot once allotted or transferred cannot be surrendered being NON REFUNDABLE.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>4.</td>
+                                    <td>If any allottee fails to pay 3 successive installments after the prescribed
+                                        period, the allotment is liable to penalty charges.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>5.</td>
+                                    <td>In case of extra land with any plot, extra amount will be charged in addition to
+                                        the total amount.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>6.</td>
+                                    <td>
+                                        For each preferential location, i.e. Corner, facing park and main boulevard
+                                        plot, applicants will pay 10% premium each at the time of Ballot Payment.
+                                        In case of multiple preferences in location, the applicant will pay in multiples
+                                        of 10%, 20% and 30%.
+                                        For example, main boulevard/corner plots will be charged 20% in addition to the
+                                        total amount.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>7.</td>
+                                    <td>One application form can be used for booking of one plot only.</td>
+                                </tr>
+
+                                <tr>
+                                    <td>8.</td>
+                                    <td>Plot allotted to an applicant shall not be used for any purpose other than
+                                        applied or meant for.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>9.</td>
+                                    <td>No applicant shall be paid any mark/markup against the amount paid by him to
+                                        management.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>10.</td>
+                                    <td>All registration/mutation charges shall be borne by the allottee along with any
+                                        other government tax in vogue.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>11.</td>
+                                    <td>No construction can be done without the prior approval of the Design Studio
+                                        authorities.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>12.</td>
+                                    <td>
+                                        The Management Committee of A &amp; A Associates reserves the right to
+                                        allot/sell a plot surrendered by an allottee or cancelled from the name of the
+                                        allottee due to nonpayment of dues to any other applicant or person.
+                                        The ex-allottee shall have no right to such a plot, and the decision of the
+                                        Management Committee shall not be challenged on any forum.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>13.</td>
+                                    <td>Access charges, if any, will be levied under extremely unavoidable circumstances
+                                        for which the client shall be taken into confidence prior to the levy.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>14.</td>
+                                    <td>
+                                        Payment plan is cost plan only &amp; the development and duty charges are
+                                        separate.
+                                        Charges of internal development (roads, main water supply, sewerage,
+                                        electricity) do not include cost of Sui Gas, Phone, Mosque, Maintenance etc.
+                                        Provision of utility charges shall be obtained at the time of possession under
+                                        Misc. Charges.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>15.</td>
+                                    <td>The size and location of the plot are tentative and subject to adjustment after
+                                        demarcation/measurement at the time of possession.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>16.</td>
+                                    <td>In case the possession is not taken within specified time, the booking of plot
+                                        is liable to penalty charges.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>17.</td>
+                                    <td>Transfer of plot shall be allowed only after clearance of all dues.
+                                        Registration/mutation charges shall be borne by the allottee.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>18.</td>
+                                    <td>On transfer, the first allottee must clear all dues with A &amp; A Associates
+                                        before transfer.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>19.</td>
+                                    <td>
+                                        Any dispute between the allottee and A &amp; A Associates will be referred to
+                                        arbitration of the Management Committee, whose decision shall be final and
+                                        binding.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>20.</td>
+                                    <td>
+                                        Every applicant will abide by these terms and conditions, rules and regulations
+                                        related to allotment, possession, ownership, construction and transfer of plots
+                                        enforced by A &amp; A Associates or any authority.
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>21.</td>
+                                    <td>
+                                        Corporate Office Lahore:
+                                        If the official is an A &amp; A Associates representative, they can receive
+                                        payments only via Pay Order/Demand Draft in
+                                        <span style="font-weight:bold;">favour</span>
+                                        of "A &amp; A Associates" and will provide customer services.
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                            <h2 style="font-size:12px; margin-bottom:2px; font-weight:bold;">DECLARATION</h2>
+
+                            <div class="declaration" style="margin-bottom:8px;">
+                                <p style="font-size:12px; line-height:18px; margin:0;">
+                                    I have read all the rules and regulations accompanying this form and I hereby agree
+                                    to abide by those as well as all existing and future Bahria Town rules.
+                                </p>
+                            </div>
+
+                            <table style="width:100%; font-size:12px; margin-top:10px; border-collapse:none;  border: 0px solid #fff;">
+                                <tr>
+                                    <!-- Column 1 -->
+                                    <td style="width:50%; vertical-align:bottom;">
+                                        <p style="margin:0 0 5px 0;">Signature of the Applicant:</p>
+                                        <div style="border-bottom:1px solid #000; height:25px;"/>
+                                    </td>
+
+                                    <!-- Column 2 -->
+                                    <td style="width:50%; vertical-align:bottom;">
+                                        <p style="margin:0 0 5px 0;">Date:</p>
+                                        <div style="border-bottom:1px solid #000; height:25px;"/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

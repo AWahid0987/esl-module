@@ -1,0 +1,90 @@
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_land_root" name="Land Plots" sequence="10"/>
+
+    <!-- Customer Reports Menu -->
+    <menuitem id="menu_customer_report_root"
+              name="Customer Reports"
+              parent="menu_land_root"
+              sequence="20"/>
+
+    <!-- Action -->
+    <record id="action_customer_report" model="ir.actions.act_window">
+        <field name="name">Customer Invoice Report</field>
+        <field name="res_model">customer.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menu Item for Customer Report -->
+    <menuitem id="menu_customer_report"
+              name="Customer Invoice Report"
+              parent="menu_customer_report_root"
+              action="action_customer_report"
+              sequence="10"/>
+
+    <!-- ✅ List View -->
+    <record id="view_customer_report_list" model="ir.ui.view">
+        <field name="name">customer.report.list</field>
+        <field name="model">customer.report</field>
+        <field name="arch" type="xml">
+            <list string="Customer Invoice Report">
+                <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="invoice_date"/>
+                                            
+            </list>
+        </field>
+    </record>
+
+    <!-- ✅ Form View -->
+    <record id="view_customer_report_form" model="ir.ui.view">
+        <field name="name">customer.report.form</field>
+        <field name="model">customer.report</field>
+        <field name="arch" type="xml">
+            <form string="Customer Invoice Report">
+                <sheet>
+                    <group>
+                        <field name="partner_id" options="{'no_create': True}"/>
+                        <field name="phone" readonly="1"/>
+                        <field name="email" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Invoices">
+                            <field name="invoice_ids" nolabel="1" readonly="1" context="{'no_create': True}">
+                                <list string="Invoices" create="false" edit="false" delete="false">
+                                    <field name="name"/> <!-- Invoice Number -->
+                                    <field name="invoice_date"/> <!-- Invoice Date -->
+                                    <field name="state"/> <!-- Draft/Posted -->
+                                    <field name="payment_state"/> <!-- Paid/Not Paid -->
+                                    <field name="amount_total"/> <!-- Total Amount -->
+                                    <field name="amount_residual"/> <!-- Remaining Balance -->
+                                </list>
+                                <form string="Invoice">
+                                    <sheet>
+                                        <group>
+                                            <field name="name" readonly="1"/>
+                                            <field name="partner_id" readonly="1"/>
+                                            <field name="invoice_date" readonly="1"/>
+                                            <field name="state" readonly="1"/>
+                                            <field name="payment_state" readonly="1"/>
+                                            <field name="amount_total" readonly="1"/>
+                                            <field name="amount_residual" readonly="1"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+
+                            <!-- Static text -->
+                            <div class="o_form_label" style="margin-top:10px;">
+                                Open any invoice above to see its product lines.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

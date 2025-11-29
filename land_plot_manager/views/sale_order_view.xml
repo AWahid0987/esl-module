@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_payment_plan" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.payment.plan</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="//header" position="inside">-->
+                <!-- Button that calls a server method -->
+<!--                <button name="action_print_sale_user"-->
+<!--                        type="object"-->
+<!--                        string="Sale User"-->
+<!--                        class="btn-primary"-->
+<!--                        icon="fa-file-text-o"-->
+<!--                        modifiers="{'invisible': [('state','!=','sale')]}"/>-->
+
+                <!-- Button that directly triggers the report action method on the server -->
+<!--                <button name="action_print_sale"-->
+<!--                        type="object"-->
+<!--                        string="Allotment Letter"-->
+<!--                        class="btn-primary"-->
+<!--                        icon="fa-file-text-o"-->
+<!--                        modifiers="{'invisible': [('state','!=','sale')]}"/>-->
+
+                <!-- Another button for installment letter - unique method name -->
+<!--                <button name="action_print_installment_letter"-->
+<!--                        type="object"-->
+<!--                        string="Installment Letter"-->
+<!--                        class="btn-primary"-->
+<!--                        icon="fa-file-text-o"-->
+<!--                        modifiers="{'invisible': [('state','!=','sale')]}"/>-->
+<!--                <button name="action_print_payment_acknowledgement"-->
+<!--                        type="object"-->
+<!--                        string="Payment Acknowledgement"-->
+<!--                        class="btn-secondary"-->
+<!--                        icon="fa-file-text-o"-->
+<!--                        print="true"-->
+<!--                        modifiers='{"invisible": [["state", "!=", "sale"]]}'/>-->
+<!--                <button name="action_print_final_file"-->
+<!--                        type="object"-->
+<!--                        string="Plot File"-->
+<!--                        class="btn-secondary"-->
+<!--                        icon="fa-file-text-o"-->
+<!--                        print="true"-->
+<!--                        modifiers='{"invisible": [["state", "!=", "sale"]]}'/>-->
+<!--            </xpath>-->
+            <!-- Insert plan_type below Customer -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="plan_type"/>
+                <field name="pal_number" readonly="1"/>
+                <field name="reg_number"/>
+                <field name="allotment_no"/>
+                <field name="land_project_id"/>
+            </xpath>
+
+            <!-- Add commission creation button in header -->
+<!--            <xpath expr="//header" position="inside">-->
+<!--                <button name="action_create_commission"-->
+<!--                        type="object"-->
+<!--                        string="Calculate Commission"-->
+<!--                        class="btn-secondary"-->
+<!--                        icon="fa-calculator"-->
+<!--                        invisible="not order_line"/>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//header" position="inside">-->
+<!--                <button-->
+<!--                        name="action_create_commission"-->
+<!--                        type="object"-->
+<!--                        string="Create Commission"-->
+<!--                        class="btn btn-primary"-->
+<!--                        icon="fa-calculator"-->
+<!--                        modifiers="{'invisible': [('state', 'not in', ('sale','done'))]}"-->
+<!--                />-->
+<!--            </xpath>-->
+            <!-- Add the Payment Plan as a new page inside the main notebook -->
+
+        </field>
+    </record>
+</odoo>

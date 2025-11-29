@@ -1,0 +1,18 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_land_project_user,Land Project User,land_plot_manager.model_land_project,base.group_user,1,1,1,1
+access_land_plot_user,Land Plot User,land_plot_manager.model_land_plot,base.group_user,1,1,1,1
+access_land_near_plot_user,Land Near Plot User,land_plot_manager.model_land_near_plot,base.group_user,1,1,1,1
+access_customer_report_user,Customer Report User,land_plot_manager.model_customer_report,base.group_user,1,1,1,1
+
+access_partner_read,Partner Read,base.model_res_partner,base.group_user,1,1,1,1
+access_move_read,Account Move Read,account.model_account_move,base.group_user,1,,1,1,1
+
+access_product_template_rw,Product Template RW,product.model_product_template,base.group_user,1,1,1,1
+
+access_land_plot_commission,Land Plot Commission,land_plot_manager.model_land_plot_commission,base.group_user,1,1,1,1
+land_plot_manager.access_land_notebook,access_land_notebook,land_plot_manager.model_land_notebook,base.group_user,1,1,1,1
+land_plot_manager.access_customer_report_line,access_customer_report_line,land_plot_manager.model_customer_report_line,base.group_user,1,1,1,1
+land_plot_manager.access_journey_label,access_journey_label,land_plot_manager.model_journey_label,base.group_user,1,1,1,1
+
+
+access_land_project_summary,access_land_project_summary,model_land_project_summary,,1,1,1,1

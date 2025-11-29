@@ -1,0 +1,19 @@
+<odoo>
+
+    <!-- MAIN LAND MENU -->
+    <menuitem
+            id="menu_land_root"
+            name="Land Plots"
+            sequence="10"
+            web_icon="land_plot_manager,static/description/icon.png"/>
+
+    <!-- PROJECT LIST -->
+    <menuitem
+            id="menu_land_projects"
+            name="Projects"
+            parent="menu_land_root"
+            action="action_land_projects"
+            sequence="10"/>
+
+
+</odoo>

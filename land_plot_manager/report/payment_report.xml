@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+    <!-- Full Payment Report Action -->
+    <record id="action_full_payment_acknowledgement" model="ir.actions.report">
+        <field name="name">Full Payment</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">land_plot_manager.report_full_payment_acknowledgement</field>
+        <field name="report_file">land_plot_manager.report_full_payment_acknowledgement</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Full_Payment_Acknowledgement_' + object.name</field>
+    </record>
+
+    <!-- Installment Report Action -->
+    <record id="action_installment_acknowledgement" model="ir.actions.report">
+        <field name="name">Installment Payment</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">land_plot_manager.report_installment_acknowledgement</field>
+        <field name="report_file">land_plot_manager.report_installment_acknowledgement</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Installment_Acknowledgement_' + object.name</field>
+    </record>
+
+    <!-- Paperformat for Full Payment -->
+    <record id="paperformat_no_header_full_payment" model="report.paperformat">
+        <field name="name">No Header Format (Full Payment)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+        <field name="report_ids" eval="[(4, ref('land_plot_manager.action_full_payment_acknowledgement'))]"/>
+    </record>
+
+    <!-- Paperformat for Installment -->
+    <record id="paperformat_no_header_installment" model="report.paperformat">
+        <field name="name">No Header Format (Installment)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+        <field name="report_ids" eval="[(4, ref('land_plot_manager.action_installment_acknowledgement'))]"/>
+    </record>
+
+
+    <!-- Full Payment Template -->
+    <template id="report_full_payment_acknowledgement">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <main class="page" style="padding: 40px; font-family: Arial, sans-serif; color: #000;">
+                        <table class="header-table" style="width:100%; border-collapse:none;  border: 0px solid #fff;">
+                            <tr>
+                                <!-- Left Logo -->
+                                <td style="width:25%; border:none; text-align:left; vertical-align:middle;">
+                                    <img src="/land_plot_manager/static/src/img/leftlogo.png"
+                                         style="width: 100%; max-width: 150px; height: auto;"/>
+                                </td>
+
+                                <!-- Center Text -->
+                                <td style="width:50%; border:none; text-align:center; vertical-align:middle;">
+                                    <h1 style="margin:0; font-size:22px;">ANCHORAGE LAHORE</h1>
+                                    <h2 style="margin:0; font-size:16px;">A PROJECT OF PAKISTAN NAVY BENEVOLENT
+                                        ASSOCIATION
+                                    </h2>
+<!--                                    <div style="margin-top:6px; font-size:14px;">-->
+<!--                                        RESIDENTIAL PLOTS-->
+<!--                                        <br/>-->
+<!--                                        <span>APPLICATION FORM</span>-->
+<!--                                        <br/>-->
+<!--                                        <span style="font-size:10px; letter-spacing:3px;">N O N R E F U N D A B L E-->
+<!--                                        </span>-->
+<!--                                    </div>-->
+                                </td>
+
+                                <!-- Right Logo -->
+                                <td style="width:25%; border:none; text-align:right; vertical-align:middle;">
+                                    <img src="/land_plot_manager/static/src/img/rightlogo.png"
+                                         style="width: 100%; max-width: 250px; height: auto;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Body -->
+                        <p>
+                            <strong>Date:</strong>
+                            <t t-esc="doc.date_order"/>
+                        </p>
+                        <p>
+                            <strong>Ref:</strong>
+                            <t t-esc="doc.allotment_no"/>
+                        </p>
+
+                        <p>
+                            <strong>To:</strong>
+                        </p>
+                        <p>
+                            <strong>
+                                <t t-esc="doc.partner_id.name"/>
+                            </strong>
+                        </p>
+                        <p>
+                            <t t-esc="doc.partner_id.street"/>
+                        </p>
+<!--                        <p>-->
+<!--                            <t t-esc="doc.partner_id.street2"/>-->
+<!--                        </p>-->
+
+                        <p>
+                            <strong>Acknowledgement of Cash File Booking –</strong>
+                            <t t-esc="doc.land_project_id.name"/>
+                        </p>
+
+                        <p>
+                            Dear<t t-esc="doc.partner_id.name"/>,
+                        </p>
+
+                        <p>
+                            We are pleased to acknowledge that your
+                            <strong>booking for a Cash File of
+                                <t t-foreach="doc.order_line" t-as="line">
+                                    <t t-esc="line.product_id.name"/>
+                                </t>
+                                in
+                                <t t-esc="doc.land_project_id.name"/>
+                            </strong>
+                            has been successfully processed. The booking amount has been received as per the approved
+                            payment schedule.
+                        </p>
+
+                        <p>
+                            <strong>Your booking details are as follows:</strong>
+                        </p>
+
+                        <div class="registration-info">
+                            <ul>
+                                <li>
+                                    <strong>Name:</strong>
+                                    <t t-esc="doc.partner_id.name"/>
+                                </li>
+                                <li>
+                                    <strong>Project:</strong>
+                                    <t t-esc="doc.land_project_id.name"/>
+                                </li>
+                                <li>
+                                    <strong>Plot Size / Product:</strong>
+                                    <t t-esc="', '.join(doc.order_line.mapped('product_id.name'))"/>
+                                </li>
+                                <li>
+                                    <strong>Booking Type:</strong>
+                                    <t t-esc="doc.plan_type or 'N/A'"/>
+                                </li>
+                                <li>
+                                    <strong>Reference:</strong>
+                                    <t t-esc="doc.allotment_no"/>
+                                </li>
+                                <li>
+                                    <strong>Total Price:</strong>
+                                    <t t-esc="'{:,.0f}'.format(doc.amount_total)"/>
+                                </li>
+                                <li>
+                                    <strong>Amount Received:</strong> PKR 
+                                    <t t-set="invoices" t-value="doc.env['account.move'].search([('invoice_origin', '=', doc.name), ('move_type', '=', 'out_invoice'), ('state', '=', 'posted')])"/>
+                                    <t t-set="paid_amount" t-value="sum(invoices.mapped('amount_total'))"/>
+                                    <t t-esc="'{:,.0f}'.format(paid_amount) if paid_amount else '0'"/>
+                                </li>
+                                <li>
+                                    <strong>Balance Payable:</strong> PKR 
+                                    <t t-set="balance" t-value="doc.amount_total - paid_amount"/>
+                                    <t t-esc="'{:,.0f}'.format(balance) if balance > 0 else '0'"/>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <p>
+                            Please note that your <strong>Provisional Allotment Letter (PAL)</strong> will be issued
+                            <strong>upon full and final payment</strong>
+                            and completion of all booking formalities.
+                        </p>
+
+                        <p>
+                            A <strong>copy of your payment receipt</strong>  is
+                            enclosed
+                            for your record.
+                        </p>
+
+                    </main>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Installment Template -->
+
+    <template id="report_installment_acknowledgement">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+
+                <t t-foreach="docs" t-as="doc">
+
+                    <main class="page" style="padding: 40px; font-family: Arial, sans-serif; color: #000;">
+
+                        <table class="header-table" style="width:100%; border-collapse:none;  border: 0px solid #fff;">
+                            <tr>
+                                <!-- Left Logo -->
+                                <td style="width:25%; border:none; text-align:left; vertical-align:middle;">
+                                    <img src="/land_plot_manager/static/src/img/leftlogo.png"
+                                         style="width: 100%; max-width: 150px; height: auto;"/>
+                                </td>
+
+                                <!-- Center Text -->
+                                <td style="width:50%; border:none; text-align:center; vertical-align:middle;">
+                                    <h1 style="margin:0; font-size:22px;">ANCHORAGE LAHORE</h1>
+                                    <h2 style="margin:0; font-size:16px;">A PROJECT OF PAKISTAN NAVY BENEVOLENT
+                                        ASSOCIATION
+                                    </h2>
+<!--                                    <div style="margin-top:6px; font-size:14px;">-->
+<!--                                        RESIDENTIAL PLOTS-->
+<!--                                        <br/>-->
+<!--                                        <span>APPLICATION FORM</span>-->
+<!--                                        <br/>-->
+<!--                                        <span style="font-size:10px; letter-spacing:3px;">N O N R E F U N D A B L E-->
+<!--                                        </span>-->
+<!--                                    </div>-->
+                                </td>
+
+                                <!-- Right Logo -->
+                                <td style="width:25%; border:none; text-align:right; vertical-align:middle;">
+                                    <img src="/land_plot_manager/static/src/img/rightlogo.png"
+                                         style="width: 100%; max-width: 250px; height: auto;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Body -->
+                        <p>
+                            <strong>Date:</strong>
+                            <t t-esc="doc.date_order"/>
+                        </p>
+                        <p>
+                            <strong>Ref:</strong>
+                            <t t-esc="doc.allotment_no"/>
+                        </p>
+
+                        <p>
+                            <strong>To:</strong>
+                        </p>
+                        <p>
+                            <strong>
+                                <t t-esc="doc.partner_id.name"/>
+                            </strong>
+                        </p>
+                        <p>
+                            <t t-esc="doc.partner_id.street"/>
+                        </p>
+
+
+                        <p>
+                            <strong>Acknowledgement of Installment File Booking –</strong>
+                            <t t-esc="doc.land_project_id.name"/>
+                        </p>
+
+                        <p>
+                            Dear<t t-esc="doc.partner_id.name"/>,
+                        </p>
+
+                        <p>
+                            We are pleased to acknowledge that your
+                            <strong>booking for an Installment File of a
+                                <t t-foreach="doc.order_line" t-as="line">
+                                    <t t-esc="line.product_id.name"/>
+                                </t>
+                                in
+                                <t t-esc="doc.land_project_id.name"/>
+                            </strong>
+                            has been successfully processed. The booking amount has been received in our records as per
+                            the
+                            approved payment schedule
+                        </p>
+
+                        <p>
+                            <strong>Below are your booking particulars for reference:</strong>
+                        </p>
+
+                        <div class="registration-info">
+                            <ul>
+                                <li>
+                                    <strong>Name:</strong>
+                                    <t t-esc="doc.partner_id.name"/>
+                                </li>
+                                <li>
+                                    <strong>Project:</strong>
+                                    <t t-esc="doc.land_project_id.name"/>
+                                </li>
+                                <li>
+                                    <strong>Plot Size / Product:</strong>
+                                    <t t-esc="', '.join(doc.order_line.mapped('product_id.name'))"/>
+                                </li>
+                                <li>
+                                    <strong>Booking Type:</strong>
+                                    <t t-esc="doc.plan_type or 'N/A'"/>
+                                </li>
+                                <li>
+                                    <strong>Reference:</strong>
+                                    <t t-esc="doc.allotment_no"/>
+                                </li>
+                                <li>
+                                    <strong>Total Price:</strong>
+                                    PKR
+                                    <t t-esc="'{:,.0f}'.format(doc.amount_total)"/>
+                                </li>
+                                <li>
+                                    <strong>Amount Received:</strong> PKR 
+                                    <t t-set="invoices" t-value="doc.env['account.move'].search([('invoice_origin', '=', doc.name), ('move_type', '=', 'out_invoice'), ('state', '=', 'posted')])"/>
+                                    <t t-set="paid_amount" t-value="sum(invoices.mapped('amount_total'))"/>
+                                    <t t-esc="'{:,.0f}'.format(paid_amount) if paid_amount else '0'"/>
+                                </li>
+                                <li>
+                                    <strong>Balance Payable:</strong> PKR 
+                                    <t t-set="balance" t-value="doc.amount_total - paid_amount"/>
+                                    <t t-esc="'{:,.0f}'.format(balance) if balance > 0 else '0'"/>
+                                </li>
+                            </ul>
+                        </div>
+                        <p>
+                            Kindly note that your  <strong>Provisional Allotment Letter (PAL)</strong> will be issued
+                            <strong>upon full and final payment</strong>
+                            of all installments as per the schedule.
+                        </p>
+
+                        <p>
+                            A detailed <strong>Installment Plan and Payment Schedule</strong> is enclosed for your
+                            record
+                        </p>
+
+                        <p>
+                            For any future correspondence or installment payments, please mention your <strong>File
+                            Reference Number
+                        </strong> to ensure smooth processing.
+                        </p>
+
+                        <div style="text-align: right; margin-top: 50px;">
+                            <p>
+                                <strong>Yours sincerely,</strong>
+                            </p>
+
+                            <p>
+                                <strong>A &amp; A ASSOCIATES</strong>
+                            </p>
+
+                        </div>
+
+
+                    </main>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ==================== -->
+    <!-- Commission List View -->
+    <!-- ==================== -->
+    <record id="view_land_plot_commission_list" model="ir.ui.view">
+        <field name="name">land.plot.commission.list</field>
+        <field name="model">land.plot.commission</field>
+        <field name="arch" type="xml">
+            <list string="Land Plot Commissions">
+                <field name="name"/>
+                <field name="commission_category"/>
+                <field name="sale_price"/>
+                <field name="commission_total"/>
+                <field name="create_date" readonly="1"/>
+                <field name="commission_invoice_id" readonly="1"/>
+                <field name="invoice_state" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== -->
+    <!-- Commission Form View -->
+    <!-- ==================== -->
+    <record id="view_land_plot_commission_form" model="ir.ui.view">
+        <field name="name">land.plot.commission.form</field>
+        <field name="model">land.plot.commission</field>
+        <field name="arch" type="xml">
+            <form string="Land Plot Commission">
+                <header>
+                    <!-- Show Confirm Invoice button only if invoice exists -->
+                    <button name="action_confirm_invoice"
+                            type="object"
+                            string="Confirm Bill"
+                            class="btn-primary"
+                            invisible="not commission_invoice_id"/>
+                    <field name="invoice_state" widget="statusbar" statusbar_visible="draft,posted,cancel"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="commission_category"/>
+                        </group>
+                        <group>
+                            <field name="sale_price"/>
+                            <field name="extra_amount" readonly="1"/>
+                            <field name="variable_commission_base" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <separator string="Commission Breakdown"/>
+
+                    <group string="Commission Details">
+                        <field name="commission_1" readonly="1"/>
+                        <field name="commission_2" readonly="1"/>
+                        <field name="commission_total" readonly="1"/>
+                        <field name="commission_invoice_id"/>
+                        <field name="invoice_state" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== -->
+    <!-- Commission Actions -->
+    <!-- ==================== -->
+    <record id="action_land_plot_commission" model="ir.actions.act_window">
+        <field name="name">Land Plot Commissions</field>
+        <field name="res_model">land.plot.commission</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No commission records found!</p>
+            <p>Create commission calculations from sale orders.</p>
+        </field>
+    </record>
+
+    <!-- ==================== -->
+    <!-- Menu Item -->
+    <!-- ==================== -->
+<!--    <menuitem id="menu_land_plot_commission"-->
+<!--              name="Commissions"-->
+<!--              parent="sale.sale_menu_root"-->
+<!--              action="action_land_plot_commission"-->
+<!--              sequence="100"/>-->
+</odoo>

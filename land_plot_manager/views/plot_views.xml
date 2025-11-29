@@ -1,0 +1,180 @@
+<odoo>
+    <!-- ===================== -->
+    <!-- Land Project: List    -->
+    <!-- ===================== -->
+    <record id="view_land_project_list" model="ir.ui.view">
+        <field name="name">land.project.list</field>
+        <field name="model">land.project</field>
+        <field name="arch" type="xml">
+            <list string="Land Projects">
+                <field name="name"/>
+                <field name="total_acres"/>
+                <!--                <field name="total_marla" readonly="1"/>-->
+                <!--                <field name="remaining_marla" readonly="1"/>-->
+                <field name="cnt_r10"/>
+                <field name="cnt_r5"/>
+                <field name="cnt_c8"/>
+                <field name="cnt_c4"/>
+                <!--                <field name="cost_per_marla" readonly="1"/>-->
+            </list>
+        </field>
+    </record>
+
+    <!-- ===================== -->
+    <!-- Land Project: Form    -->
+    <!-- ===================== -->
+    <record id="view_land_project_form" model="ir.ui.view">
+        <field name="name">land.project.form</field>
+        <field name="model">land.project</field>
+        <field name="arch" type="xml">
+            <form string="Land Project">
+                <header>
+                    <!--                    <button name="action_generate_plots" type="object" class="btn-primary" string="Create Plots"/>-->
+                    <button name="action_convert_to_inventory" type="object" class="btn-secondary"
+                            string="Convert to Inventory"/>
+                </header>
+
+                <sheet>
+                    <group col="3">
+                        <!-- ️ Column 1: Project Info -->
+                        <group string="Project Info" colspan="1">
+                            <field name="name"/>
+                            <field name="project_type"/>
+                            <field name="total_acres"/>
+                            <!--                            <field name="total_marla" readonly="1"/>-->
+                            <!--                            <field name="remaining_marla" readonly="1"/>-->
+                            <!--                            <field name="non_compact"/>-->
+                        </group>
+
+                        <!--  Column 2: Costing -->
+                        <group string="Costing" colspan="1">
+                            <field name="land_price"/>
+                            <field name="registry_fee"/>
+                            <field name="fard_fee"/>
+                            <field name="intiqal_fee"/>
+                            <field name="purchase_tax"/>
+                            <field name="commission_amount"/>
+
+                            <field name="other_fee"/>
+                        </group>
+
+                        <!-- Column 3: Total Costing -->
+                        <group string="Total Costing" colspan="1">
+                            <field name="total_cost" readonly="1"/>
+                            <!--                            <field name="cost_per_marla" readonly="1"/>-->
+                        </group>
+                    </group>
+
+                    <group string="Residential Actual Counts (Read-only)">
+                        <group string="Residential Actual Counts">
+                            <field name="ratio_r10" readonly="1"/>
+                            <field name="ratio_r5" readonly="1"/>
+                        </group>
+                        <group string="Commercial Actual Counts">
+                            <field name="ratio_c8" readonly="1"/>
+                            <field name="ratio_c4" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Normal plot">
+                        <group string="Residential Plot Counts">
+                            <field name="cnt_r10"/>
+                            <field name="cnt_r5"/>
+                        </group>
+                        <group string="Commercial Plot Counts">
+                            <field name="cnt_c8"/>
+                            <field name="cnt_c4"/>
+                        </group>
+                    </group>
+                    <group string="Compact/Non-compact">
+                        <group string="Residential Security">
+                            <field name="sec_cnt_r10"/>
+                            <field name="sec_cnt_r5"/>
+                        </group>
+
+                        <group string="Commercial Security">
+                            <field name="sec_cnt_c8"/>
+                            <field name="sec_cnt_c4"/>
+                        </group>
+                    </group>
+
+
+                    <group string="Computed Plot Costs (Read-only)">
+                        <group string="Residential">
+                            <field name="cost_r10" readonly="1"/>
+                            <field name="cost_r5" readonly="1"/>
+                        </group>
+                        <group string="Commercial (+1.2%)">
+                            <field name="cost_c8" readonly="1"/>
+                            <field name="cost_c4" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="All Plots">
+                            <field name="plot_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="name"/>
+
+                                    <field name="category"/>
+                                    <field name="number"/>
+                                    <field name="size_marla"/>
+                                    <field name="cost"/>
+                                    <field name="product_id"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Project Documents">
+                            <group>
+                                <field name="registry_attachment_project"/>
+                                <field name="fard_attachment_project"/>
+                                <field name="intiqal_attachment_project"/>
+                                <field name="tax_challan_attachment_project"/>
+                                <field name="commission_receiving_attachment_project"/>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+    <!-- ===================== -->
+    <!-- Land Plot: List/Form  -->
+    <!-- ===================== -->
+    <record id="view_land_plot_list" model="ir.ui.view">
+        <field name="name">land.plot.list</field>
+        <field name="model">land.plot</field>
+        <field name="arch" type="xml">
+            <list string="Plots">
+                <field name="project_id"/>
+                <field name="category"/>
+                <field name="number"/>
+                <field name="name"/>
+                <field name="size_marla"/>
+                <field name="cost"/>
+                <field name="product_id"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- ============ -->
+    <!-- Actions      -->
+    <!-- ============ -->
+    <record id="action_land_projects" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">land.project</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_land_plots" model="ir.actions.act_window">
+        <field name="name">All Plots</field>
+        <field name="res_model">land.plot</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
