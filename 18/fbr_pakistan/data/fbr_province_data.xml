@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="fbr_province_azad_jammu_kashmir" model="fbr.province">
+            <field name="name">AZAD JAMMU AND KASHMIR</field>
+        </record>
+
+        <record id="fbr_province_balochistan" model="fbr.province">
+            <field name="name">BALOCHISTAN</field>
+        </record>
+
+        <record id="fbr_province_capital_territory" model="fbr.province">
+            <field name="name">CAPITAL TERRITORY</field>
+        </record>
+
+        <record id="fbr_province_gilgit_baltistan" model="fbr.province">
+            <field name="name">GILGIT BALTISTAN</field>
+        </record>
+
+        <record id="fbr_province_khyber_pakhtunkhwa" model="fbr.province">
+            <field name="name">KHYBER PAKHTUNKHWA</field>
+        </record>
+
+        <record id="fbr_province_punjab" model="fbr.province">
+            <field name="name">PUNJAB</field>
+        </record>
+
+        <record id="fbr_province_sindh" model="fbr.province">
+            <field name="name">SINDH</field>
+        </record>
+
+        <record id="fbr_province_fata_pata" model="fbr.province">
+            <field name="name">FATA/PATA</field>
+        </record>
+
+    </data>
+</odoo>

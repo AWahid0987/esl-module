@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View account.move form -->
+    <record id="view_account_move_form_inhiert" model="ir.ui.view">
+        <field name="name">view.account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <button name="action_post" position="after">
+                <button name="action_send_to_fbr"
+                    string="Send to FBR"
+                    invisible="state != 'posted' or fbr_sent"
+                    type="object"
+                    class="btn btn-info"
+                />
+
+                <button name="action_dynamic_payload"
+                    type="object"
+                    string="Generate Payload"
+                    class="oe_stat_button"
+                    icon="fa-flask"
+                >
+                </button>
+            </button>
+
+            <notebook position="inside">
+                <page string="FBR Integration" name="fbr_integration">
+                    <group>
+
+                        <group string="Scenario Data" colspan="4">
+                            <group>
+
+                                <field name="fbr_sale_type_id" />
+                                <field name="fbr_province_id" />
+                            </group>
+                            <group>
+
+                                <field name="fbr_document_type_id" />
+                                <field name="fbr_scenario_id" />
+                                <field name="fbr_reason_id" />
+                            </group>
+
+                        </group>
+
+                        <group string="FBR API Data" colspan="4">
+                            <field name="fbr_sent" />
+                            <field name="fbr_response" />
+                            <field name="payload" />
+                        </group>
+
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

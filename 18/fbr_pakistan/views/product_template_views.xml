@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Product Template Form View - Add FBR Page -->
+    <record id="view_product_template_form_fbr" model="ir.ui.view">
+        <field name="name">product.template.form.fbr</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+
+            <!-- Add FBR Page after Sales tab -->
+            <xpath expr="//page[@name='sales']" position="after">
+                <page string="FBR Information" name="fbr_information">
+
+                    <!-- FBR Classification Section -->
+                    <group string="FBR Classification &amp; Identification" name="fbr_classification">
+                        <group>
+                            <field name="fbr_hs_code" placeholder="e.g., 0101.2100"/>
+                            <field name="fbr_uom_id"/>
+                        </group>
+                        <group>
+                            <field name="fbr_sro_id" options="{ 'no_open': True}" />
+                            <field name="fbr_sro_name" invisible="1"/>
+                            <field name="fbr_sro_item_serial_id"/>
+                        </group>
+                    </group>
+
+                    <!-- FBR Tax Configuration Section -->
+                    <group string="FBR Tax Configuration" name="fbr_tax_config">
+                        <group>
+                            <!-- <field name="fbr_fed_payable"/> -->
+                            <field name="fbr_fed_payable_id"/>
+                            <!-- <field name="fbr_sales_tax_withheld"/> -->
+                            <!-- <field name="fbr_extra_tax"/> -->
+                        </group>
+                        <group>
+                            <field name="fbr_fixed_notified_value" invisible="fbr_sro_name != '3rd Schedule goods'"/>
+                            <!-- <field name="fbr_further_tax"/> -->
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

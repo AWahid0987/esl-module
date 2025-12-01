@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="fbr_sale_type_goods_standard_rate" model="fbr.sale.type">
+            <field name="name">Goods at Standard rate (default)</field>
+        </record>
+
+        <record id="fbr_sale_type_goods_reduced_rate" model="fbr.sale.type">
+            <field name="name">Goods at Reduced Rate</field>
+        </record>
+
+        <record id="fbr_sale_type_goods_zero_rate" model="fbr.sale.type">
+            <field name="name">Goods at zero-rate</field>
+        </record>
+
+        <record id="fbr_sale_type_petroleum_products" model="fbr.sale.type">
+            <field name="name">Petroleum Products</field>
+        </record>
+
+        <record id="fbr_sale_type_electricity_supply" model="fbr.sale.type">
+            <field name="name">Electricity Supply to Retailers</field>
+        </record>
+
+        <record id="fbr_sale_type_sim" model="fbr.sale.type">
+            <field name="name">SIM</field>
+        </record>
+
+        <record id="fbr_sale_type_gas_cng" model="fbr.sale.type">
+            <field name="name">Gas to CNG stations</field>
+        </record>
+
+        <record id="fbr_sale_type_mobile_phones" model="fbr.sale.type">
+            <field name="name">Mobile Phones</field>
+        </record>
+
+        <record id="fbr_sale_type_rerollable_scrap" model="fbr.sale.type">
+            <field name="name">Rerollable scrap by ship breakers</field>
+        </record>
+
+        <record id="fbr_sale_type_processing_conversion" model="fbr.sale.type">
+            <field name="name">Processing/Conversion of Goods</field>
+        </record>
+
+        <record id="fbr_sale_type_3rd_schedule_goods" model="fbr.sale.type">
+            <field name="name">3rd Schedule Goods</field>
+        </record>
+
+        <record id="fbr_sale_type_goods_fed_st" model="fbr.sale.type">
+            <field name="name">Goods (FED in ST Mode)</field>
+        </record>
+
+        <record id="fbr_sale_type_services_fed_st" model="fbr.sale.type">
+            <field name="name">Services (FED in ST Mode)</field>
+        </record>
+
+        <record id="fbr_sale_type_services" model="fbr.sale.type">
+            <field name="name">Services</field>
+        </record>
+
+        <record id="fbr_sale_type_exempt_goods" model="fbr.sale.type">
+            <field name="name">Exempt goods</field>
+        </record>
+
+        <record id="fbr_sale_type_dtre_goods" model="fbr.sale.type">
+            <field name="name">DTRE goods</field>
+        </record>
+
+        <record id="fbr_sale_type_cotton_ginners" model="fbr.sale.type">
+            <field name="name">Cotton ginners</field>
+        </record>
+
+        <record id="fbr_sale_type_electric_vehicle" model="fbr.sale.type">
+            <field name="name">Electric Vehicle</field>
+        </record>
+
+        <record id="fbr_sale_type_cement_concrete" model="fbr.sale.type">
+            <field name="name">Cement /Concrete Block</field>
+        </record>
+
+        <record id="fbr_sale_type_telecom_services" model="fbr.sale.type">
+            <field name="name">Telecommunication services</field>
+        </record>
+
+        <record id="fbr_sale_type_steel_melting" model="fbr.sale.type">
+            <field name="name">Steel Melting and re-Rolling</field>
+        </record>
+
+        <record id="fbr_sale_type_ship_breaking" model="fbr.sale.type">
+            <field name="name">Ship breaking</field>
+        </record>
+
+        <record id="fbr_sale_type_potassium_chlorate" model="fbr.sale.type">
+            <field name="name">Potassium Chlorate</field>
+        </record>
+
+        <record id="fbr_sale_type_non_adjustable" model="fbr.sale.type">
+            <field name="name">Non-Adjustable Supplies</field>
+        </record>
+
+        <record id="fbr_sale_type_goods_sro_297" model="fbr.sale.type">
+            <field name="name">Goods as per SRO.297(|)/2023</field>
+        </record>
+
+        <record id="fbr_sale_type_cng_sales" model="fbr.sale.type">
+            <field name="name">CNG Sales</field>
+        </record>
+
+        <record id="fbr_sale_type_toll_manufacturing" model="fbr.sale.type">
+            <field name="name">Toll Manufacturing</field>
+        </record>
+
+    </data>
+</odoo>

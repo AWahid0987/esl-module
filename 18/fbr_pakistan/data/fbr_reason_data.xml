@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="fbr_reason_cancellation_of_supply" model="fbr.reason">
+            <field name="name">Cancellation of supply</field>
+        </record>
+
+        <record id="fbr_reason_return_of_goods" model="fbr.reason">
+            <field name="name">Return of goods</field>
+        </record>
+
+        <record id="fbr_reason_change_in_nature_of_supply" model="fbr.reason">
+            <field name="name">Change in nature of supply</field>
+        </record>
+
+        <record id="fbr_reason_change_in_value_of_supply" model="fbr.reason">
+            <field name="name">Change in value of supply</field>
+        </record>
+
+        <record id="fbr_reason_change_in_amount_of_tax" model="fbr.reason">
+            <field name="name">Change in amount of tax</field>
+        </record>
+
+        <record id="fbr_reason_others" model="fbr.reason">
+            <field name="name">Others</field>
+        </record>
+
+        <record id="fbr_reason_adjustment_given_to_steel_melters" model="fbr.reason">
+            <field name="name">Adjustment given to Steel Melters</field>
+        </record>
+
+    </data>
+</odoo>
