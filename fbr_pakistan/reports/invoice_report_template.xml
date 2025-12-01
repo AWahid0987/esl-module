@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Inherit the main invoice report template -->
+  <template id="report_invoice_document_fbr_inherit3" inherit_id="account.report_invoice_document">
+
+    <!-- Add FBR section after the document title -->
+    <xpath
+      expr="//div[@class='row'][t[@t-if='o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)']]"
+      position="before">
+      <!-- FBR Information section - only show if sent to FBR -->
+      <div class="row mt-3"
+        t-if="o.fbr_sent and o.fbr_invoice_number and o.move_type in ['out_invoice', 'out_refund']">
+        <div class="col-12">
+          <div class="border-start border-success border-4 ps-3 py-2"
+            style="background-color: #f8f9fa;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="flex-grow-1 col-7">
+                <div class="mb-2">
+                  <small class="text-muted text-uppercase fw-bold">FBR Pakistan</small>
+                  <span class="badge bg-success ms-2">
+                    <i class="fa fa-check-circle me-1"></i>Submitted </span>
+                </div>
+                <div class="mb-1">
+                  <span class="text-muted">Invoice #:</span>
+                  <strong class="text-primary ms-1" t-esc="o.fbr_invoice_number" />
+                </div>
+                <div t-if="o.fbr_document_type_id or o.fbr_province_id" class="small text-muted">
+                  <span t-if="o.fbr_document_type_id" t-field="o.fbr_document_type_id.name" />
+                  <span t-if="o.fbr_province_id and o.fbr_document_type_id"> • </span>
+                  <span t-if="o.fbr_province_id" t-field="o.fbr_province_id.name" />
+                </div>
+              </div>
+              <div t-if="o.fbr_qr_code" class="text-center ms-5 mt-2 col-5">
+                <img t-att-src="image_data_uri(o.fbr_digital_invoice_logo)"
+                  style="width: auto; height: 45px; margin-right: 10px;"
+                  alt="FBR QR" />
+                <img t-att-src="image_data_uri(o.fbr_qr_code)"
+                  style="width: 60px; height: 60px; "
+                  alt="FBR QR" />
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </xpath>
+
+  </template>
+</odoo>

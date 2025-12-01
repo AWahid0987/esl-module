@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <record id="fbr_api_token" model="ir.config_parameter">
+      <field name="key">fbr.api.token</field>
+      <field name="value">42a72a44-c938-35b1-80ef-ba9a4b857ff3</field>
+    </record>
+    <record id="fbr_api_url" model="ir.config_parameter">
+      <field name="key">fbr.api.url</field>
+      <field name="value">https://gw.fbr.gov.pk/di_data/v1/di/postinvoicedata_sb</field>
+    </record>
+  </data>
+</odoo>
