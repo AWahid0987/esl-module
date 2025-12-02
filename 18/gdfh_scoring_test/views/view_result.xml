@@ -1,0 +1,54 @@
+<odoo>
+  <template id="view_result_template" name="GDfH Scoring Result">
+    <t t-call="website.layout">
+      <div class="container mt-5">
+        <t t-if="results">
+          <h2 class="mb-4">Thank you, <t t-esc="results[0].name"/>!</h2>
+          <p><strong>Email:</strong> <t t-esc="results[0].email"/></p>
+          <p><strong>Country:</strong> <t t-esc="results[0].country"/></p>
+
+          <!-- ✅ PAGE 1: Graph + Legend -->
+          <div class="row mt-4">
+            <div class="col-md-8">
+              <h3 class="mb-3">Score Graph</h3>
+              <canvas id="gdfhChart"></canvas>
+            </div>
+            <div class="col-md-3">
+              <h3 class="mb-3">Legend</h3>
+              <p><span style="color: green; font-weight: bold;">85-100 🌟 Progressive Visionary</span></p>
+              <p><span style="color: #28a745; font-weight: bold;">70-84 ✅ Strong Contributor</span></p>
+              <p><span style="color: orange; font-weight: bold;">50-69 ⚠️ Emerging Contributor</span></p>
+              <p><span style="color: red; font-weight: bold;">Below 50 💡 Needs Focused Engagement</span></p>
+            </div>
+          </div>
+
+          <!-- ✅ Only latest submission table -->
+          <div class="result-entry mb-4 p-3 border rounded shadow-sm mt-4">
+            <h5>Submission on: <t t-esc="results[0].submitted_on.strftime('%Y-%m-%d %H:%M') if results[0].submitted_on else ''"/></h5>
+            <p><strong>Total Score:</strong> <t t-esc="results[0].total_score"/>/180</p>
+            <p><strong>Level:</strong> <t t-esc="results[0].level"/></p>
+
+            <table class="table table-bordered table-striped mt-3">
+              <thead>
+                <tr>
+                  <th>Question/Group</th>
+                  <th>Score</th>
+                  <th>Percentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Global Awareness</td><td><t t-esc="results[0].global_awareness"/></td><td><t t-esc="results[0].global_awareness_pct"/>%</td></tr>
+                <tr><td>Civic Participation</td><td><t t-esc="results[0].civic_participation"/></td><td><t t-esc="results[0].civic_participation_pct"/>%</td></tr>
+                <tr><td>Environmental Awareness</td><td><t t-esc="results[0].environment"/></td><td><t t-esc="results[0].environment_pct"/>%</td></tr>
+                <tr><td>Ethical Understanding</td><td><t t-esc="results[0].ethical"/></td><td><t t-esc="results[0].ethical_pct"/>%</td></tr>
+                <tr><td>Peace &amp; Conflict Resolution</td><td><t t-esc="results[0].peace"/></td><td><t t-esc="results[0].peace_pct"/>%</td></tr>
+                <tr><td>Intercultural Understanding</td><td><t t-esc="results[0].intercultural"/></td><td><t t-esc="results[0].intercultural_pct"/>%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+      </t>
+    </div>
+  </t>
+</template>
+</odoo>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- Kanban View for Result -->
+    <record id="view_gdfh_result_kanban" model="ir.ui.view">
+        <field name="name">gdfh.result.kanban.view</field>
+        <field name="model">gdfh.result</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" create="false">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="country"/>
+                <field name="total_score"/>
+                <field name="level"/>
+               
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record" style="padding: 10px; border: 1px solid #ccc;">
+                            <div class="row" style="display: flex; justify-content: space-between;">
+                                <!-- Left Column -->
+                                <div style="width: 100%;">
+                                    <p><strong>Name:</strong><br/><t t-esc="record.name.value"/></p>
+                                    <p><strong>Email:</strong><br/><t t-esc="record.email.value"/></p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+                
+            </kanban>
+        </field>
+    </record>
+<record id="view_gdfh_related_result_kanban" model="ir.ui.view">
+    <field name="name">gdfh.result.related.kanban</field>
+    <field name="model">gdfh.result</field>
+    <field name="type">kanban</field> <!-- REQUIRED -->
+    <field name="arch" type="xml">
+        <kanban string="Related Results">
+            <field name="name"/>
+            <field name="email"/>
+        </kanban>
+    </field>
+</record>
+
+    <!-- ✅ Form View with Print Button -->
+    <record id="view_gdfh_result_form" model="ir.ui.view">
+        <field name="name">gdfh.result.form</field>
+        <field name="model">gdfh.result</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="print_report" type="object" string="Print Report" class="btn-primary"/>
+                </header>
+               <sheet>
+    <!-- Basic Info Group -->
+    <group class="o_main_table">
+        <group>
+            <field name="name"/>
+            <field name="email"/>
+            <field name="country"/>
+        </group>
+    </group>
+
+    <!-- Scores Group -->
+    <group string="Scores">
+        <group>
+            <field name="score_1"/>
+            <field name="score_2"/>
+            <field name="score_3"/>
+            <field name="score_4"/>
+            <field name="score_5"/>
+            <field name="score_6"/>
+            <field name="score_7"/>
+            <field name="score_8"/>
+            <field name="score_9"/>
+            <field name="score_10"/>
+        </group>
+        <group>
+            <field name="score_11"/>
+            <field name="score_12"/>
+            <field name="score_13"/>
+            <field name="score_14"/>
+            <field name="score_15"/>
+            <field name="score_16"/>
+            <field name="score_17"/>
+            <field name="score_18"/>
+        </group>
+    </group>
+
+    <!-- Summary Group -->
+    <group string="Summary">
+        <field name="total_score"/>
+        <field name="level"/>
+        <field name="submitted_on"/>
+    </group>
+</sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_gdfh_result_kanban" model="ir.actions.act_window">
+        <field name="name">GDfH Results</field>
+        <field name="res_model">gdfh.result</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="view_gdfh_result_kanban"/>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_gdfh_root" name="GDfH" sequence="10"/>
+    <menuitem id="menu_gdfh_result_menu" 
+              name="Results" 
+              parent="menu_gdfh_root" 
+              action="action_gdfh_result_kanban"/>
+
+  </data>
+</odoo>

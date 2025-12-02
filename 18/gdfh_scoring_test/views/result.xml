@@ -1,0 +1,567 @@
+<odoo>
+  <!-- =================== RESULT AFTER SUBMIT =================== -->
+  <template id="result_template" name="GDfH Scoring Result">
+    <t t-call="website.layout">
+      <div class="container mt-5">
+        <t t-if="results">
+          <h2 class="mb-4">
+            Thank you, <t t-esc="results[0].name"/>!
+          </h2>
+          <p>
+            <strong>Email:</strong>
+            <t t-esc="results[0].email"/>
+          </p>
+
+          <!-- Precompute label parts for chart -->
+          <t t-set="lbl_global_1">Global</t>
+          <t t-set="lbl_global_2">Awareness</t>
+          <t t-set="lbl_civic_1">Civic</t>
+          <t t-set="lbl_civic_2">Participation</t>
+          <t t-set="lbl_env_1">Environmental</t>
+          <t t-set="lbl_env_2">Awareness</t>
+          <t t-set="lbl_eth_1">Ethical</t>
+          <t t-set="lbl_eth_2">Understanding</t>
+          <t t-set="lbl_peace_1">Peace &amp;</t>
+          <t t-set="lbl_peace_2">Conflict Resolution</t>
+          <t t-set="lbl_int_1">Intercultural</t>
+          <t t-set="lbl_int_2">Understanding</t>
+          <t t-set="lbl_score">Score in each area</t>
+          <t t-set="lbl_percentage">Percentage</t>
+
+          <!-- ✅ PAGE 1: Graph + Legend -->
+          <div class="row mt-4">
+            <div class="col-md-8">
+              <h3 class="mb-3">
+                Your Global Impact Graph
+              </h3>
+              <canvas id="gdfhChart"></canvas>
+            </div>
+            <div class="col-md-3">
+              <h6 class="mb-3" style="font-size: 20px;">
+                Score Percentage (%) Description
+              </h6>
+              <p>
+                <span style="color: green; font-weight: bold;">
+                  85-100: Top Contributor
+                </span>
+              </p>
+              <p>
+                <span style="color: #28a745; font-weight: bold;">
+                  70-84: Strong Contributor
+                </span>
+              </p>
+              <p>
+                <span style="color: orange; font-weight: bold;">
+                  50-69: Emerging Contributor
+                </span>
+              </p>
+              <p>
+                <span style="color: red; font-weight: bold;">
+                  Below 50: Requires Contribution
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- ✅ Only latest submission table -->
+          <div class="result-entry mb-4 p-3 border rounded shadow-sm mt-4">
+            <h5>
+              Submission on:
+              <t t-esc="results[0].submitted_on.strftime('%Y-%m-%d %H:%M') if results[0].submitted_on else ''"/>
+            </h5>
+            <p>
+              <strong>Total Score:</strong>
+              <t t-esc="results[0].total_score"/>/180
+            </p>
+            <p>
+              <strong>Level:</strong>
+              <t t-esc="results[0].level"/>
+            </p>
+
+            <table class="table table-bordered table-striped mt-3">
+              <thead>
+                <tr style="background-color: green; color: #fff;">
+                  <th>Question/Group</th>
+                  <th>Score</th>
+                  <th>Percentage</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Global Awareness -->
+                <t t-set="ga_pct" t-value="results[0].global_awareness_pct or 0"/>
+                <tr>
+                  <td>Global Awareness</td>
+                  <td><t t-esc="results[0].global_awareness"/></td>
+                  <td><t t-esc="ga_pct"/>%</td>
+                  <td>
+                    <span t-if="ga_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="ga_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="ga_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <!-- Civic Participation -->
+                <t t-set="cp_pct" t-value="results[0].civic_participation_pct or 0"/>
+                <tr>
+                  <td>Civic Participation</td>
+                  <td><t t-esc="results[0].civic_participation"/></td>
+                  <td><t t-esc="cp_pct"/>%</td>
+                  <td>
+                    <span t-if="cp_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="cp_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="cp_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <!-- Environmental Awareness -->
+                <t t-set="env_pct" t-value="results[0].environment_pct or 0"/>
+                <tr>
+                  <td>Environmental Awareness</td>
+                  <td><t t-esc="results[0].environment"/></td>
+                  <td><t t-esc="env_pct"/>%</td>
+                  <td>
+                    <span t-if="env_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="env_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="env_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <!-- Ethical Understanding -->
+                <t t-set="eth_pct" t-value="results[0].ethical_pct or 0"/>
+                <tr>
+                  <td>Ethical Understanding</td>
+                  <td><t t-esc="results[0].ethical"/></td>
+                  <td><t t-esc="eth_pct"/>%</td>
+                  <td>
+                    <span t-if="eth_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="eth_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="eth_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <!-- Peace & Conflict Resolution -->
+                <t t-set="peace_pct" t-value="results[0].peace_pct or 0"/>
+                <tr>
+                  <td>Peace &amp; Conflict Resolution</td>
+                  <td><t t-esc="results[0].peace"/></td>
+                  <td><t t-esc="peace_pct"/>%</td>
+                  <td>
+                    <span t-if="peace_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="peace_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="peace_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <!-- Intercultural Understanding -->
+                <t t-set="int_pct" t-value="results[0].intercultural_pct or 0"/>
+                <tr>
+                  <td>Intercultural Understanding</td>
+                  <td><t t-esc="results[0].intercultural"/></td>
+                  <td><t t-esc="int_pct"/>%</td>
+                  <td>
+                    <span t-if="int_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="int_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="int_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4 text-center">
+            <a t-att-href="'/GDfH_Scoring_Test/previous_results?email=' + results[0].email"
+               class="btn btn-primary">
+              View Previous Results
+            </a>
+          </div>
+        </t>
+
+        <div class="mt-4">
+          <a href="/" class="btn btn-secondary">
+            Home
+          </a>
+          <a href="/GDfH_Scoring_Test" class="btn btn-primary">
+            Go Back
+          </a>
+        </div>
+      </div>
+
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const ctx = document.getElementById("gdfhChart").getContext("2d");
+
+          const scores = [
+            <t t-esc="results[0].global_awareness"/>,
+            <t t-esc="results[0].civic_participation"/>,
+            <t t-esc="results[0].environment"/>,
+            <t t-esc="results[0].ethical"/>,
+            <t t-esc="results[0].peace"/>,
+            <t t-esc="results[0].intercultural"/>
+          ];
+
+          const percentages = [
+            <t t-esc="results[0].global_awareness_pct"/>,
+            <t t-esc="results[0].civic_participation_pct"/>,
+            <t t-esc="results[0].environment_pct"/>,
+            <t t-esc="results[0].ethical_pct"/>,
+            <t t-esc="results[0].peace_pct"/>,
+            <t t-esc="results[0].intercultural_pct"/>
+          ];
+
+          const labels = [
+            ['<t t-esc="lbl_global_1"/>', '<t t-esc="lbl_global_2"/>'],
+            ['<t t-esc="lbl_civic_1"/>', '<t t-esc="lbl_civic_2"/>'],
+            ['<t t-esc="lbl_env_1"/>', '<t t-esc="lbl_env_2"/>'],
+            ['<t t-esc="lbl_eth_1"/>', '<t t-esc="lbl_eth_2"/>'],
+            ['<t t-esc="lbl_peace_1"/>', '<t t-esc="lbl_peace_2"/>'],
+            ['<t t-esc="lbl_int_1"/>', '<t t-esc="lbl_int_2"/>']
+          ];
+
+          const colors = scores.map(score => {
+            if (score >= 25.5) return 'green';
+            else if (score >= 21) return '#28a745';
+            else if (score >= 15) return 'orange';
+            else return 'red';
+          });
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: '<t t-esc="lbl_score"/>',
+                  data: scores,
+                  backgroundColor: colors,
+                  borderColor: 'rgba(0,0,0,0.2)',
+                  borderWidth: 1
+                },
+                {
+                  label: '<t t-esc="lbl_percentage"/>',
+                  data: percentages,
+                  type: 'line',
+                  borderColor: 'blue',
+                  borderWidth: 2,
+                  fill: false,
+                  yAxisID: 'y1'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                legend: {
+                  display: false
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      if (context.datasetIndex === 0) {
+                        return 'Score in each area: ' + context.formattedValue;
+                      } else {
+                        return 'Percentage in each area: ' + context.formattedValue;
+                      }
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: '<t t-esc="lbl_score"/>' },
+                  suggestedMax: 30
+                },
+                y1: {
+                  beginAtZero: true,
+                  position: 'right',
+                  title: {
+                    display: true,
+                    text: '<t t-esc="lbl_percentage"/> (%)',
+                    rotation: -90
+                  },
+                  suggestedMax: 100,
+                  grid: { drawOnChartArea: false }
+                }
+              }
+            }
+          });
+        });
+      </script>
+    </t>
+  </template>
+
+  <!-- =================== VIEW RESULT (FROM LINK) =================== -->
+  <template id="view_result_template" name="GDfH Scoring Result View">
+    <t t-call="website.layout">
+      <div class="container mt-5">
+        <t t-if="results">
+          <h2 class="mb-4">
+            Thank you, <t t-esc="results[0].name"/>!
+          </h2>
+          <p>
+            <strong>Email:</strong>
+            <t t-esc="results[0].email"/>
+          </p>
+          <p>
+            <strong>Country:</strong>
+            <t t-esc="results[0].country"/>
+          </p>
+
+          <!-- re-use same label sets -->
+          <t t-set="lbl_global_1">Global</t>
+          <t t-set="lbl_global_2">Awareness</t>
+          <t t-set="lbl_civic_1">Civic</t>
+          <t t-set="lbl_civic_2">Participation</t>
+          <t t-set="lbl_env_1">Environmental</t>
+          <t t-set="lbl_env_2">Awareness</t>
+          <t t-set="lbl_eth_1">Ethical</t>
+          <t t-set="lbl_eth_2">Understanding</t>
+          <t t-set="lbl_peace_1">Peace &amp;</t>
+          <t t-set="lbl_peace_2">Conflict Resolution</t>
+          <t t-set="lbl_int_1">Intercultural</t>
+          <t t-set="lbl_int_2">Understanding</t>
+          <t t-set="lbl_score">Score</t>
+          <t t-set="lbl_percentage">Percentage</t>
+
+          <div class="row mt-4">
+            <div class="col-md-8">
+              <h3 class="mb-3">
+                Score Graph
+              </h3>
+              <canvas id="gdfhChart"></canvas>
+            </div>
+            <div class="col-md-3">
+              <h3 class="mb-3">Legend</h3>
+              <p><span style="color: green; font-weight: bold;">85-100: Top Contributor</span></p>
+              <p><span style="color: #28a745; font-weight: bold;">70-84: Strong Contributor</span></p>
+              <p><span style="color: orange; font-weight: bold;">50-69: Emerging Contributor</span></p>
+              <p><span style="color: red; font-weight: bold;">Below 50: Requires Contribution</span></p>
+            </div>
+          </div>
+
+          <!-- Same table as above but colored descriptions -->
+          <div class="result-entry mb-4 p-3 border rounded shadow-sm mt-4">
+            <h5>
+              Submission on:
+              <t t-esc="results[0].submitted_on.strftime('%Y-%m-%d %H:%M') if results[0].submitted_on else ''"/>
+            </h5>
+            <p>
+              <strong>Total Score:</strong>
+              <t t-esc="results[0].total_score"/>/180
+            </p>
+            <p>
+              <strong>Level:</strong>
+              <t t-esc="results[0].level"/>
+            </p>
+
+            <table class="table table-bordered table-striped mt-3">
+              <thead>
+                <tr>
+                  <th>Question/Group</th>
+                  <th>Score</th>
+                  <th>Percentage</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <t t-set="ga_pct" t-value="results[0].global_awareness_pct or 0"/>
+                <tr>
+                  <td>Global Awareness</td>
+                  <td><t t-esc="results[0].global_awareness"/></td>
+                  <td><t t-esc="ga_pct"/>%</td>
+                  <td>
+                    <span t-if="ga_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="ga_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="ga_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <t t-set="cp_pct" t-value="results[0].civic_participation_pct or 0"/>
+                <tr>
+                  <td>Civic Participation</td>
+                  <td><t t-esc="results[0].civic_participation"/></td>
+                  <td><t t-esc="cp_pct"/>%</td>
+                  <td>
+                    <span t-if="cp_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="cp_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="cp_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <t t-set="env_pct" t-value="results[0].environment_pct or 0"/>
+                <tr>
+                  <td>Environmental Awareness</td>
+                  <td><t t-esc="results[0].environment"/></td>
+                  <td><t t-esc="env_pct"/>%</td>
+                  <td>
+                    <span t-if="env_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="env_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="env_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <t t-set="eth_pct" t-value="results[0].ethical_pct or 0"/>
+                <tr>
+                  <td>Ethical Understanding</td>
+                  <td><t t-esc="results[0].ethical"/></td>
+                  <td><t t-esc="eth_pct"/>%</td>
+                  <td>
+                    <span t-if="eth_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="eth_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="eth_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <t t-set="peace_pct" t-value="results[0].peace_pct or 0"/>
+                <tr>
+                  <td>Peace &amp; Conflict Resolution</td>
+                  <td><t t-esc="results[0].peace"/></td>
+                  <td><t t-esc="peace_pct"/>%</td>
+                  <td>
+                    <span t-if="peace_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="peace_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="peace_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+
+                <t t-set="int_pct" t-value="results[0].intercultural_pct or 0"/>
+                <tr>
+                  <td>Intercultural Understanding</td>
+                  <td><t t-esc="results[0].intercultural"/></td>
+                  <td><t t-esc="int_pct"/>%</td>
+                  <td>
+                    <span t-if="int_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
+                    <span t-elif="int_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
+                    <span t-elif="int_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
+                    <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </t>
+
+        <div class="mt-4">
+          <a href="https://bostongithub08-c4h.odoo.com/" class="btn btn-secondary">
+            Home
+          </a>
+          <a href="/GDfH_Scoring_Test" class="btn btn-primary">
+            Go Back
+          </a>
+        </div>
+      </div>
+
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const ctx = document.getElementById("gdfhChart").getContext("2d");
+
+          const scores = [
+            <t t-esc="results[0].global_awareness"/>,
+            <t t-esc="results[0].civic_participation"/>,
+            <t t-esc="results[0].environment"/>,
+            <t t-esc="results[0].ethical"/>,
+            <t t-esc="results[0].peace"/>,
+            <t t-esc="results[0].intercultural"/>
+          ];
+
+          const percentages = [
+            <t t-esc="results[0].global_awareness_pct"/>,
+            <t t-esc="results[0].civic_participation_pct"/>,
+            <t t-esc="results[0].environment_pct"/>,
+            <t t-esc="results[0].ethical_pct"/>,
+            <t t-esc="results[0].peace_pct"/>,
+            <t t-esc="results[0].intercultural_pct"/>
+          ];
+
+          const labels = [
+            ['<t t-esc="lbl_global_1"/>', '<t t-esc="lbl_global_2"/>'],
+            ['<t t-esc="lbl_civic_1"/>', '<t t-esc="lbl_civic_2"/>'],
+            ['<t t-esc="lbl_env_1"/>', '<t t-esc="lbl_env_2"/>'],
+            ['<t t-esc="lbl_eth_1"/>', '<t t-esc="lbl_eth_2"/>'],
+            ['<t t-esc="lbl_peace_1"/>', '<t t-esc="lbl_peace_2"/>'],
+            ['<t t-esc="lbl_int_1"/>', '<t t-esc="lbl_int_2"/>']
+          ];
+
+          const colors = scores.map(score => {
+            if (score >= 25.5) return 'green';
+            else if (score >= 21) return '#28a745';
+            else if (score >= 15) return 'orange';
+            else return 'red';
+          });
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: '<t t-esc="lbl_score"/>',
+                  data: scores,
+                  backgroundColor: colors,
+                  borderColor: 'rgba(0,0,0,0.2)',
+                  borderWidth: 1
+                },
+                {
+                  label: '<t t-esc="lbl_percentage"/>',
+                  data: percentages,
+                  type: 'line',
+                  borderColor: 'blue',
+                  borderWidth: 2,
+                  fill: false,
+                  yAxisID: 'y1'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              interaction: { mode: 'index', intersect: false },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: '<t t-esc="lbl_score"/>' },
+                  suggestedMax: 30
+                },
+                y1: {
+                  beginAtZero: true,
+                  position: 'right',
+                  title: { display: true, text: '<t t-esc="lbl_percentage"/> (%)' },
+                  suggestedMax: 100,
+                  grid: { drawOnChartArea: false }
+                }
+              }
+            }
+          });
+        });
+      </script>
+    </t>
+  </template>
+
+  <!-- =================== NO RESULT =================== -->
+  <template id="no_result_template" name="No Result Found">
+    <t t-call="website.layout">
+      <div class="container mt-5">
+        <h2>No result found!</h2>
+        <a href="/GDfH_Scoring_Test" class="btn btn-primary">
+          Back to Form
+        </a>
+      </div>
+    </t>
+  </template>
+</odoo>
