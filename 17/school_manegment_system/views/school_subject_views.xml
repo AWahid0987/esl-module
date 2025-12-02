@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subject Tree View -->
+    <record id="view_school_subject_tree" model="ir.ui.view">
+        <field name="name">school.subject.tree</field>
+        <field name="model">school.subject</field>
+        <field name="arch" type="xml">
+            <tree string="Subjects">
+                <field name="name"/>
+                <field name="class_id"/>
+                <field name="max_marks"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Subject Form View -->
+    <record id="view_school_subject_form" model="ir.ui.view">
+        <field name="name">school.subject.form</field>
+        <field name="model">school.subject</field>
+        <field name="arch" type="xml">
+            <form string="Subject">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="class_id"/>
+                        <field name="max_marks"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Subject Search View -->
+    <record id="view_school_subject_search" model="ir.ui.view">
+        <field name="name">school.subject.search</field>
+        <field name="model">school.subject</field>
+        <field name="arch" type="xml">
+            <search string="Search Subjects">
+                <field name="name"/>
+                <field name="class_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Subject Action -->
+    <record id="action_subject" model="ir.actions.act_window">
+        <field name="name">Subjects</field>
+        <field name="res_model">school.subject</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first subject record!
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+        <menuitem id="menu_school_root" name="School"/>
+   
+<!-- ✅ Settings Root -->
+    <menuitem id="menu_school_settings_root"
+              name="Settings"
+              parent="menu_school_root"
+              sequence="100"/>
+
+    <!-- ✅ Subjects under Settings -->
+    <menuitem id="menu_settings_subject"
+              name="Subjects"
+              parent="menu_school_settings_root"
+              action="action_subject"
+              sequence="10"/>
+
+
+   </odoo>

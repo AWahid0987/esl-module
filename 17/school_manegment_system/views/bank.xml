@@ -1,0 +1,126 @@
+<odoo>
+    <!-- Tree View -->
+    <record id="view_school_bank_tree" model="ir.ui.view">
+        <field name="name">school.bank.tree</field>
+        <field name="model">school.bank</field>
+        <field name="arch" type="xml">
+            <tree string="Bank">
+                <field name="name"/>
+                <field name="account_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_school_teacher_bank_tree" model="ir.ui.view">
+        <field name="name">school.teacher.bank.tree</field>
+        <field name="model">school.teacher.bank</field>
+        <field name="arch" type="xml">
+            <tree string="Teacher Bank">
+                <field name="teacher_id"/>
+                <field name="bank_id"/>
+                <field name="account_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_school_bank_form" model="ir.ui.view">
+        <field name="name">school.bank.form</field>
+        <field name="model">school.bank</field>
+        <field name="arch" type="xml">
+            <form string="Bank">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="account_number"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_school_teacher_bank_form" model="ir.ui.view">
+        <field name="name">school.teacher.bank.form</field>
+        <field name="model">school.teacher.bank</field>
+        <field name="arch" type="xml">
+            <form string="Teacher Bank">
+                <sheet>
+                    <group>
+                        <field name="teacher_id"/>
+                        <field name="bank_id"/>
+                        <field name="account_number"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_school_bank_search" model="ir.ui.view">
+        <field name="name">school.bank.search</field>
+        <field name="model">school.bank</field>
+        <field name="arch" type="xml">
+            <search string="Bank">
+                <field name="name"/>
+                <field name="account_number"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_school_teacher_bank_search" model="ir.ui.view">
+        <field name="name">school.teacher.bank.search</field>
+        <field name="model">school.teacher.bank</field>
+        <field name="arch" type="xml">
+            <search string="Teacher Bank">
+                <field name="teacher_id"/>
+                <field name="bank_id"/>
+                <field name="account_number"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_bank" model="ir.actions.act_window">
+        <field name="name">Bank</field>
+        <field name="res_model">school.bank</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_bank_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first bank record!
+            </p>
+        </field>
+    </record>
+
+    <record id="action_teacher_bank" model="ir.actions.act_window">
+        <field name="name">Teacher Bank</field>
+        <field name="res_model">school.teacher.bank</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_teacher_bank_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first teacher bank record!
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+
+
+
+           <menuitem id="menu_school_root" name="School"/>
+
+    <!-- ✅ Settings Root -->
+    <menuitem id="menu_school_settings_root"
+              name="Settings"
+              parent="menu_school_root"
+              sequence="100"/>
+
+  
+    <!-- ✅ Classes under Settings -->
+    <menuitem id="menu_settings_bank"
+              name="Bank"
+              parent="menu_school_settings_root"
+              action="action_bank"
+              sequence="60"/>      
+</odoo>

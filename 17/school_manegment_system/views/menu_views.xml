@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_school_management_root"
+              name="School Management"
+              web_icon="school_manegment_system,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Student Menu -->
+    <menuitem id="menu_student_root"
+              name="Students"
+              parent="menu_school_management_root"
+              sequence="10"/>
+    <menuitem id="menu_student"
+              name="Students"
+              parent="menu_student_root"
+              action="action_student"
+              sequence="10"/>
+
+    <!-- Class Menu -->
+    <menuitem id="menu_class_root"
+              name="Classes"
+              parent="menu_school_management_root"
+              sequence="20"/>
+    <menuitem id="menu_class"
+              name="Classes"
+              parent="menu_class_root"
+              action="action_class"
+              sequence="10"/>
+ <!-- Subject Menu -->
+    <menuitem id="menu_subject_root"
+              name="Subject"
+              parent="menu_school_management_root"
+              sequence="30"/>
+    <menuitem id="menu_subject"
+              name="Subject"
+              parent="menu_subject_root"
+              action="action_subject"
+              sequence="10"/>
+
+
+    <!-- Attendance Menu -->
+    <menuitem id="menu_attendance_root"
+              name="Attendance"
+              parent="menu_school_management_root"
+              sequence="40"/>
+    <menuitem id="menu_attendance"
+              name="Attendance"
+              parent="menu_attendance_root"
+              action="action_attendance"
+              sequence="10"/>
+
+    <!-- Fee Menu -->
+    <menuitem id="menu_fee_root"
+              name="Fees"
+              parent="menu_school_management_root"
+              sequence="50"/>
+    <menuitem id="menu_fee"
+              name="Fees"
+              parent="menu_fee_root"
+              action="action_fee"
+              sequence="10"/>
+
+    <!-- Result Menu -->
+    <menuitem id="menu_result_root"
+              name="Result"
+              parent="menu_school_management_root"
+              sequence="60"/>
+    <menuitem id="menu_result"
+              name="Result"
+              parent="menu_result_root"
+              action="action_school_result"
+              sequence="10"/>
+        <!-- Subject Menu -->
+    <!-- Subject Menu -->
+  
+
+    <!-- ✅ Settings Root -->
+    <menuitem id="menu_school_settings_root"
+              name="Settings"
+              parent="menu_school_management_root"
+              sequence="100"/>
+
+    <!-- ✅ Students under Settings -->
+    <menuitem id="menu_settings_students"
+              name="Students"
+              parent="menu_school_settings_root"
+              action="action_student"
+              sequence="10"/>
+
+    <!-- ✅ Classes under Settings -->
+    <menuitem id="menu_settings_classes"
+              name="Classes"
+              parent="menu_school_settings_root"
+              action="action_class"
+              sequence="20"/>
+    <!--Subject under Setting-->
+    <menuitem id="menu_settings_subject"
+              name="Subject"
+              parent="menu_school_settings_root"
+              action="action_subject"
+              sequence="30"/>
+
+    <!-- ✅ Attendance under Settings -->
+    <menuitem id="menu_settings_attendance"
+              name="Attendance"
+              parent="menu_school_settings_root"
+              action="action_attendance"
+              sequence="40"/>
+
+    <!-- ✅ Fees under Settings -->
+    <menuitem id="menu_settings_fees"
+              name="Fees"
+              parent="menu_school_settings_root"
+              action="action_fee"
+              sequence="50"/>
+
+    <!-- ✅ Result under Settings -->
+    <menuitem id="menu_settings_result"
+              name="Result"
+              parent="menu_school_settings_root"
+              action="action_school_result"
+              sequence="60"/>
+    <!--Bank menu-->
+    <menuitem id="menu_settings_bank"
+              name="Bank"
+              parent="menu_school_settings_root"
+              action="action_bank"
+              sequence="70"/>
+     <!--Exam menu-->
+     <menuitem id="menu_settings_exam"
+               name="exam"
+               parent="menu_school_settings_root"
+               action="action_exam"
+               sequence="80"/>
+
+
+</odoo>

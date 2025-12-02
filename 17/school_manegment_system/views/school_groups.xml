@@ -1,0 +1,13 @@
+<odoo>
+    <!-- Admin group (inherits Settings/Administration) -->
+    <record id="group_school_admin" model="res.groups">
+        <field name="name">School Admin</field>
+        <field name="category_id" ref="base.module_category_administration"/>
+    </record>
+
+    <!-- Normal User group -->
+    <record id="group_school_user" model="res.groups">
+        <field name="name">School User</field>
+        <field name="category_id" ref="base.module_category_administration"/>
+    </record>
+</odoo>

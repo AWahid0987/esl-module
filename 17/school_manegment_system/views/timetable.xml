@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Timetable menu under School Management -->
+    <menuitem id="menu_timetable_root" name="Timetable"
+              parent="menu_school_root" sequence="30"/>
+
+    <!-- Action -->
+    <record id="action_timetable" model="ir.actions.act_window">
+        <field name="name">Timetable</field>
+        <field name="res_model">school.timetable</field>
+        <field name="view_mode">tree,form,calendar</field>
+    </record>
+
+    <!-- Link menu to action -->
+    <menuitem id="menu_timetable_sub" name="Class Timetable"
+              parent="menu_timetable_root" action="action_timetable"/>
+
+    <!-- Tree View -->
+    <record id="view_timetable_tree" model="ir.ui.view">
+        <field name="name">timetable.tree</field>
+        <field name="model">school.timetable</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="class_id"/>
+                <field name="subject_id"/>
+                <field name="teacher_id"/>
+                <field name="day_of_week"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_timetable_form" model="ir.ui.view">
+        <field name="name">timetable.form</field>
+        <field name="model">school.timetable</field>
+        <field name="arch" type="xml">
+            <form string="Timetable">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="class_id"/>
+                        <field name="subject_id"/>
+                        <field name="teacher_id"/>
+                        <field name="day_of_week"/>
+                        <field name="start_time"/>
+                        <field name="end_time"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Calendar View (Optional: See timetable like a schedule) -->
+    <record id="view_timetable_calendar" model="ir.ui.view">
+        <field name="name">timetable.calendar</field>
+        <field name="model">school.timetable</field>
+        <field name="arch" type="xml">
+            <calendar string="Class Timetable" date_start="start_time" date_stop="end_time" color="class_id">
+                <field name="name"/>
+                <field name="class_id"/>
+                <field name="teacher_id"/>
+                <field name="subject_id"/>
+                <field name="day_of_week"/>
+            </calendar>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,76 @@
+<odoo>
+    <!-- Tree/List View -->
+    <record id="view_school_salary_tree" model="ir.ui.view">
+        <field name="name">school.salary.tree</field>
+        <field name="model">school.salary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="teacher_id"/>
+                <field name="month"/>
+                <field name="year"/>
+                <field name="basic_salary"/>
+                <field name="allowance"/>
+                <field name="deduction"/>
+                <field name="net_salary"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_school_salary_form" model="ir.ui.view">
+        <field name="name">school.salary.form</field>
+        <field name="model">school.salary</field>
+        <field name="arch" type="xml">
+            <form string="School Salary">
+                <header>
+                
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_pay" string="Mark as Paid" type="object" class="btn btn-success" invisible="state not in ['pending', 'overdue']"/>
+                    <button name="action_overdue" string="Mark as Overdue" type="object" class="btn btn-danger" invisible="state != 'pending'"/>
+                     <button name="action_print_salary" type="object" string="Print Salary" class="btn-primary"/>
+
+                      <field name="state" widget="statusbar" statusbar_visible="draft,pending,paid,overdue"/>
+           
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="invoice_id" readonly="1"/>
+                        <field name="teacher_id"/>
+                        <field name="month"/>
+                        <field name="year"/>
+                    </group>
+                    <group>
+                        <field name="basic_salary"/>
+                        <field name="allowance"/>
+                        <field name="deduction"/>
+                        <field name="net_salary" readonly="1"/>
+                    </group>
+                   
+                </sheet>
+              
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_school_salary" model="ir.actions.act_window">
+        <field name="name">Salaries</field>
+        <field name="res_model">school.salary</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_administration_root" name="Administration"/>
+    <menuitem id="menu_salary_root"
+              name="Salaries"
+              parent="menu_administration_root"
+              sequence="10"/>
+    <menuitem id="menu_salary"
+              name="Salaries"
+              parent="menu_salary_root"
+              action="action_school_salary"
+              sequence="10"/>
+</odoo>

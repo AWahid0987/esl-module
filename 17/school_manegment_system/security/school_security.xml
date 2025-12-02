@@ -1,0 +1,17 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- School Admin Group -->
+        <record id="group_school_admin" model="res.groups">
+            <field name="name">School Admin</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <!-- School User Group -->
+        <record id="group_school_user" model="res.groups">
+            <field name="name">School User</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+    </data>
+</odoo>

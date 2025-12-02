@@ -1,0 +1,69 @@
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_school_exam_tree" model="ir.ui.view">
+        <field name="name">school.exam.tree</field>
+        <field name="model">school.exam</field>
+        <field name="arch" type="xml">
+            <tree string="Exams">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_school_exam_form" model="ir.ui.view">
+        <field name="name">school.exam.form</field>
+        <field name="model">school.exam</field>
+        <field name="arch" type="xml">
+            <form string="Exam">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_school_exam_search" model="ir.ui.view">
+        <field name="name">school.exam.search</field>
+        <field name="model">school.exam</field>
+        <field name="arch" type="xml">
+            <search string="Exam">
+                <field name="name"/>
+                <filter string="By Name" name="filter_name" domain="[('name','!=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_exam" model="ir.actions.act_window">
+        <field name="name">Exams</field>
+        <field name="res_model">school.exam</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_exam_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first exam record!
+            </p>
+        </field>
+    </record>
+         <menuitem id="menu_school_root" name="School"/>
+
+
+    <!-- ✅ Settings Root -->
+    <menuitem id="menu_school_settings_root"
+              name="Settings"
+              parent="menu_school_root"
+              sequence="100"/>
+
+     <!--Exam menu-->
+     <menuitem id="menu_settings_exam"
+               name="Exam"
+               parent="menu_school_settings_root"
+               action="action_exam"
+               sequence="80"/>
+
+</odoo>

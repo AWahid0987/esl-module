@@ -1,0 +1,52 @@
+<odoo>
+    <!-- Teacher Menu -->
+    <menuitem id="menu_school_root" name="School"/>
+    <menuitem id="menu_teacher_root" name="Teachers" parent="menu_school_root" sequence="10"/>
+
+    <!-- Teacher List -->
+    <record id="view_teacher_tree" model="ir.ui.view">
+        <field name="name">school.teacher.tree</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <tree string="Teachers">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="hire_date"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Teacher Form -->
+    <record id="view_teacher_form" model="ir.ui.view">
+        <field name="name">school.teacher.form</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <form string="Teacher">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="phone"/>
+                        <field name="hire_date"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="subject_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_teacher" model="ir.actions.act_window">
+        <field name="name">Teachers</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_teacher" name="All Teachers" parent="menu_teacher_root" action="action_teacher"/>
+</odoo>

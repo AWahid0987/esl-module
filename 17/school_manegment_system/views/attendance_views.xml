@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================== -->
+    <!-- Attendance Tree View -->
+    <!-- =========================== -->
+    <record id="view_attendance_tree" model="ir.ui.view">
+        <field name="name">school.attendance.tree</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'confirmed'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="student_id"/>
+                <!-- use classroom_id (related stored field) to avoid missing field errors -->
+                <field name="classroom_id"/>
+                <field name="status"/>
+                <field name="start_time"/>
+                <field name="end_time"/>
+                <field name="remark"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- =========================== -->
+    <!-- Attendance Form View -->
+    <!-- =========================== -->
+    <record id="view_attendance_form" model="ir.ui.view">
+        <field name="name">school.attendance.form</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Attendance">
+                <header>
+                    <!-- keep using invisible attribute (works in v17) instead of attrs -->
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <!-- replaced attrs with invisible -->
+                    <button name="action_qr_scan" string="QR Scan Entry/Exit"
+                            type="object"
+                            invisible="state == 'confirmed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Attendance Reference"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="student_id" options="{'no_create': True}"/>
+                            <!-- use classroom_id to show student's class -->
+                            <field name="classroom_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="start_time"/>
+                            <field name="end_time"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="remark" colspan="2"/>
+                    </group>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================== -->
+    <!-- Attendance Search View -->
+    <!-- =========================== -->
+    <record id="view_attendance_search" model="ir.ui.view">
+        <field name="name">school.attendance.search</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendance">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="classroom_id"/>
+                <field name="date"/>
+                <field name="status"/>
+
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Student" name="student" context="{'group_by':'student_id'}"/>
+                    <filter string="Class" name="class" context="{'group_by':'classroom_id'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- =========================== -->
+    <!-- Attendance Action -->
+    <!-- =========================== -->
+    <record id="action_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">school.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_attendance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No attendance yet — start by scanning a student's QR code.
+            </p>
+        </field>
+    </record>
+
+    <!-- =========================== -->
+    <!-- Attendance Daily Summary (Pivot View) -->
+    <!-- =========================== -->
+    <record id="view_attendance_pivot" model="ir.ui.view">
+        <field name="name">school.attendance.pivot</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <!-- use id count as measure so pivot shows counts -->
+            <pivot string="Attendance Summary">
+                <field name="classroom_id" type="row"/>
+                <field name="status" type="col"/>
+                <field name="id" type="measure" operator="count"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- =========================== -->
+    <!-- Menu Structure -->
+    <!-- =========================== -->
+    <menuitem id="menu_school_root" name="School"/>
+
+    <!-- Attendance Main -->
+    <menuitem id="menu_attendance_root"
+              name="Attendance"
+              parent="menu_school_root"
+              sequence="40"/>
+
+    <menuitem id="menu_attendance"
+              name="Student Attendance"
+              parent="menu_attendance_root"
+              action="action_attendance"
+              sequence="10"/>
+
+    <!-- Settings -->
+    <menuitem id="menu_school_settings_root"
+              name="Settings"
+              parent="menu_school_root"
+              sequence="100"/>
+
+</odoo>
