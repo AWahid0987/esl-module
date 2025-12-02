@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inherit the tree view -->
+<!--    <record id="view_move_tree_inherit_custom_payment_state" model="ir.ui.view">-->
+<!--        <field name="name">account.move.tree.custom.payment.state</field>-->
+<!--        <field name="model">account.move</field>-->
+<!--        <field name="inherit_id" ref="account.view_invoice_tree"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='payment_state']" position="after">-->
+<!--                <field name="custom_payment_state"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <!-- Optional: add to form view as well -->
+    <record id="view_move_form_inherit_custom_payment_state" model="ir.ui.view">
+        <field name="name">account.move.form.custom.payment.state</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_state']" position="after">
+                <field name="custom_payment_state"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_payment,access.custom.payment,model_custom_payment,base.group_user,1,1,1,1
+access_custom_payment_recieve,access.custom.payment.recieve,model_custom_payment_recieve,base.group_user,1,1,1,1
+access_custom_payment_user,access.custom.payment.user,model_custom_payment,base.group_user,1,1,1,0
+access_custom_payment_admin,access.custom.payment.admin,model_custom_payment,base.group_system,1,1,1,1
+access_custom_payment_approver_move_line,access_custom_payment_approver_move_line,account.model_account_move_line,custom_payment.group_custom_payment_approver,1,1,1,1

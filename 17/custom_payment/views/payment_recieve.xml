@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Top-level Payment menu -->
+    <menuitem id="menu_payments"
+              name="Payment"
+              sequence="0"
+              web_icon="custom_payment,static/description/icon.png"/>
+
+    <!-- Search View -->
+    <record id="view_custom_receive_payment_search" model="ir.ui.view">
+        <field name="name">Custom Payment Receive Search</field>
+        <field name="model">custom.payment.recieve</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Receiving" name="receiving_filter" domain="[('type','=','receiving')]"/>
+                <filter string="Sending" name="sending_filter" domain="[('type','=','sending')]"/>
+                <filter string="Draft" name="draft_filter" domain="[('status','=','draft')]"/>
+                <filter string="Sent" name="sent_filter" domain="[('status','=','sent')]"/>
+                <filter string="Received" name="received_filter" domain="[('status','=','received')]"/>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_custom_receive_payment_tree" model="ir.ui.view">
+        <field name="name">Custom Payment Receive Tree</field>
+        <field name="model">custom.payment.recieve</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="company_id" invisible="1"/>
+                <field name="journal_id"/>
+                <field name="amount"/>
+                <field name="debit_account_id"/>
+                <field name="credit_account_id"/>
+                <field name="status" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_custom_receive_payment_form" model="ir.ui.view">
+        <field name="name">Custom Payment Receive Form</field>
+        <field name="model">custom.payment.recieve</field>
+        <field name="arch" type="xml">
+            <form string="Custom Payment Receive">
+                 <header>
+                    <button name="action_send_payment" type="object" string="Send"
+                            class="btn-primary"
+                            invisible="status != 'draft'"/>
+                    <button name="action_approve_payment" type="object" string="Approve"
+                            class="btn-success" groups="account.group_account_manager"
+                            invisible="status != 'waiting_for_approval'"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft"
+                            class="btn-warning"
+                            invisible="not (status in ['waiting_for_approval','done'])"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            class="btn-danger"
+                            invisible="status == 'cancelled'"/>
+
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,waiting_for_approval,done,cancelled"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_journal_entry"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="journal_entry_count != True">
+                            <field name="journal_entry_count" widget="statinfo" string="Journal Entries"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" readonly="status != 'draft'"/>
+                            <field name="company_id" readonly="status != 'draft'" invisible="1"/>
+                            <field name="journal_id" readonly="status != 'draft'"/>
+                            <field name="amount" readonly="status != 'draft'"/>
+                            <field name="label" readonly="status != 'draft'"/>
+                            <field name="notes" readonly="status != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="credit_account_id" readonly="status != 'draft'"/>
+                            <field name="debit_account_id" readonly="status != 'draft'"/>
+                            <field name="type" readonly="status != 'draft'" invisible="1"/>
+                            <field name="entry_date" readonly="status != 'draft'"/>
+                            <field name="journal_entry_id" readonly="1" invisible="1"/>
+                            <field name="journal_entry_count" readonly="1" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_recieve_payment" model="ir.actions.act_window">
+        <field name="name">Receive Payment</field>
+        <field name="res_model">custom.payment.recieve</field>
+        <field name="view_mode">tree,form</field>
+        <field name="views" eval="[
+            (ref('view_custom_receive_payment_tree'), 'tree'),
+            (ref('view_custom_receive_payment_form'), 'form')
+        ]"/>
+        <field name="search_view_id" ref="view_custom_receive_payment_search"/>
+        <field name="domain">[('type','=','receiving')]</field>
+        <field name="context">{'default_type': 'receiving'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first cash receipt.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_custom_receive_payment"
+              name="Cash Receipt"
+              parent="custom_payment.menu_payments"
+              sequence="2"
+              action="custom_payment.action_recieve_payment"/>
+</odoo>

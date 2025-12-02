@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Search View Override -->
+    <record id="view_account_account_search_minimal" model="ir.ui.view">
+        <field name="name">account.account.search.minimal</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_search"/>
+
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="replace">
+                <search string="Search Account">
+                    <field name="code"/>
+                    <field name="name"/>
+                </search>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree/List View Override -->
+    <record id="view_account_account_tree_minimal" model="ir.ui.view">
+        <field name="name">account.account.tree.minimal</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="replace">
+                <tree string="Accounts">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
