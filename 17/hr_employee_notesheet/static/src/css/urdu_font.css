@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'NooriNastaleeq';
+    src: url('/hr_employee_notesheet/static/src/fonts/NooriNastaleeq.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, .o_form_view, .o_list_view {
+    font-family: 'NooriNastaleeq', serif !important;
+}

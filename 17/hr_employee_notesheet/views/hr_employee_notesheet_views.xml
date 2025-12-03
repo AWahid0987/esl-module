@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inherit Employee Form -->
+    <record id="view_employee_form_notesheet" model="ir.ui.view">
+        <field name="name">hr.employee.form.notesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add new page inside main notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="نوٹ شیٹ / Note Sheet">
+
+                    <!-- اوپر general نوٹ شیٹ حصہ -->
+                    <!-- اوپر والا حصہ -->
+                    <group string="اوپر والا حصہ" colspan="4" style="direction: rtl; width:100%;">
+
+                        <div class="o_top_custom_block_container_1">
+
+                            <!-- عرصہ عہد -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">عرصہ عہد</div>
+
+                                <div class="o_box_row">
+                                    <field name="marital_period_year" nolabel="1"/>
+                                    <span>سال</span>
+                                </div>
+
+                                <div class="o_box_row">
+                                    <field name="marital_period_month" nolabel="1"/>
+                                    <span>مہینہ</span>
+                                </div>
+                            </div>
+
+                            <!-- معرفت -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">معرفت</div>
+                                <div class="o_box_row">
+                                    <field name="marfat" nolabel="1"/>
+                                </div>
+                            </div>
+
+                            <!-- پابندی وظائف -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">پابندی وظائف</div>
+                                <div class="o_box_row">
+                                    <field name="pabandi_wazaif" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <!-- کلمہ -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">کلمہ (فی کل لمحه)</div>
+                                <div class="o_box_row">
+                                    <field name="kalma_taiba" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- اللہ -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">اللہ</div>
+                                <div class="o_box_row">
+                                    <field name="allah" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- لا اله الا الله -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">لا اله الا الله</div>
+                                <div class="o_box_row">
+                                    <field name="la_ila_ha" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- صلی الله علیه وسلم -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">صلی الله علیه وسلم</div>
+                                <div class="o_box_row">
+                                    <field name="daru_pak" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- استغفر اللہ -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">استغفر اللہ</div>
+                                <div class="o_box_row">
+                                    <field name="istagfarallah" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- آیته الکرسی -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">آیته الکرسی</div>
+                                <div class="o_box_row">
+                                    <field name="ayatul_kursi" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- دعاء تعلق -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">دعاء تعلق</div>
+                                <div class="o_box_row">
+                                    <field name="prayer_connection" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <!-- دعاء سواس -->
+                            <div class="o_custom_box">
+                                <div class="o_box_title">دعاء سواس</div>
+                                <div class="o_box_row">
+                                    <field name="prayers" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                        </div>
+
+                    </group>
+
+                    <!-- دوسرا سیکشن -->
+                    <group string="نوٹ شیٹ" colspan="4" style="direction: rtl; width:100%;">
+
+                        <div class="o_top_custom_block_container_2">
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">سبحان الله العظیم سبحان الله وبحمده</div>
+                                <div class="o_box_row">
+                                    <field name="praise_be_to_god" nolabel="1" widget="radio"/>
+                                </div>
+
+                                <div class="o_box_subtitle">مرتبہ</div>
+                                <field name="martaba" nolabel="1"/>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">اضافی وضائف</div>
+                                <div class="o_box_row">
+                                    <field name="additional_features" nolabel="1"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">پابندی نماز</div>
+                                <div class="o_box_row">
+                                    <field name="pabandi_namaz" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">کون سی قضا ہوتی ہیں؟</div>
+                                <div class="o_box_row">
+                                    <field name="qaza_nemaz" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">قضا ادا کرتے ہیں؟</div>
+                                <div class="o_box_row">
+                                    <field name="pay_the_fine" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">قرآن شریف</div>
+                                <div class="o_box_row">
+                                    <field name="quran" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">پابندی اشراق</div>
+                                <div class="o_box_row">
+                                    <field name="restrictions" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </group>
+
+                    <!-- تیسرا سیکشن -->
+                    <group string=" شیٹ" colspan="4" style="direction: rtl; width:100%;">
+
+                        <div class="o_top_custom_block_container_3">
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">پابندی تہجد</div>
+                                <div class="o_box_row">
+                                    <field name="pabandi_tahajjud" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">وظائف کی ترتیب آ‌خری مرتبه کب کرائی ہے؟</div>
+                                <div class="o_box_row">
+                                    <div class="o_box_subtitle">مہینہ</div>
+                                    <field name="marital_period_month" nolabel="1"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">ملتان کتنے عرصہ بحد آتے ہیں؟</div>
+                                <div class="o_box_row">
+                                    <field name="multan" nolabel="1"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">گھر کے کتنے افراد عهد میں ہیں؟</div>
+                                <div class="o_box_row">
+                                    <field name="home_member" nolabel="1"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">رعبت دین و سلسلە</div>
+                                <div class="o_box_row">
+                                    <!-- yahan غلطی تھی: widget="ratio" → radio -->
+                                    <field name="religion_and_lineage" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">داڑھی(مرد)</div>
+                                <div class="o_box_row">
+                                    <field name="beard" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">شراعی پرده (خاتون)</div>
+                                <div class="o_box_row">
+                                    <field name="curtain" nolabel="1" widget="radio"/>
+                                </div>
+                            </div>
+
+                            <div class="o_custom_box">
+                                <div class="o_box_title">گیٹوں پر ڈیوٹی</div>
+
+                                <div class="o_box_row">
+                                    <field name="many_days" nolabel="1"/>
+                                    <span>کتنے دن</span>
+                                </div>
+
+                                <div class="o_box_row">
+                                    <field name="which_one" nolabel="1"/>
+                                    <span>کون سی</span>
+                                </div>
+                            </div>
+                        </div>
+                    </group>
+
+                    <separator string="تفصیل افرادِ خانہ" colspan="4"/>
+
+                    <!-- Family details grid -->
+                    <field name="family_line_ids" nolabel="1">
+                        <tree editable="bottom" string="تفصیل افرادِ خانہ">
+
+                            <!-- Basic Info -->
+                            <field name="member_name"/>
+                            <field name="relation"/>
+                            <field name="age"/>
+                            <field name="marital_period"/>
+                            <field name="marfat"/>
+                            <field name="occupation"/>
+                            <field name="education"/>
+                            <field name="monthly_income"/>
+
+                            <!-- Yes/No radio -->
+                            <field name="shari_parda" widget="radio"/>
+                            <field name="pabandi_tahajjud" widget="radio"/>
+                            <field name="pabandi_ishraq" widget="radio"/>
+                            <field name="pabandi_namaz" widget="radio"/>
+                            <field name="pabandi_wazaif" widget="radio"/>
+
+                            <!-- Qaza Namaz fields -->
+                            <field name="qaza_none"/>
+                            <field name="qaza_multiple"/>
+
+                        </tree>
+
+                        <!-- form view for editing one line -->
+                        <form string="Family Detail">
+                            <group>
+                                <group>
+                                    <field name="member_name"/>
+                                    <field name="relation"/>
+                                    <field name="age"/>
+                                    <field name="marital_period"/>
+                                    <field name="marfat"/>
+                                    <field name="occupation"/>
+                                    <field name="education"/>
+                                    <field name="monthly_income"/>
+                                </group>
+
+                                <group>
+                                    <field name="shari_parda" widget="radio"/>
+                                    <field name="pabandi_tahajjud" widget="radio"/>
+                                    <field name="pabandi_ishraq" widget="radio"/>
+                                    <field name="pabandi_namaz" widget="radio"/>
+                                    <field name="pabandi_wazaif" widget="radio"/>
+                                    <field name="pay_the_fine" widget="radio"/>
+
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

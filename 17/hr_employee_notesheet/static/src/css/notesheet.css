@@ -1,0 +1,145 @@
+/* ================================
+   NOTE SHEET — Single Row Layout
+   ================================ */
+
+/* --- Top containers --- */
+.o_top_custom_block_container_1 {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: 70%;
+    overflow-x: auto !important;   /* horizontal scroll */
+    overflow-y: hidden;
+    direction: rtl;
+    margin-top: 10px;
+    padding-bottom: 5px;
+}
+
+.o_top_custom_block_container_2,
+.o_top_custom_block_container_3 {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: 100%;
+    overflow-x: auto !important;   /* horizontal scroll */
+    overflow-y: hidden;
+    direction: rtl;
+    margin-top: 10px;
+    padding-bottom: 5px;
+}
+
+/* --- Individual Box --- */
+.o_custom_box {
+    flex: 0 0 240px;          /* ہر box کی fixed width */
+    min-width: 240px;
+    max-width: 240px;
+    border: 1px solid #cfcfcf;
+    padding: 8px;
+    border-radius: 8px;
+    background: #ffffff;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: 0.2s ease-in-out;
+    overflow: visible;        /* اندر کا content hide نہ ہو */
+}
+
+/* Hover effect */
+.o_custom_box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* Title inside block */
+.o_box_title {
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #444;
+    white-space: normal;   /* title wrap ہو سکتا ہے */
+}
+
+/* Row inside box (horizontal) */
+.o_box_row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0;
+    font-size: 12px;
+    white-space: normal;
+}
+
+/* Subtitle like "مرتبہ" */
+.o_box_subtitle {
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #555;
+}
+
+/* ===== Radio / Boolean alignment + circle style ===== */
+/* ===== Radio button: white circle (normal) + blue fill (selected) ===== */
+
+/* پورے radio گروپ کو horizontal + icon left */
+.o_custom_box .o_field_widget.o_field_radio {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    direction: ltr;
+    width: auto !important;
+}
+
+/* ہر radio item icon left + label center */
+.o_custom_box .o_field_widget.o_field_radio .o_radio_item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 4px;
+    white-space: nowrap;
+}
+
+/* Label centered */
+.o_custom_box .o_field_widget.o_field_radio .o_radio_item label {
+    display: inline-block;
+    min-width: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: #333;
+}
+
+/* -------- Default (Unchecked) -------- */
+.o_custom_box .o_field_widget.o_field_radio .o_radio_item input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #888;     /* grey border */
+    background-color: #fff;     /* white center */
+    cursor: pointer;
+    position: relative;
+    transition: 0.2s ease;
+}
+
+/* -------- Checked (Blue Selected) -------- */
+.o_custom_box .o_field_widget.o_field_radio .o_radio_item input[type="radio"]:checked {
+    border-color: #2b7cff;     /* blue border */
+    background-color: #fff;    /* center white، اندر fill الگ آئے گا */
+}
+
+/* Blue fill dot inside */
+.o_custom_box .o_field_widget.o_field_radio .o_radio_item input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    background-color: #2b7cff;  /* BLUE fill */
+    border-radius: 50%;
+}
