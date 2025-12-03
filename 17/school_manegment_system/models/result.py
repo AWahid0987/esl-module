@@ -14,7 +14,7 @@ class SchoolResult(models.Model):
     class_id = fields.Many2one('school.class', string="Class", required=True)
     exam_id = fields.Many2one('school.exam', string="Exam", required=True)
     line_ids = fields.One2many('school.result.line', 'result_id', string="Subjects")
-
+    date = fields.Date(string="Result Date", default=fields.Date.context_today)
     total_marks = fields.Float(string="Total Marks", compute="_compute_totals", store=True)
     obtained_marks = fields.Float(string="Obtained Marks", compute="_compute_totals", store=True)
     percentage = fields.Float(string="Percentage", compute="_compute_totals", store=True)

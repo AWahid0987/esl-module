@@ -6,5 +6,5 @@ class SchoolSubject(models.Model):
 
     name = fields.Char(string="Subject Name", required=True)
     class_id = fields.Many2one('school.class', string="Class", required=True)
-    max_marks = fields.Integer(string="Maximum Marks")
+    max_marks = fields.Float(string="Maximum Marks", default=100)
     description = fields.Text(string="Description")
