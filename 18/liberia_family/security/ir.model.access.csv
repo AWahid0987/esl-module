@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_liberia_family,access_liberia_family,model_liberia_family,,1,1,1,1
+access_afghanistan_family,access_afghanistan_family,model_afghanistan_family,,1,1,1,1
+access_sierra_family,access_sierra_family,model_sierra_family,,1,1,1,1
+access_liberia_community,access_liberia_community,model_liberia_community,,1,1,1,1
+access_afghanistan_community,access_afghanistan_community,model_afghanistan_community,,1,1,1,1
+access_sierra_community,access_sierra_community,model_sierra_community,,1,1,1,1

@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View liberia -->
+    <record id="view_liberia_family_list" model="ir.ui.view">
+        <field name="name">liberia.family.list</field>
+        <field name="model">liberia.family</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name_en"/>
+                <field name="location_en"/>
+                <field name="project_title_en"/>
+                <field name="investment_needed_en"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- List View community liberia -->
+    <record id="view_liberia_community_list" model="ir.ui.view">
+        <field name="name">liberia.community.list</field>
+        <field name="model">liberia.community</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name_en"/>
+                <field name="location_en"/>
+                <field name="investment_needed_en"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- List View sierra -->
+    <record id="view_sierra_family_list" model="ir.ui.view">
+        <field name="name">sierra.family.list</field>
+        <field name="model">sierra.family</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name_en"/>
+                <field name="location_en"/>
+                <field name="project_title_en"/>
+                <field name="investment_needed_en"/>
+            </list>
+        </field>
+    </record>
+    <!-- List View  community sierra -->
+    <record id="view_sierra_community_list" model="ir.ui.view">
+        <field name="name">sierra.community.list</field>
+        <field name="model">sierra.community</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name_en"/>
+                <field name="location_en"/>
+                <field name="investment_needed_en"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- List View Afghanistan -->
+    <record id="view_afghanistan_family_list" model="ir.ui.view">
+        <field name="name">afghanistan.family.list</field>
+        <field name="model">afghanistan.family</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name_en"/>
+                <field name="location_en"/>
+                <field name="project_title_en"/>
+                <field name="investment_needed_en"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- List View community  Afghanistan -->
+    <record id="view_afghanistan_community_list" model="ir.ui.view">
+        <field name="name">afghanistan.community.list</field>
+        <field name="model">afghanistan.community</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name_en"/>
+                <field name="location_en"/>
+                <field name="investment_needed_en"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View liberia En-->
+    <record id="view_liberia_family_form" model="ir.ui.view">
+        <field name="name">liberia.family.form</field>
+        <field name="model">liberia.family</field>
+        <field name="arch" type="xml">
+            <form string="Liberia Family">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name_en"/>
+                            <field name="name_de"/>
+                            <field name="age_en"/>
+                            <field name="age_de"/>
+                            <field name="location_en"/>
+                            <field name="location_de"/>
+                            <field name="project_title_en"/>
+                            <field name="project_title_de"/>
+                            <field name="project_description_en"/>
+                            <field name="project_description_de"/>
+                            <field name="investment_needed_en"/>
+                            <field name="investment_needed_de"/>
+                            <field name="current_income_en"/>
+                            <field name="current_income_de"/>
+                        </group>
+                        <group>
+                            <field name="receivew_1_en"/>
+                            <field name="receivew_1_de"/>
+                            <field name="receivew_2_en"/>
+                            <field name="receivew_2_de"/>
+                            <field name="receivew_3_en"/>
+                            <field name="receivew_3_de"/>
+                            <field name="receivew_4_en"/>
+                            <field name="receivew_4_de"/>
+                            <field name="additional_income_en"/>
+                            <field name="additional_income_de"/>
+                            <field name="progress_percentage_en"/>
+                            <field name="progress_percentage_de"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="photo" widget="image" class="oe_avatar"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Form View community liberia -->
+    <record id="view_liberia_community_form" model="ir.ui.view">
+        <field name="name">liberia.community.form</field>
+        <field name="model">liberia.community</field>
+        <field name="arch" type="xml">
+            <form string="Small Projects">
+                <sheet>
+                    <group>
+                        <group string="English Information">
+                            <field name="name_en"/>
+                            <field name="location_en"/>
+                            <field name="plot_project_en"/>
+                            <field name="number_beneficiaries_en"/>
+                            <field name="distribution_en"/>
+                            <field name="investment_needed_en"/>
+                            <field name="current_income_en"/>
+                            <field name="receivew_1_en"/>
+                            <field name="receivew_2_en"/>
+                            <field name="receivew_3_en"/>
+                            <field name="receivew_4_en"/>
+                            <field name="additional_income_en"/>
+                            <field name="progress_percentage_en"/>
+                        </group>
+
+                        <group string="English Capacity &amp; Impact">
+                            <field name="storage_capacity_en"/>
+                            <field name="system_capacity_en"/>
+                            <field name="facility_capacity_en"/>
+                            <field name="equipment_capacity_en"/>
+                            <field name="processing_capacity_per_year_en"/>
+                            <field name="production_capacity_en"/>
+                            <field name="fuel_cost_savings_en"/>
+                            <field name="environmental_impact_en"/>
+                            <field name="agricultural_impact_en"/>
+                            <field name="economic_impact_en"/>
+                            <field name="production_impact_en"/>
+                            <field name="health_impact_en"/>
+                        </group>
+
+                        <group string="German Information">
+                            <field name="name_de"/>
+                            <field name="location_de"/>
+                            <field name="plot_project_de"/>
+                            <field name="number_beneficiaries_de"/>
+                            <field name="distribution_de"/>
+                            <field name="investment_needed_de"/>
+                            <field name="current_income_de"/>
+                            <field name="receivew_1_de"/>
+                            <field name="receivew_2_de"/>
+                            <field name="receivew_3_de"/>
+                            <field name="receivew_4_de"/>
+                            <field name="additional_income_de"/>
+                            <field name="progress_percentage_de"/>
+                        </group>
+
+                        <group string="German Capacity &amp; Impact">
+                            <field name="storage_capacity_de"/>
+                            <field name="system_capacity_de"/>
+                            <field name="facility_capacity_de"/>
+                            <field name="equipment_capacity_de"/>
+                            <field name="processing_capacity_per_year_de"/>
+                            <field name="production_capacity_de"/>
+                            <field name="fuel_cost_savings_de"/>
+                            <field name="environmental_impact_de"/>
+                            <field name="agricultural_impact_de"/>
+                            <field name="economic_impact_de"/>
+                            <field name="production_impact_de"/>
+                            <field name="health_impact_de"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <group>
+                            <field name="photo" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="community_liberia_file_en" filename="community_file_filename_en"
+                                   widget="binary"/>
+                            <field name="community_liberia_file_de" filename="community_file_filename_de"
+                                   widget="binary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Form View sierra -->
+    <record id="view_sierra_family_form" model="ir.ui.view">
+        <field name="name">sierra.family.form</field>
+        <field name="model">sierra.family</field>
+        <field name="arch" type="xml">
+            <form string="Liberia Family">
+                <sheet>
+                    <group>
+                        <group string="English Information">
+                            <field name="name_en"/>
+                            <field name="age_en"/>
+                            <field name="location_en"/>
+                            <field name="project_title_en"/>
+                            <field name="project_description_en"/>
+                            <field name="investment_needed_en"/>
+                            <field name="current_income_en"/>
+                            <field name="receivew_1_en"/>
+                            <field name="receivew_2_en"/>
+                            <field name="receivew_3_en"/>
+                            <field name="receivew_4_en"/>
+                            <field name="additional_income_en"/>
+                            <field name="progress_percentage_en"/>
+                        </group>
+                        <group string="German Information">
+                            <field name="name_de"/>
+                            <field name="age_de"/>
+                            <field name="location_de"/>
+                            <field name="project_title_de"/>
+                            <field name="project_description_de"/>
+                            <field name="investment_needed_de"/>
+                            <field name="current_income_de"/>
+                            <field name="receivew_1_de"/>
+                            <field name="receivew_2_de"/>
+                            <field name="receivew_3_de"/>
+                            <field name="receivew_4_de"/>
+                            <field name="additional_income_de"/>
+                            <field name="progress_percentage_de"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <field name="photo" widget="image" class="oe_avatar"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Form View community sierra -->
+    <record id="view_sierra_community_form" model="ir.ui.view">
+        <field name="name">sierra.community.form</field>
+        <field name="model">sierra.community</field>
+        <field name="arch" type="xml">
+            <form string="Medium Projects">
+                <sheet>
+                    <group>
+                        <group string="English Information">
+                            <field name="name_en"/>
+                            <field name="location_en"/>
+                            <field name="plot_project_en"/>
+                            <field name="number_beneficiaries_en"/>
+                            <field name="distribution_en"/>
+                            <field name="investment_needed_en"/>
+                            <field name="current_income_en"/>
+                            <field name="receivew_1_en"/>
+                            <field name="receivew_2_en"/>
+                            <field name="receivew_3_en"/>
+                            <field name="receivew_4_en"/>
+                            <field name="additional_income_en"/>
+                            <field name="progress_percentage_en"/>
+                        </group>
+
+                        <group string="English Capacity &amp; Impact">
+                            <field name="storage_capacity_en"/>
+                            <field name="system_capacity_en"/>
+                            <field name="facility_capacity_en"/>
+                            <field name="equipment_capacity_en"/>
+                            <field name="processing_capacity_per_year_en"/>
+                            <field name="production_capacity_en"/>
+                            <field name="fuel_cost_savings_en"/>
+                            <field name="environmental_impact_en"/>
+                            <field name="agricultural_impact_en"/>
+                            <field name="economic_impact_en"/>
+                            <field name="production_impact_en"/>
+                            <field name="health_impact_en"/>
+                        </group>
+
+                        <group string="German Information">
+                            <field name="name_de"/>
+                            <field name="location_de"/>
+                            <field name="plot_project_de"/>
+                            <field name="number_beneficiaries_de"/>
+                            <field name="distribution_de"/>
+                            <field name="investment_needed_de"/>
+                            <field name="current_income_de"/>
+                            <field name="receivew_1_de"/>
+                            <field name="receivew_2_de"/>
+                            <field name="receivew_3_de"/>
+                            <field name="receivew_4_de"/>
+                            <field name="additional_income_de"/>
+                            <field name="progress_percentage_de"/>
+                        </group>
+
+                        <group string="German Capacity &amp; Impact">
+                            <field name="storage_capacity_de"/>
+                            <field name="system_capacity_de"/>
+                            <field name="facility_capacity_de"/>
+                            <field name="equipment_capacity_de"/>
+                            <field name="processing_capacity_per_year_de"/>
+                            <field name="production_capacity_de"/>
+                            <field name="fuel_cost_savings_de"/>
+                            <field name="environmental_impact_de"/>
+                            <field name="agricultural_impact_de"/>
+                            <field name="economic_impact_de"/>
+                            <field name="production_impact_de"/>
+                            <field name="health_impact_de"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <group>
+                            <field name="photo" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="community_sierra_file_en" filename="community_file_filename_en"
+                                   widget="binary"/>
+                            <field name="community_sierra_file_de" filename="community_file_filename_de"
+                                   widget="binary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Form View afghanistan -->
+    <record id="view_afghanistan_family_form" model="ir.ui.view">
+        <field name="name">afghanistan.family.form</field>
+        <field name="model">afghanistan.family</field>
+        <field name="arch" type="xml">
+            <form string="Liberia Family">
+                <sheet>
+                    <group string="English Information">
+                        <group>
+                            <field name="name_en"/>
+                            <field name="age_en"/>
+                            <field name="location_en"/>
+                            <field name="project_title_en"/>
+                            <field name="project_description_en"/>
+                            <field name="investment_needed_en"/>
+                            <field name="current_income_en"/>
+                            <field name="receivew_1_en"/>
+                            <field name="receivew_2_en"/>
+                            <field name="receivew_3_en"/>
+                            <field name="receivew_4_en"/>
+                            <field name="additional_income_en"/>
+                            <field name="progress_percentage_en"/>
+                        </group>
+                        <group string="German Information">
+                            <field name="name_de"/>
+                            <field name="age_de"/>
+                            <field name="location_de"/>
+                            <field name="project_title_de"/>
+                            <field name="project_description_de"/>
+                            <field name="investment_needed_de"/>
+                            <field name="current_income_de"/>
+                            <field name="receivew_1_de"/>
+                            <field name="receivew_2_de"/>
+                            <field name="receivew_3_de"/>
+                            <field name="receivew_4_de"/>
+                            <field name="additional_income_de"/>
+                            <field name="progress_percentage_de"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="photo" widget="image" class="oe_avatar"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Form View community afghanistan -->
+    <record id="view_afghanistan_community_form" model="ir.ui.view">
+        <field name="name">afghanistan.community.form</field>
+        <field name="model">afghanistan.community</field>
+        <field name="arch" type="xml">
+            <form string="Large Projects">
+                <sheet>
+                    <group>
+                        <group string="English Information">
+                            <field name="name_en"/>
+                            <field name="location_en"/>
+                            <field name="plot_project_en"/>
+                            <field name="number_beneficiaries_en"/>
+                            <field name="distribution_en"/>
+                            <field name="investment_needed_en"/>
+                            <field name="current_income_en"/>
+                            <field name="receivew_1_en"/>
+                            <field name="receivew_2_en"/>
+                            <field name="receivew_3_en"/>
+                            <field name="receivew_4_en"/>
+                            <field name="additional_income_en"/>
+                            <field name="progress_percentage_en"/>
+                        </group>
+
+                        <group string="English Capacity &amp; Impact">
+                            <field name="storage_capacity_en"/>
+                            <field name="system_capacity_en"/>
+                            <field name="facility_capacity_en"/>
+                            <field name="equipment_capacity_en"/>
+                            <field name="processing_capacity_per_year_en"/>
+                            <field name="production_capacity_en"/>
+                            <field name="fuel_cost_savings_en"/>
+                            <field name="environmental_impact_en"/>
+                            <field name="agricultural_impact_en"/>
+                            <field name="economic_impact_en"/>
+                            <field name="production_impact_en"/>
+                            <field name="health_impact_en"/>
+                        </group>
+
+                        <group string="German Information">
+                            <field name="name_de"/>
+                            <field name="location_de"/>
+                            <field name="plot_project_de"/>
+                            <field name="number_beneficiaries_de"/>
+                            <field name="distribution_de"/>
+                            <field name="investment_needed_de"/>
+                            <field name="current_income_de"/>
+                            <field name="receivew_1_de"/>
+                            <field name="receivew_2_de"/>
+                            <field name="receivew_3_de"/>
+                            <field name="receivew_4_de"/>
+                            <field name="additional_income_de"/>
+                            <field name="progress_percentage_de"/>
+                        </group>
+
+                        <group string="German Capacity &amp; Impact">
+                            <field name="storage_capacity_de"/>
+                            <field name="system_capacity_de"/>
+                            <field name="facility_capacity_de"/>
+                            <field name="equipment_capacity_de"/>
+                            <field name="processing_capacity_per_year_de"/>
+                            <field name="production_capacity_de"/>
+                            <field name="fuel_cost_savings_de"/>
+                            <field name="environmental_impact_de"/>
+                            <field name="agricultural_impact_de"/>
+                            <field name="economic_impact_de"/>
+                            <field name="production_impact_de"/>
+                            <field name="health_impact_de"/>
+                        </group>
+
+                    </group>
+                    <group>
+                        <group>
+                            <field name="photo" widget="image" class="oe_avatar"/>
+                        </group>
+                        <group>
+                            <field name="community_afghanistan_file_en" filename="community_file_filename_en"
+                                   widget="binary"/>
+                            <field name="community_afghanistan_file_de" filename="community_file_filename_de"
+                                   widget="binary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Liberia -->
+    <record id="action_liberia_family" model="ir.actions.act_window">
+        <field name="name">Liberia Families</field>
+        <field name="res_model">liberia.family</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <!-- Action community Liberia -->
+    <record id="action_liberia_community" model="ir.actions.act_window">
+        <field name="name">Small Projects</field>
+        <field name="res_model">liberia.community</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- Action sierra -->
+    <record id="action_sierra_family" model="ir.actions.act_window">
+        <field name="name">Sierra Families</field>
+        <field name="res_model">sierra.family</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- Action community sierra -->
+    <record id="action_sierra_community" model="ir.actions.act_window">
+        <field name="name">Medium Projects</field>
+        <field name="res_model">sierra.community</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_afghanistan_family" model="ir.actions.act_window">
+        <field name="name">Afghanistan Families</field>
+        <field name="res_model">afghanistan.family</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Action community Afghanistan-->
+    <record id="action_afghanistan_community" model="ir.actions.act_window">
+        <field name="name">Large Projects</field>
+        <field name="res_model">afghanistan.community</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_family_root"
+              name="Family Management"
+              sequence="10"
+              web_icon="liberia_family,static/description/icon.png"/>
+
+    <!-- Submenus -->
+    <menuitem id="menu_liberia_family"
+              name="Liberia Families"
+              parent="menu_family_root"
+              action="action_liberia_family"
+              sequence="10"/>
+    <menuitem id="menu_liberia_community"
+              name="Small Projects"
+              parent="menu_family_root"
+              action="action_liberia_community"
+              sequence="40"/>
+
+    <menuitem id="menu_sierra_family"
+              name="Sierra Families"
+              parent="menu_family_root"
+              action="action_sierra_family"
+              sequence="20"/>
+
+    <menuitem id="menu_sierra_community"
+              name="Medium Projects"
+              parent="menu_family_root"
+              action="action_sierra_community"
+              sequence="50"/>
+
+    <menuitem id="menu_afghanistan_family"
+              name="Afghanistan Families"
+              parent="menu_family_root"
+              action="action_afghanistan_family"
+              sequence="30"/>
+
+    <menuitem id="menu_afghanistan_community"
+              name="Large Projects"
+              parent="menu_family_root"
+              action="action_afghanistan_community"
+              sequence="60"/>
+
+</odoo>
