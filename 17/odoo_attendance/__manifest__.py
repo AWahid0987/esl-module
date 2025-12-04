@@ -1,5 +1,5 @@
 {
-    'name': 'Geolocation in HR Attendance',
+    'name': 'Geo location in Attendance',
     'version': '17.0.1.0.1',
     'summary': "The attendance location of the employee",
     'author': 'Abdul Wahid',
