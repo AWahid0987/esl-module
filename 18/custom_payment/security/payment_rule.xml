@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ===================== CUSTOM PAYMENT (CASH PAYMENT) ===================== -->
+
+    <!-- Normal users: only own company records -->
+    <record id="custom_payment_user_rule" model="ir.rule">
+        <field name="name">Custom Payment: Users see only own company</field>
+        <field name="model_id" ref="model_custom_payment"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+    </record>
+
+    <!-- Admin: can see all records -->
+    <record id="custom_payment_admin_rule" model="ir.rule">
+        <field name="name">Custom Payment: Admin sees all</field>
+        <field name="model_id" ref="model_custom_payment"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- ===================== CUSTOM PAYMENT RECEIVE (CASH RECEIVE) ===================== -->
+
+    <!-- Normal users: only own company records -->
+    <record id="custom_payment_receive_user_rule" model="ir.rule">
+        <field name="name">Custom Payment Receive: Users see only own company</field>
+        <field name="model_id" ref="model_custom_payment_recieve"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+    </record>
+
+    <!-- Admin: can see all records -->
+    <record id="custom_payment_receive_admin_rule" model="ir.rule">
+        <field name="name">Custom Payment Receive: Admin sees all</field>
+        <field name="model_id" ref="model_custom_payment_recieve"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

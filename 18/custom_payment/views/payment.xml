@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Simplified account.account tree (optional) -->
+    <record id="view_account_account_simplified_tree" model="ir.ui.view">
+        <field name="name">account.account.simplified.tree</field>
+        <field name="model">account.account</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_custom_payment_form" model="ir.ui.view">
+        <field name="name">custom.payment.form</field>
+        <field name="model">custom.payment</field>
+        <field name="arch" type="xml">
+            <form string="Custom Payment">
+                <header>
+                    <button name="action_send_payment" type="object" string="Send"
+                            class="btn-primary"
+                            invisible="status != 'draft'"/>
+
+                    <button name="action_approve_payment" type="object" string="Approve"
+                            class="btn-success"
+                            groups="custom_payment.group_custom_payment_approver"
+                            invisible="status != 'waiting_for_approval' or not can_approve"/>
+
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft"
+                            class="btn-warning"
+                            invisible="not (status in ['waiting_for_approval','cancelled'])"/>
+
+                    <button name="action_cancel" type="object" string="Cancel"
+                            class="btn-danger"
+                            invisible="status == 'cancelled'"/>
+
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,waiting_for_approval,done,cancelled"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="customer_id"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="journal_id" readonly="status != 'draft'"/>
+                            <field name="label" readonly="status != 'draft'"/>
+                            <field name="entry_date" readonly="status != 'draft'"/>
+                            <field name="notes" readonly="status != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="amount" readonly="status != 'draft'"/>
+                            <field name="debit_account_id"
+                                   readonly="status != 'draft'"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="credit_account_id"
+                                   readonly="status != 'draft'"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="journal_entry_id"/>
+                        </group>
+                    </group>
+                </sheet>
+
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_custom_payment_tree" model="ir.ui.view">
+        <field name="name">custom.payment.tree</field>
+        <field name="model">custom.payment</field>
+        <field name="arch" type="xml">
+            <list string="Custom Payments"
+                  decoration-success="status == 'done'"
+                  decoration-warning="status == 'waiting_for_approval'"
+                  decoration-danger="status == 'cancelled'">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="journal_id"/>
+                <field name="customer_id"/>
+                <field name="type"/>
+                <field name="amount"/>
+                <field name="status" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payment_search" model="ir.ui.view">
+        <field name="name">custom.payment.search</field>
+        <field name="model">custom.payment</field>
+        <field name="arch" type="xml">
+            <search string="Custom Payment">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="journal_id"/>
+                <field name="type"/>
+                <field name="amount"/>
+                <field name="status"/>
+                <filter string="By Name" name="filter_name" domain="[('name','!=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payment" model="ir.actions.act_window">
+        <field name="name">Custom Payments</field>
+        <field name="res_model">custom.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="views" eval="[
+            (ref('view_custom_payment_tree'), 'list'),
+            (ref('view_custom_payment_form'), 'form')
+        ]"/>
+        <field name="search_view_id" ref="view_custom_payment_search"/>
+    </record>
+
+    <!-- Top Payment menu (same ID as used by receive menu) -->
+    <menuitem id="menu_payments"
+              name="Payment"
+              web_icon="custom_payment,static/description/icon.png"
+              sequence="0"/>
+
+    <!-- Cash Payments Menu -->
+    <menuitem id="menu_custom_payment"
+              name="Cash Payments"
+              parent="custom_payment.menu_payments"
+              sequence="2"
+              action="custom_payment.action_custom_payment"/>
+</odoo>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ⚠ Define this ONLY in one file in your module.
+         If you already defined menu_payments in another XML, remove this block there or here. -->
+    <menuitem id="menu_payments"
+              name="Payment"
+              sequence="0"
+              web_icon="custom_payment,static/description/icon.png"/>
+
+    <!-- ===================== SEARCH VIEW ===================== -->
+    <record id="view_custom_receive_payment_search" model="ir.ui.view">
+        <field name="name">custom.payment.recieve.search</field>
+        <field name="model">custom.payment.recieve</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- Type filters -->
+                <filter string="Receiving" name="receiving_filter"
+                        domain="[('type','=','receiving')]"/>
+                <filter string="Sending" name="sending_filter"
+                        domain="[('type','=','sending')]"/>
+
+                <!-- Status filters -->
+                <filter string="Draft" name="draft_filter"
+                        domain="[('status','=','draft')]"/>
+                <filter string="Waiting Approval" name="waiting_filter"
+                        domain="[('status','=','waiting_for_approval')]"/>
+                <filter string="Received" name="received_filter"
+                        domain="[('status','=','received')]"/>
+                <filter string="Cancelled" name="cancelled_filter"
+                        domain="[('status','=','cancelled')]"/>
+
+                <!-- Search fields -->
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===================== TREE (LIST) VIEW ===================== -->
+    <record id="view_custom_receive_payment_tree" model="ir.ui.view">
+        <field name="name">custom.payment.recieve.tree</field>
+        <field name="model">custom.payment.recieve</field>
+        <field name="arch" type="xml">
+            <list string="Cash Receipts"
+                  decoration-success="status == 'received'"
+                  decoration-warning="status == 'waiting_for_approval'"
+                  decoration-danger="status == 'cancelled'">
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="journal_id"/>
+                <field name="customer_id"/>
+                <field name="amount"/>
+                <field name="debit_account_id"/>
+                <field name="credit_account_id"/>
+                <field name="status" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===================== FORM VIEW ===================== -->
+    <record id="view_custom_receive_payment_form" model="ir.ui.view">
+        <field name="name">custom.payment.recieve.form</field>
+        <field name="model">custom.payment.recieve</field>
+        <field name="arch" type="xml">
+            <form string="Custom Payment Receive">
+                <header>
+                    <button name="action_send_payment"
+                            type="object"
+                            string="Send"
+                            class="btn-primary"
+                            invisible="status != 'draft'"/>
+
+                    <button name="action_approve_payment"
+                            type="object"
+                            string="Approve"
+                            class="btn-success"
+                            groups="custom_payment.group_custom_payment_receive_approver"
+                            invisible="status != 'waiting_for_approval' or not can_approve"/>
+
+                    <button name="action_reset_to_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            class="btn-warning"
+                            invisible="not (status in ['waiting_for_approval','cancelled'])"/>
+
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            class="btn-danger"
+                            invisible="status == 'cancelled'"/>
+
+                    <field name="status"
+                           widget="statusbar"
+                           statusbar_visible="draft,waiting_for_approval,received,cancelled"/>
+                </header>
+
+                <sheet>
+                    <!-- Stat button: journal entry -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_journal_entry"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="journal_entry_count == 0">
+                            <field name="journal_entry_count"
+                                   widget="statinfo"
+                                   string="Journal Entries"/>
+                        </button>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="journal_id" readonly="status != 'draft'"/>
+                            <field name="amount" readonly="status != 'draft'"/>
+                            <field name="label" readonly="status != 'draft'"/>
+                            <field name="customer_id"/>
+                        </group>
+                        <group>
+                            <field name="debit_account_id"
+                                   readonly="status != 'draft'"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="credit_account_id"
+                                   readonly="status != 'draft'"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="type" readonly="1"/>
+                            <field name="entry_date" readonly="status != 'draft'"/>
+                            <field name="invoice_id" readonly="status != 'draft'"/>
+                            <!-- Hidden technical fields -->
+                            <field name="journal_entry_id" invisible="1"/>
+                            <field name="journal_entry_count" invisible="1"/>
+                            <field name="can_approve" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+
+                <!-- Chatter -->
+
+            </form>
+        </field>
+    </record>
+
+    <!-- ===================== ACTION ===================== -->
+    <record id="action_recieve_payment" model="ir.actions.act_window">
+        <field name="name">Cash Receipts</field>
+        <field name="res_model">custom.payment.recieve</field>
+        <!-- IMPORTANT: use tree,form here to match view types -->
+        <field name="view_mode">list,form</field>
+        <field name="views" eval="[
+            (ref('view_custom_receive_payment_tree'), 'list'),
+            (ref('view_custom_receive_payment_form'), 'form')
+        ]"/>
+        <field name="search_view_id" ref="view_custom_receive_payment_search"/>
+        <field name="domain">[('type','=','receiving')]</field>
+        <field name="context">{'default_type': 'receiving'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first cash receipt.
+            </p>
+        </field>
+    </record>
+
+    <!-- ===================== MENU ===================== -->
+    <menuitem id="menu_custom_receive_payment"
+              name="Cash Receipt"
+              parent="custom_payment.menu_payments"
+              sequence="3"
+              action="custom_payment.action_recieve_payment"/>
+</odoo>
