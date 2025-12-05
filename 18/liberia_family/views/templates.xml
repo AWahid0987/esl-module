@@ -2119,7 +2119,6 @@
                                                             <t t-esc="c.location_de or ''"/>
                                                         </t>
 
-
                                                     </div>
 
                                                 </div>
@@ -2159,6 +2158,7 @@
                                                 text-align: left; /* changed */
                                                 font-size: 16px;
                                                 }
+
                                                 /* Optional: dotted line under each item */
                                                 .dotted-line {
                                                 border-bottom: 1px dotted #ccc;
@@ -2178,27 +2178,25 @@
 
 
                                             <!-- DATA FIELDS SECTION -->
-
-                                            <!-- DATA FIELDS SECTION -->
                                             <div class="mt-2 text-start px-2">
                                                 <t t-set="fields" t-value="[
-                                                ('number_beneficiaries', 'Number of Beneficiaries','Anzahl der Begünstigten'),
-                                                ('current_income', 'Current average monthly income ($)','Aktuelles Ø monatliches Einkommen ($)'),
-                                                ('additional_income', 'Project induced expected income (+$)','Projektbedingtes erwartetes Einkommen'),
-                                                ('storage_capacity', 'Storage Capacity','Lagerkapazität'),
-                                                ('system_capacity', 'System Capacity','Systemkapazität'),
-                                                ('facility_capacity', 'Facility Capacity','Anlagenkapazität'),
-                                                ('equipment_capacity', 'Equipment Capacity','Gerätekapazität'),
-                                                ('processing_capacity_per_year', 'Processing Capacity per Year','Verarbeitungskapazität pro Jahr'),
-                                                ('production_capacity', 'Production Capacity','Produktionskapazität'),
-                                                ('fuel_cost_savings', 'Fuel-Cost Savings (per household)','Kraftstoffkosteneinsparungen (pro Haushalt)'),
-                                                ('environmental_impact', 'Environmental Impact','Umweltauswirkung'),
-                                                ('agricultural_impact', 'Agricultural Impact','Landwirtschaftlicher Einfluss'),
-                                                ('time_save', 'Time Saved','Zeit gespart'),
-                                                ('economic_impact', 'Economic Impact','Wirtschaftlicher Einfluss'),
-                                                ('production_impact', 'Production Impact','Produktionseinfluss'),
-                                                ('health_impact', 'Health Impact','Gesundheitliche Auswirkung')
-                                                ]"/>
+                                    ('number_beneficiaries', 'Number of Beneficiaries','Anzahl der Begünstigten'),
+                                    ('current_income', 'Current average monthly income ($)','Aktuelles Ø monatliches Einkommen ($)'),
+                                    ('additional_income', 'Project induced expected income (+$)','Projektbedingtes erwartetes Einkommen'),
+                                    ('storage_capacity', 'Storage Capacity','Lagerkapazität'),
+                                    ('system_capacity', 'System Capacity','Systemkapazität'),
+                                    ('facility_capacity', 'Facility Capacity','Anlagenkapazität'),
+                                    ('equipment_capacity', 'Equipment Capacity','Gerätekapazität'),
+                                    ('processing_capacity_per_year', 'Processing Capacity per Year','Verarbeitungskapazität pro Jahr'),
+                                    ('production_capacity', 'Production Capacity','Produktionskapazität'),
+                                    ('fuel_cost_savings', 'Fuel-Cost Savings (per household)','Kraftstoffkosteneinsparungen (pro Haushalt)'),
+                                    ('environmental_impact', 'Environmental Impact','Umweltauswirkung'),
+                                    ('agricultural_impact', 'Agricultural Impact','Landwirtschaftlicher Einfluss'),
+                                    ('time_save', 'Time Saved','Zeit gespart'),
+                                    ('economic_impact', 'Economic Impact','Wirtschaftlicher Einfluss'),
+                                    ('production_impact', 'Production Impact','Produktionseinfluss'),
+                                    ('health_impact', 'Health Impact','Gesundheitliche Auswirkung')
+                                ]"/>
 
                                                 <t t-foreach="fields" t-as="item">
                                                     <!-- Construct dynamic field based on language -->
@@ -2216,9 +2214,6 @@
                                                     </t>
                                                 </t>
                                             </div>
-
-
-                                            <!-- FILE DOWNLOAD BUTTON -->
 
                                         </div>
 
@@ -2366,7 +2361,8 @@
                                                     </t>
                                                 </t>
                                             </div>
-                                            <!-- Funding Progress -->
+
+                                           <!-- Funding Progress -->
                                             <h6 style="color:#017F36; font-weight:600; margin-top:5px; margin-bottom:5px;">
                                                 <t t-if="user_lang and user_lang.startswith('en')">
                                                     Funding Progress
@@ -2421,9 +2417,10 @@
                                             </t>
 
                                         </div>
+
                                         <!-- Buttons aligned exactly under progress bar and donor box -->
-                                        <div
-                                                style="display:flex; width:100%; gap:22px; margin-top:-20px; padding-top:0;">
+                                        <div class="project-actions"
+                                             style="display:flex; width:100%; gap:22px; margin-top:-20px; padding-top:0;">
 
                                             <!-- Left Box - 42% -->
                                             <div style="flex: 0 0 41.5%; margin-top:0; padding-top:0;">
@@ -2832,7 +2829,7 @@
                                                     </t>
                                                 </t>
                                             </div>
-                                            <!-- Funding Progress -->
+                                           <!-- Funding Progress -->
                                             <h6 style="color:#017F36; font-weight:600; margin-top:5px; margin-bottom:5px;">
                                                 <t t-if="user_lang and user_lang.startswith('en')">
                                                     Funding Progress
@@ -2885,6 +2882,7 @@
                                                     </div>
                                                 </t>
                                             </t>
+
 
                                         </div>
                                         <!-- Buttons aligned exactly under progress bar and donor box -->
@@ -3296,7 +3294,7 @@
                                                     </t>
                                                 </t>
                                             </div>
-                                            <!-- Funding Progress -->
+                                           <!-- Funding Progress -->
                                             <h6 style="color:#017F36; font-weight:600; margin-top:5px; margin-bottom:5px;">
                                                 <t t-if="user_lang and user_lang.startswith('en')">
                                                     Funding Progress
@@ -3447,161 +3445,6 @@
         </t>
     </template>
 
-    <!-- ===============================================================
-         All Project Page Style
-         =============================================================== -->
-       <template id="projects_hub_styles" name="Projects Hub Styles">
-    <style>
-        /* ============================
-           DEFAULT DESKTOP BEHAVIOR
-        ============================ */
-        .projects-section {
-            display: none !important;
-        }
-        .projects-section--active {
-            display: block !important;
-        }
-
-        /* ---- Tabs container (DESKTOP/LAPTOP) ---- */
-        .project-tabs {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 16px;
-            justify-content: center;  /* ya flex-start agar left align chahiye */
-        }
-
-        /* ---- Tab buttons ---- */
-        .project-tab {
-            /* size &amp; layout */
-            flex: 1 1 0;                 /* ✅ teenon equal width, full row fill */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 16px;
-
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 18px;
-            text-align: center;
-
-            /* text wrapping */
-            white-space: normal !important;
-            word-wrap: break-word !important;
-            line-height: 1.25 !important;
-        }
-
-        /* Active / Inactive colors */
-        .project-tab.active {
-            background-color: #017F36 !important;
-            color: #ffffff !important;
-        }
-        .project-tab:not(.active) {
-            background-color: #ECECEC !important;
-            color: #017F36 !important;
-        }
-
-        /* Scaling for desktop boxes */
-        #small, #medium, #large {
-            height: auto !important;
-            zoom: 75% !important;
-            margin: auto;
-        }
-
-        /* Hide language sections by default */
-        .lang-en, .lang-de {
-            display: none;
-        }
-
-        /* ===================================
-           RESPONSIVE (TABLET &amp; MOBILE)
-        =================================== */
-
-        /* Tablet */
-        @media (max-width: 992px) {
-            #small, #medium, #large {
-                zoom: 100% !important;
-            }
-        }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-
-            /* Container spacing */
-            .container.py-3 {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-
-            /* ✅ Tabs vertically stacked on mobile */
-            .project-tabs {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px !important;
-            }
-            .project-tabs .project-tab {
-                width: 100% !important;
-                flex: 0 0 auto;        /* each tab apni row me */
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-
-            /* Card layout vertical stacking */
-            .projects-section .card .row.g-0 {
-                flex-direction: column;
-            }
-            .projects-section .card .col-md-5,
-            .projects-section .card .col-md-7 {
-                max-width: 100%;
-                flex: 0 0 100%;
-            }
-
-            /* Image full width */
-            .custom-img {
-                width: 100% !important;
-                height: 200px !important;
-                object-fit: cover;
-            }
-
-            /* Location &amp; beneficiary text */
-            .location-text strong,
-            .location-text span,
-            .beneficiaries-text strong,
-            .beneficiaries-text span {
-                text-align: left;
-                font-size: 14px;
-            }
-
-            /* Donor benefits padding */
-            .projects-section .alert {
-                padding: 8px 10px !important;
-                font-size: 14px;
-            }
-
-            /* Progress bar smaller */
-            .projects-section .progress {
-                height: 30px !important;
-            }
-
-            /* Action buttons vertical */
-            .projects-section .project-actions {
-                flex-direction: column;
-                gap: 10px;
-                margin-top: 0;
-                padding-top: 10px;
-            }
-            .projects-section .project-actions > div {
-                flex: 0 0 100% !important;
-            }
-
-            /* Buttons full width */
-            .projects-section .project-actions a,
-            .projects-section .project-actions button {
-                width: 100% !important;
-            }
-        }
-    </style>
-</template>
-
 
     <!-- ===============================================================
           All Project Page Scripts
@@ -3654,52 +3497,416 @@
             });
         </script>
     </template>
+
+    <!-- ===============================================================
+         All Project Page Style
+         =============================================================== -->
+    <template id="projects_hub_styles" name="Projects Hub Styles">
+        <style>
+            /* ============================
+            DEFAULT DESKTOP BEHAVIOR
+            ============================ */
+            .projects-section {
+            display: none !important;
+            }
+            .projects-section--active {
+            display: block !important;
+            }
+
+            /* ---- Tabs container (DESKTOP/LAPTOP) ---- */
+            .project-tabs {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 16px;
+            justify-content: center; /* ya flex-start agar left align chahiye */
+            }
+
+            /* ---- Tab buttons ---- */
+            .project-tab {
+            /* size &amp; layout */
+            flex: 1 1 0; /* ✅ teenon equal width, full row fill */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            text-align: center;
+
+            /* text wrapping */
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            line-height: 1.25 !important;
+            }
+
+            /* Active / Inactive colors */
+            .project-tab.active {
+            background-color: #017F36 !important;
+            color: #ffffff !important;
+            }
+            .project-tab:not(.active) {
+            background-color: #ECECEC !important;
+            color: #017F36 !important;
+            }
+
+            /* Scaling for desktop boxes */
+            #small, #medium, #large {
+            height: auto !important;
+            zoom: 75% !important;
+            margin: auto;
+            }
+
+            /* Hide language sections by default */
+            .lang-en, .lang-de {
+            display: none;
+            }
+
+            /* ===================================
+            RESPONSIVE (TABLET &amp; MOBILE)
+            =================================== */
+
+            /* Tablet and below */
+            @media (max-width: 992px) {
+            #small, #medium, #large {
+            zoom: 100% !important;
+            }
+
+            /* 🔧 Support Family buttons stacked &amp; full width */
+            .support-family-actions {
+            display: flex;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+            width: 100%;
+            margin-top: 10px;
+            }
+            .support-family-actions > div {
+            flex: 0 0 100% !important;
+            }
+            .support-family-actions a,
+            .support-family-actions button {
+            width: 100% !important;
+            }
+            }
+
+            /* Mobile */
+            @media (max-width: 768px) {
+
+            /* Container spacing */
+            .container.py-3 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            }
+
+            /* ✅ Tabs vertically stacked on mobile */
+            .project-tabs {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px !important;
+            }
+            .project-tabs .project-tab {
+            width: 100% !important;
+            flex: 0 0 auto; /* each tab apni row me */
+            padding-top: 10px;
+            padding-bottom: 10px;
+            }
+
+            /* Card layout vertical stacking */
+            .projects-section .card .row.g-0 {
+            flex-direction: column;
+            }
+            .projects-section .card .col-md-5,
+            .projects-section .card .col-md-7 {
+            max-width: 100%;
+            flex: 0 0 100%;
+            }
+
+            /* 🔧 Ensure full card content visible on mobile */
+            .projects-section .card.h-100 {
+            height: auto !important;
+            overflow: visible !important;
+            }
+
+            /* Image full width */
+            .custom-img {
+            width: 100% !important;
+            height: 200px !important;
+            object-fit: cover;
+            }
+
+            /* Location &amp; beneficiary text */
+            .location-text strong,
+            .location-text span,
+            .beneficiaries-text strong,
+            .beneficiaries-text span {
+            text-align: left;
+            font-size: 14px;
+            }
+
+            /* Donor benefits padding */
+            .projects-section .alert {
+            padding: 8px 10px !important;
+            font-size: 14px;
+            }
+
+            /* Progress bar smaller */
+            .projects-section .progress {
+            height: 30px !important;
+            }
+
+            /* Action buttons vertical (for small projects) */
+            .projects-section .project-actions {
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 0;
+            padding-top: 10px;
+            }
+            .projects-section .project-actions > div {
+            flex: 0 0 100% !important;
+            }
+
+            /* Buttons full width */
+            .projects-section .project-actions a,
+            .projects-section .project-actions button {
+            width: 100% !important;
+            }
+            }
+        </style>
+    </template>
+    <!-- ================================== -->
+    <!-- GLOBAL STYLES FOR PROJECTS / FAMILY -->
+    <!-- ================================== -->
+
+    <template id="projects_hub_style" name="Projects Hub Styles">
+        <style>
+            /* ============================
+            DEFAULT DESKTOP BEHAVIOR
+            ============================ */
+            .projects-section {
+            display: none !important;
+            }
+            .projects-section--active {
+            display: block !important;
+            }
+
+            /* ---- Tabs container (DESKTOP/LAPTOP) ---- */
+            .project-tabs {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 16px;
+            justify-content: center; /* ya flex-start agar left align chahiye */
+            }
+
+            /* ---- Tab buttons ---- */
+            .project-tab {
+            /* size &amp; layout */
+            flex: 1 1 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            text-align: center;
+
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            line-height: 1.25 !important;
+            }
+
+            /* Active / Inactive colors */
+            .project-tab.active {
+            background-color: #017F36 !important;
+            color: #ffffff !important;
+            }
+            .project-tab:not(.active) {
+            background-color: #ECECEC !important;
+            color: #017F36 !important;
+            }
+
+            /* Scaling for desktop boxes that use #small/#medium/#large */
+            #small, #medium, #large {
+            height: auto !important;
+            zoom: 75% !important;
+            margin: auto;
+            }
+
+            /* Hide language sections by default */
+            .lang-en, .lang-de {
+            display: none;
+            }
+
+            /* ===================================
+            RESPONSIVE (TABLET &amp; MOBILE)
+            =================================== */
+
+            /* Tablet and below */
+            @media (max-width: 992px) {
+            #small, #medium, #large {
+            zoom: 100% !important;
+            }
+
+            /* 🔧 Support Family buttons stacked &amp; full width */
+            .support-family-actions {
+            display: flex;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+            width: 100%;
+            margin-top: 10px;
+            }
+            .support-family-actions > div {
+            flex: 0 0 100% !important;
+            }
+            .support-family-actions a,
+            .support-family-actions button {
+            width: 100% !important;
+            }
+            }
+
+            /* Mobile */
+            @media (max-width: 768px) {
+
+            /* Container spacing */
+            .container.py-3 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            }
+
+            /* ✅ Tabs vertically stacked on mobile */
+            .project-tabs {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px !important;
+            }
+            .project-tabs .project-tab {
+            width: 100% !important;
+            flex: 0 0 auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            }
+
+            /* Card layout vertical stacking for any .projects-section cards */
+            .projects-section .card .row.g-0 {
+            flex-direction: column;
+            }
+            .projects-section .card .col-md-5,
+            .projects-section .card .col-md-7 {
+            max-width: 100%;
+            flex: 0 0 100%;
+            }
+
+            /* 🔧 Ensure full card content visible on mobile */
+            .projects-section .card.h-100 {
+            height: auto !important;
+            overflow: visible !important;
+            }
+
+            /* Image full width */
+            .custom-img {
+            width: 100% !important;
+            height: 200px !important;
+            object-fit: cover;
+            }
+
+            /* Location &amp; beneficiary text */
+            .location-text strong,
+            .location-text span,
+            .beneficiaries-text strong,
+            .beneficiaries-text span {
+            text-align: left;
+            font-size: 14px;
+            }
+
+            /* Donor benefits padding */
+            .projects-section .alert {
+            padding: 8px 10px !important;
+            font-size: 14px;
+            }
+
+            /* Progress bar smaller */
+            .projects-section .progress {
+            height: 30px !important;
+            }
+
+            /* Action buttons vertical for community project cards (if using .project-actions) */
+            .projects-section .project-actions {
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 0;
+            padding-top: 10px;
+            }
+            .projects-section .project-actions > div {
+            flex: 0 0 100% !important;
+            }
+            .projects-section .project-actions a,
+            .projects-section .project-actions button {
+            width: 100% !important;
+            }
+            }
+        </style>
+    </template>
+
+    <!-- ================================== -->
+    <!-- FAMILY LEVEL TABS PAGE            -->
+    <!-- ================================== -->
     <template id="support_family_level_tabs" name="Support Family Level Tabs">
         <t t-call="website.layout">
-            <t t-call="liberia_family.projects_hub_styles"/>
+            <t t-call="liberia_family.projects_hub_style"/>
 
             <div class="container py-3">
 
                 <!-- PAGE HEADER -->
                 <h3 class="mb-4 text-center fw-bold text-success">
-                    <t t-if="user_lang.startswith('de')">Stärkung von Familien durch nachhaltige
-                        Mikroentwicklungsprojekte
+                    <t t-if="user_lang.startswith('de')">
+                        Stärkung von Familien durch nachhaltige Mikroentwicklungsprojekte
                     </t>
-                    <t t-if="user_lang.startswith('en')">Empowering Families Through Sustainable Micro Development
-                        Projects
+                    <t t-if="user_lang.startswith('en')">
+                        Empowering Families Through Sustainable Micro Development Projects
                     </t>
                 </h3>
-                <p>
-                    <t t-if="user_lang.startswith('de')">Um die nachhaltige Wirksamkeit unserer familienbezogenen
-                        Projekte zu sichern, führen unsere Teams eine gründliche Prüfung durch, um festzustellen, ob die
-                        Begünstigten tatsächlich bedürftig sind und den Willen sowie den Charakter besitzen,
-                        wirtschaftliche Selbstständigkeit und Eigenverantwortung zu erreichen. Durch ausführliche
-                        Interviews und Untersuchungen vor Ort stellen wir ihre Authentizität, Fähigkeiten und ihr
-                        Engagement. Unsere Teammitglieder bieten kontinuierlich die notwendige Beratung, überwachen den
-                        Fortschritt und kümmern sich um operative Themen.
-                    </t>
-                    <t t-if="user_lang.startswith('en')">To ensure the success and sustainability of family-level
-                        projects, our teams carefully select and verify beneficiaries who are genuinely in need and
-                        demonstrate the willingness and character to achieve self-reliance and economic empowerment.
-                        Through detailed interviews and on-site research, we ensure authenticity, capability, and their
-                        commitment. Our team and field experts continuously provide necessary advisory, monitors
-                        progress, and take care of operations issues
-                    </t>
 
+                <p>
+                    <t t-if="user_lang.startswith('de')">
+                        Um die nachhaltige Wirksamkeit unserer familienbezogenen Projekte zu sichern, führen unsere
+                        Teams
+                        eine gründliche Prüfung durch, um festzustellen, ob die Begünstigten tatsächlich bedürftig sind
+                        und den Willen sowie den Charakter besitzen, wirtschaftliche Selbstständigkeit und
+                        Eigenverantwortung zu erreichen. Durch ausführliche Interviews und Untersuchungen vor Ort
+                        stellen
+                        wir ihre Authentizität, Fähigkeiten und ihr Engagement sicher. Unsere Teammitglieder bieten
+                        kontinuierlich die notwendige Beratung, überwachen den Fortschritt und kümmern sich um operative
+                        Themen.
+                    </t>
+                    <t t-if="user_lang.startswith('en')">
+                        To ensure the success and sustainability of family-level projects, our teams carefully select
+                        and
+                        verify beneficiaries who are genuinely in need and demonstrate the willingness and character to
+                        achieve self-reliance and economic empowerment. Through detailed interviews and on-site
+                        research,
+                        we ensure authenticity, capability, and their commitment. Our team and field experts
+                        continuously
+                        provide necessary advisory, monitor progress, and take care of operational issues.
+                    </t>
                 </p>
-                <t t-if="user_lang.startswith('de')">Um vollständige Transparenz und Rechenschaftspflicht zu
-                    gewährleisten, erhalten unsere Spender regelmäßige Projektfortschrittsberichte, wir ermöglichen
-                    ihnen den direkten Austausch mit Begünstigten und stellen einen umfassenden Abschlussbericht zur
-                    Verfügung. Zusätzlich erhalten sie eine Spendenquittung für steuerliche Zwecke.
-                </t>
-                <t t-if="user_lang.startswith('en')">To ensure full transparency and accountability, we provide donors
-                    with regular project progress reports, facilitate direct communication with beneficiaries, and
-                    deliver a comprehensive final project report. In addition, donors receive a donation receipt for tax
-                    purposes.
-                </t>
 
                 <p>
-
+                    <t t-if="user_lang.startswith('de')">
+                        Um vollständige Transparenz und Rechenschaftspflicht zu gewährleisten, erhalten unsere Spender
+                        regelmäßige Projektfortschrittsberichte, wir ermöglichen ihnen den direkten Austausch mit
+                        Begünstigten und stellen einen umfassenden Abschlussbericht zur Verfügung. Zusätzlich erhalten
+                        sie
+                        eine Spendenquittung für steuerliche Zwecke.
+                    </t>
+                    <t t-if="user_lang.startswith('en')">
+                        To ensure full transparency and accountability, we provide donors with regular project progress
+                        reports, facilitate direct communication with beneficiaries, and deliver a comprehensive final
+                        project report. In addition, donors receive a donation receipt for tax purposes.
+                    </t>
                 </p>
 
                 <!-- TABS -->
@@ -3785,11 +3992,11 @@
     </template>
 
     <!-- ================================== -->
-    <!-- SMALL PROJECTS TEMPLATE -->
+    <!-- SMALL PROJECTS TEMPLATE (LIBERIA) -->
     <!-- ================================== -->
     <template id="support_family_small_cards" name="Support Family Small Cards">
 
-        <t t-call="liberia_family.projects_hub_styles"/>
+        <t t-call="liberia_family.projects_hub_style"/>
 
         <div class="row">
             <t t-foreach="records" t-as="f">
@@ -3823,7 +4030,7 @@
                                     <div class="mt-4 text-start px-2">
 
                                         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                            <strong style="width:60%; font-size:12px; ">Location</strong>
+                                            <strong style="width:60%; font-size:12px;">Location</strong>
                                             <span style="width:40%;">
                                                 <t t-esc="f.location_en"/>
                                             </span>
@@ -3886,14 +4093,17 @@
                                         </div>
 
                                         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                            <strong style="width:60%; font-size:9px;">Aktuelles monatliches Einkommen:</strong>
+                                            <strong style="width:60%; font-size:9px;">Aktuelles monatliches Einkommen:
+                                            </strong>
                                             <span style="width:40%; font-size:12px;">
                                                 <t t-esc="f.current_income_de"/>
                                             </span>
                                         </div>
 
                                         <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                            <strong style="width:60%; font-size:9px;">Projektbedingtes erwartetes Einkommen:</strong>
+                                            <strong style="width:60%; font-size:9px;">Projektbedingtes erwartetes
+                                                Einkommen:
+                                            </strong>
                                             <span style="width:40%; font-size:12px;">
                                                 <t t-esc="f.additional_income_de"/>
                                             </span>
@@ -3935,7 +4145,6 @@
                                         <t t-if="is_en">Investment Needed:</t>
                                         <t t-if="is_de">Benötigte Investition:</t>
                                     </strong>
-
                                     $
                                     <t t-if="is_en">
                                         <t t-out="f.investment_needed_en"/>
@@ -3998,34 +4207,20 @@
                                         <t t-esc="str(int(progress or 0)) + '%'"/>
                                     </div>
                                 </div>
+                                <div class="support-family-actions">
+                                    <a href="#" class="btn text-white fw-bold w-100"
+                                       style="background-color:#1ba14b; font-size:16px; border-radius:0; height:55px;">
+                                        <t t-if="is_en">Fund this Project</t>
+                                        <t t-if="is_de">Dieses Projekt unterstützen</t>
+                                    </a>
+                                </div>
 
-                            </div>
-
-                            <!-- BUTTONS -->
-
-
-                        </div>
-                        <div style="display:flex; width:100%; gap:22px; margin-top:0; align-items:flex-end;">
-
-                            <!-- LEFT box -->
-                            <div style="flex:0 0 41.5%;">
-                                <a href="#" class="btn text-white fw-bold w-100"
-                                   style="background-color:#ecfdf5; font-size:16px; border-radius:0; height:55px;">
-                                </a>
-                            </div>
-
-                            <!-- RIGHT box -->
-                            <div style="flex:0 0 58%;">
-                                <a href="#" class="btn text-white fw-bold w-100"
-                                   style="background-color:#1ba14b; font-size:16px; border-radius:0; height:55px;">
-
-                                    <t t-if="is_en">Fund this Project</t>
-                                    <t t-if="is_de">Dieses Projekt unterstützen</t>
-
-                                </a>
                             </div>
 
                         </div>
+
+                        <!-- BUTTONS -->
+
                     </div>
                 </div>
 
@@ -4035,22 +4230,251 @@
     </template>
 
     <!-- ================================== -->
-    <!-- MEDIUM PROJECTS TEMPLATE -->
+    <!-- MEDIUM PROJECTS TEMPLATE (SIERRA) -->
     <!-- ================================== -->
     <template id="support_family_medium_cards" name="Support Family Medium Cards">
-        <t t-call="liberia_family.support_family_small_cards">
-            <t t-set="records" t-value="records"/>
-        </t>
+
+        <t t-call="liberia_family.projects_hub_styles"/>
+
+        <div class="row">
+            <t t-foreach="records" t-as="f">
+
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="row g-0 h-100">
+
+                            <!-- LEFT SIDE -->
+                            <div class="col-md-5 text-center rounded-center"
+                                 style="background-color:#ecfdf5; color:#065f46; padding:30px 10px;">
+
+                                <!-- Photo -->
+                                <t t-if="f.photo">
+                                    <img t-att-src="'/web/image/%s/%d/photo' % (f._name, f.id)"
+                                         class="img-fluid rounded-circle shadow-sm mb-3"
+                                         style="width:150px;height:180px;object-fit:cover;"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
+                                         style="width:150px;height:180px;">No Photo
+                                    </div>
+                                </t>
+
+                                <!-- LANGUAGE SWITCHER -->
+                                <t t-set="is_en" t-value="user_lang and user_lang.startswith('en')"/>
+                                <t t-set="is_de" t-value="user_lang and user_lang.startswith('de')"/>
+
+                                <!-- ENGLISH CONTENT -->
+                                <t t-if="is_en">
+                                    <div class="mt-4 text-start px-2">
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:12px;">Location</strong>
+                                            <span style="width:40%;">
+                                                <t t-esc="f.location_en"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:12px;">Name</strong>
+                                            <span style="width:40%;">
+                                                <t t-esc="f.name_en"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:12px;">Age</strong>
+                                            <span style="width:40%;">
+                                                <t t-esc="f.age_en"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:12px;">Current monthly income:</strong>
+                                            <span style="width:40%;">
+                                                <t t-esc="f.current_income_en"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:12px;">Project expected income:</strong>
+                                            <span style="width:40%;">
+                                                <t t-esc="f.additional_income_en"/>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </t>
+
+                                <!-- GERMAN CONTENT -->
+                                <t t-if="is_de">
+                                    <div class="mt-4 text-start px-2">
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:9px;">Standort</strong>
+                                            <span style="width:40%; font-size:12px;">
+                                                <t t-esc="f.location_de"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:9px;">Name</strong>
+                                            <span style="width:40%; font-size:12px;">
+                                                <t t-esc="f.name_de"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:9px;">Alter</strong>
+                                            <span style="width:40%; font-size:12px;">
+                                                <t t-esc="f.age_de"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:9px;">Aktuelles monatliches Einkommen:
+                                            </strong>
+                                            <span style="width:40%; font-size:12px;">
+                                                <t t-esc="f.current_income_de"/>
+                                            </span>
+                                        </div>
+
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                                            <strong style="width:60%; font-size:9px;">Projektbedingtes erwartetes
+                                                Einkommen:
+                                            </strong>
+                                            <span style="width:40%; font-size:12px;">
+                                                <t t-esc="f.additional_income_de"/>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </t>
+
+                            </div>
+
+                            <!-- RIGHT SIDE -->
+                            <div class="col-md-7 px-3">
+
+                                <!-- Project Title -->
+                                <t t-if="is_en">
+                                    <h4 class="fw-bold text-success mb-3">
+                                        <t t-esc="f.project_title_en"/>
+                                    </h4>
+                                </t>
+                                <t t-if="is_de">
+                                    <h4 class="fw-bold text-success mb-3">
+                                        <t t-esc="f.project_title_de"/>
+                                    </h4>
+                                </t>
+
+                                <!-- Description -->
+                                <p class="text-muted mb-4">
+                                    <t t-if="is_en">
+                                        <t t-out="f.project_description_en"/>
+                                    </t>
+                                    <t t-if="is_de">
+                                        <t t-out="f.project_description_de"/>
+                                    </t>
+                                </p>
+
+                                <!-- Investment Needed -->
+                                <div class="alert rounded-3 py-2" style="background-color:#1ba14b; color:white;">
+                                    <strong>
+                                        <t t-if="is_en">Investment Needed:</t>
+                                        <t t-if="is_de">Benötigte Investition:</t>
+                                    </strong>
+                                    $
+                                    <t t-if="is_en">
+                                        <t t-out="f.investment_needed_en"/>
+                                    </t>
+                                    <t t-if="is_de">
+                                        <t t-out="f.investment_needed_de"/>
+                                    </t>
+                                </div>
+
+                                <!-- Benefits -->
+                                <div class="alert rounded-3 py-2 mb-3"
+                                     style="background-color:#ecfdf5; color:#065f46; border-left:6px solid #1ba14b; font-size:14px;">
+
+                                    <strong>
+                                        <t t-if="is_en">Your Benefits as Donor:</t>
+                                        <t t-if="is_de">Ihre Vorteile als Spender:</t>
+                                    </strong>
+                                    <br/>
+
+                                    <t t-if="is_en">
+                                        <t t-foreach="['receivew_1_en','receivew_2_en','receivew_3_en','receivew_4_en']"
+                                           t-as="rw">
+                                            <t t-if="f[rw]">
+                                                <span style="color:green; font-size:18px;">&#10004;</span>
+                                                <span style="font-size:12px;">
+                                                    <t t-esc="f[rw]"/>
+                                                </span>
+                                                <br/>
+                                            </t>
+                                        </t>
+                                    </t>
+
+                                    <t t-if="is_de">
+                                        <t t-foreach="['receivew_1_de','receivew_2_de','receivew_3_de','receivew_4_de']"
+                                           t-as="rw">
+                                            <t t-if="f[rw]">
+                                                <span style="color:green; font-size:18px;">&#10004;</span>
+                                                <span style="font-size:12px;">
+                                                    <t t-esc="f[rw]"/>
+                                                </span>
+                                                <br/>
+                                            </t>
+                                        </t>
+                                    </t>
+
+                                </div>
+
+                                <!-- Progress -->
+                                <h6 style="color:#017F36; font-weight:600; margin-top:5px; margin-bottom:5px;">
+                                    <t t-if="is_en">Funding Progress</t>
+                                    <t t-if="is_de">Finanzierungsfortschritt</t>
+                                </h6>
+
+                                <t t-set="progress"
+                                   t-value="f.progress_percentage_en if is_en else f.progress_percentage_de"/>
+
+                                <div class="progress mb-3" style="height:50px; background-color:#ECECEC;">
+                                    <div class="progress-bar"
+                                         t-att-style="'width:' + str(progress or 0) + '%; background-color:#00b800;'">
+                                        <t t-esc="str(int(progress or 0)) + '%'"/>
+                                    </div>
+                                </div>
+                                <div class="support-family-actions">
+                                    <a href="#" class="btn text-white fw-bold w-100"
+                                       style="background-color:#1ba14b; font-size:16px; border-radius:0; height:55px;">
+                                        <t t-if="is_en">Fund this Project</t>
+                                        <t t-if="is_de">Dieses Projekt unterstützen</t>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BUTTONS -->
+
+                    </div>
+                </div>
+
+            </t>
+        </div>
+
     </template>
 
     <!-- ================================== -->
-    <!-- LARGE PROJECTS TEMPLATE -->
+    <!-- LARGE PROJECTS TEMPLATE (AFGHAN)  -->
     <!-- ================================== -->
     <template id="support_family_large_cards" name="Support Family Large Cards">
+        <!-- Reuse same card layout; records will be passed from caller -->
         <t t-call="liberia_family.support_family_small_cards">
             <t t-set="records" t-value="records"/>
         </t>
     </template>
-
 
 </odoo>

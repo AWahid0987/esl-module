@@ -138,28 +138,53 @@ class GdfhResult(models.Model):
     @api.depends('total_score')
     def _compute_level(self):
         for rec in self:
-            score = rec.total_score
+            score = rec.total_score or 0
+            lang = (self.env.context.get('lang') or '').lower()
+            is_de = lang.startswith('de')
 
-            if score >= 150:
-                rec.level = (
-                    "Progressive Visionary: Your actions profoundly align with and actively "
-                    "advance a progressive world."
-                )
-            elif score >= 120:
-                rec.level = (
-                    "Strong Contributor: You consistently contribute meaningfully toward "
-                    "a progressive world."
-                )
-            elif score >= 90:
-                rec.level = (
-                    "Emerging Contributor: You are on the path of contributing to a "
-                    "progressive world."
-                )
+            if is_de:
+                # ========= GERMAN =========
+                if score >= 150:
+                    rec.level = (
+                        "Top-beitragende Person: Ihre Handlungen stehen stark im Einklang "
+                        "mit einer progressiven Welt und treiben sie aktiv voran."
+                    )
+                elif score >= 120:
+                    rec.level = (
+                        "Stark beitragende Person: Sie leisten kontinuierlich einen bedeutsamen "
+                        "Beitrag zu einer progressiven Welt."
+                    )
+                elif score >= 90:
+                    rec.level = (
+                        "Aufstrebend beitragende Person: Sie befinden sich auf einem guten Weg, "
+                        "zu einer progressiven Welt beizutragen."
+                    )
+                else:
+                    rec.level = (
+                        "Person mit Beitragsbedarf: Es gibt Raum für Wachstum und "
+                        "eine intensivere Beteiligung."
+                    )
             else:
-                rec.level = (
-                    "Needs Focused Engagement: There is room for growth and deeper involvement."
-                )
-
+                # ========= ENGLISH =========
+                if score >= 150:
+                    rec.level = (
+                        "Progressive Visionary: Your actions profoundly align with and actively "
+                        "advance a progressive world."
+                    )
+                elif score >= 120:
+                    rec.level = (
+                        "Strong Contributor: You consistently contribute meaningfully toward "
+                        "a progressive world."
+                    )
+                elif score >= 90:
+                    rec.level = (
+                        "Emerging Contributor: You are on the path of contributing to a "
+                        "progressive world."
+                    )
+                else:
+                    rec.level = (
+                        "Needs Focused Engagement: There is room for growth and deeper involvement."
+                    )
     # Print PDF Report
     def print_report(self):
         if len(self) != 1:
