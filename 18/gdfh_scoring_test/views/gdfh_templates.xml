@@ -184,7 +184,7 @@
                 /* Submit button */
                 .gdfh-submit-btn {
                     width: 100%;
-                    max-width: 300px;
+                    max-width: 350px;
                     padding: 15px 40px;
                     background: linear-gradient(135deg, #00B800 0%, #008000 100%);
                     color: white;
@@ -1398,7 +1398,7 @@
 
 
                                         <div class="text-center mt-2">
-                                            <button type="submit" class="btn btn-primary gdfh-submit-btn">Senden und überprüfen Sie Ihre Ergebnisse</button>
+                                            <button type="submit" class="btn btn-primary gdfh-submit-btn">Absenden und überprüfen Sie Ihre Ergebnisse</button>
                                         </div>
                                 </form>
                             </div>

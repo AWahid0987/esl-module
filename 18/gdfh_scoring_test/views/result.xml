@@ -14,43 +14,43 @@
 
                     /* chart wrapper so Chart.js can resize nicely */
                     .gdfh-chart-wrapper {
-                        position: relative;
-                        width: 100%;
-                        min-height: 260px;
+                    position: relative;
+                    width: 100%;
+                    min-height: 260px;
                     }
                     #gdfhChart {
-                        width: 100% !important;
-                        height: 100% !important;
+                    width: 100% !important;
+                    height: 100% !important;
                     }
 
                     .result-entry table {
-                        font-size: 14px;
+                    font-size: 14px;
                     }
 
                     @media (max-width: 768px) {
-                        .gdfh-result-wrapper {
-                            padding-left: 0.75rem;
-                            padding-right: 0.75rem;
-                        }
-                        .gdfh-chart-wrapper {
-                            min-height: 340px; /* mobile pe zyada height */
-                        }
-                        h2 {
-                            font-size: 1.5rem;
-                        }
-                        h3 {
-                            font-size: 1.25rem;
-                        }
-                        .result-entry table {
-                            font-size: 12px;
-                        }
-                        .result-entry .table thead th {
-                            font-size: 12px;
-                            white-space: nowrap;
-                        }
-                        .result-entry .table tbody td {
-                            white-space: nowrap;
-                        }
+                    .gdfh-result-wrapper {
+                    padding-left: 0.75rem;
+                    padding-right: 0.75rem;
+                    }
+                    .gdfh-chart-wrapper {
+                    min-height: 340px; /* mobile pe zyada height */
+                    }
+                    h2 {
+                    font-size: 1.5rem;
+                    }
+                    h3 {
+                    font-size: 1.25rem;
+                    }
+                    .result-entry table {
+                    font-size: 12px;
+                    }
+                    .result-entry .table thead th {
+                    font-size: 12px;
+                    white-space: nowrap;
+                    }
+                    .result-entry .table tbody td {
+                    white-space: nowrap;
+                    }
                     }
                 </style>
 
@@ -58,10 +58,10 @@
                     <!-- Name + Email -->
                     <h2 class="mb-4" style="color: green;">
                         <span class="lang-en">
-                            Thank you, <t t-esc="results[0].name"/>!
+                            Thank you,<t t-esc="results[0].name"/>!
                         </span>
                         <span class="lang-de">
-                            Vielen Dank, <t t-esc="results[0].name"/>!
+                            Vielen Dank,<t t-esc="results[0].name"/>!
                         </span>
                     </h2>
 
@@ -118,20 +118,40 @@
                                 <h6 class="mb-3" style="font-size: 18px;">
                                     Score Percentage (%) Description
                                 </h6>
-                                <p><span style="color: green; font-weight: bold;">85-100: Top Contributor</span></p>
-                                <p><span style="color: #28a745; font-weight: bold;">70-84: Strong Contributor</span></p>
-                                <p><span style="color: orange; font-weight: bold;">50-69: Emerging Contributor</span></p>
-                                <p><span style="color: red; font-weight: bold;">Below 50: Requires Contribution</span></p>
+                                <p>
+                                    <span style="color: green; font-weight: bold;">85-100: Top Contributor</span>
+                                </p>
+                                <p>
+                                    <span style="color: #28a745; font-weight: bold;">70-84: Strong Contributor</span>
+                                </p>
+                                <p>
+                                    <span style="color: orange; font-weight: bold;">50-69: Emerging Contributor</span>
+                                </p>
+                                <p>
+                                    <span style="color: red; font-weight: bold;">Below 50: Requires Contribution</span>
+                                </p>
                             </div>
 
                             <div class="lang-de">
                                 <h6 class="mb-3" style="font-size: 18px;">
                                     Prozentpunktzahl (%) Beschreibung
                                 </h6>
-                                <p><span style="color: green; font-weight: bold;">85-100: Top-beitragende Person</span></p>
-                                <p><span style="color: #28a745; font-weight: bold;">70-84: Stark beitragende Person</span></p>
-                                <p><span style="color: orange; font-weight: bold;">50-69: Aufstrebend beitragende Person</span></p>
-                                <p><span style="color: red; font-weight: bold;">Unter 50: Person mit Beitragsbedarf</span></p>
+                                <p>
+                                    <span style="color: green; font-weight: bold;">85-100: Top-beitragende Person</span>
+                                </p>
+                                <p>
+                                    <span style="color: #28a745; font-weight: bold;">70-84: Stark beitragende Person
+                                    </span>
+                                </p>
+                                <p>
+                                    <span style="color: orange; font-weight: bold;">50-69: Aufstrebend beitragende
+                                        Person
+                                    </span>
+                                </p>
+                                <p>
+                                    <span style="color: red; font-weight: bold;">Unter 50: Person mit Beitragsbedarf
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -191,20 +211,40 @@
                                             <div class="lang-en">Global Awareness</div>
                                             <div class="lang-de">Globales Bewusstseinn</div>
                                         </td>
-                                        <td><t t-esc="results[0].global_awareness"/></td>
-                                        <td><t t-esc="ga_pct"/>%</td>
+                                        <td>
+                                            <t t-esc="results[0].global_awareness"/>
+                                        </td>
+                                        <td><t t-esc="ga_pct"/>%
+                                        </td>
                                         <td>
                                             <div class="lang-en">
-                                                <span t-if="ga_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
-                                                <span t-elif="ga_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
-                                                <span t-elif="ga_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                                                <span t-if="ga_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Top Contributor
+                                                </span>
+                                                <span t-elif="ga_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Strong Contributor
+                                                </span>
+                                                <span t-elif="ga_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Emerging Contributor
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">Requires
+                                                    Contribution
+                                                </span>
                                             </div>
                                             <div class="lang-de">
-                                                <span t-if="ga_pct &gt;= 85" style="color: green; font-weight: bold;">Spitzenbeitragender</span>
-                                                <span t-elif="ga_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Starker Beitragender</span>
-                                                <span t-elif="ga_pct &gt;= 50" style="color: orange; font-weight: bold;">Aufstrebender Beitragender</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Verbesserungsbedarf</span>
+                                                <span t-if="ga_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Spitzenbeitragender
+                                                </span>
+                                                <span t-elif="ga_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Starker Beitragender
+                                                </span>
+                                                <span t-elif="ga_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Aufstrebender
+                                                    Beitragender
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">
+                                                    Verbesserungsbedarf
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -216,20 +256,40 @@
                                             <div class="lang-en">Civic Participation</div>
                                             <div class="lang-de">Aktive Bürgerbeteiligung</div>
                                         </td>
-                                        <td><t t-esc="results[0].civic_participation"/></td>
-                                        <td><t t-esc="cp_pct"/>%</td>
+                                        <td>
+                                            <t t-esc="results[0].civic_participation"/>
+                                        </td>
+                                        <td><t t-esc="cp_pct"/>%
+                                        </td>
                                         <td>
                                             <div class="lang-en">
-                                                <span t-if="cp_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
-                                                <span t-elif="cp_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
-                                                <span t-elif="cp_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                                                <span t-if="cp_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Top Contributor
+                                                </span>
+                                                <span t-elif="cp_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Strong Contributor
+                                                </span>
+                                                <span t-elif="cp_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Emerging Contributor
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">Requires
+                                                    Contribution
+                                                </span>
                                             </div>
                                             <div class="lang-de">
-                                                <span t-if="cp_pct &gt;= 85" style="color: green; font-weight: bold;">Spitzenbeitragender</span>
-                                                <span t-elif="cp_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Starker Beitragender</span>
-                                                <span t-elif="cp_pct &gt;= 50" style="color: orange; font-weight: bold;">Aufstrebender Beitragender</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Verbesserungsbedarf</span>
+                                                <span t-if="cp_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Spitzenbeitragender
+                                                </span>
+                                                <span t-elif="cp_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Starker Beitragender
+                                                </span>
+                                                <span t-elif="cp_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Aufstrebender
+                                                    Beitragender
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">
+                                                    Verbesserungsbedarf
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -241,20 +301,40 @@
                                             <div class="lang-en">Environmental Awareness</div>
                                             <div class="lang-de">Ethischer Konsum</div>
                                         </td>
-                                        <td><t t-esc="results[0].environment"/></td>
-                                        <td><t t-esc="env_pct"/>%</td>
+                                        <td>
+                                            <t t-esc="results[0].environment"/>
+                                        </td>
+                                        <td><t t-esc="env_pct"/>%
+                                        </td>
                                         <td>
                                             <div class="lang-en">
-                                                <span t-if="env_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
-                                                <span t-elif="env_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
-                                                <span t-elif="env_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                                                <span t-if="env_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Top Contributor
+                                                </span>
+                                                <span t-elif="env_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Strong Contributor
+                                                </span>
+                                                <span t-elif="env_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Emerging Contributor
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">Requires
+                                                    Contribution
+                                                </span>
                                             </div>
                                             <div class="lang-de">
-                                                <span t-if="env_pct &gt;= 85" style="color: green; font-weight: bold;">Spitzenbeitragender</span>
-                                                <span t-elif="env_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Starker Beitragender</span>
-                                                <span t-elif="env_pct &gt;= 50" style="color: orange; font-weight: bold;">Aufstrebender Beitragender</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Verbesserungsbedarf</span>
+                                                <span t-if="env_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Spitzenbeitragender
+                                                </span>
+                                                <span t-elif="env_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Starker Beitragender
+                                                </span>
+                                                <span t-elif="env_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Aufstrebender
+                                                    Beitragender
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">
+                                                    Verbesserungsbedarf
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -266,20 +346,40 @@
                                             <div class="lang-en">Ethical Understanding</div>
                                             <div class="lang-de">Umweltschutz</div>
                                         </td>
-                                        <td><t t-esc="results[0].ethical"/></td>
-                                        <td><t t-esc="eth_pct"/>%</td>
+                                        <td>
+                                            <t t-esc="results[0].ethical"/>
+                                        </td>
+                                        <td><t t-esc="eth_pct"/>%
+                                        </td>
                                         <td>
                                             <div class="lang-en">
-                                                <span t-if="eth_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
-                                                <span t-elif="eth_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
-                                                <span t-elif="eth_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                                                <span t-if="eth_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Top Contributor
+                                                </span>
+                                                <span t-elif="eth_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Strong Contributor
+                                                </span>
+                                                <span t-elif="eth_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Emerging Contributor
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">Requires
+                                                    Contribution
+                                                </span>
                                             </div>
                                             <div class="lang-de">
-                                                <span t-if="eth_pct &gt;= 85" style="color: green; font-weight: bold;">Spitzenbeitragender</span>
-                                                <span t-elif="eth_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Starker Beitragender</span>
-                                                <span t-elif="eth_pct &gt;= 50" style="color: orange; font-weight: bold;">Aufstrebender Beitragender</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Verbesserungsbedarf</span>
+                                                <span t-if="eth_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Spitzenbeitragender
+                                                </span>
+                                                <span t-elif="eth_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Starker Beitragender
+                                                </span>
+                                                <span t-elif="eth_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Aufstrebender
+                                                    Beitragender
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">
+                                                    Verbesserungsbedarf
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -291,20 +391,40 @@
                                             <div class="lang-en">Peace &amp; Conflict Resolution</div>
                                             <div class="lang-de">Frieden und Konfliktmanagement</div>
                                         </td>
-                                        <td><t t-esc="results[0].peace"/></td>
-                                        <td><t t-esc="peace_pct"/>%</td>
+                                        <td>
+                                            <t t-esc="results[0].peace"/>
+                                        </td>
+                                        <td><t t-esc="peace_pct"/>%
+                                        </td>
                                         <td>
                                             <div class="lang-en">
-                                                <span t-if="peace_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
-                                                <span t-elif="peace_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
-                                                <span t-elif="peace_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                                                <span t-if="peace_pct &gt;= 85"
+                                                      style="color: green; font-weight: bold;">Top Contributor
+                                                </span>
+                                                <span t-elif="peace_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Strong Contributor
+                                                </span>
+                                                <span t-elif="peace_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Emerging Contributor
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">Requires
+                                                    Contribution
+                                                </span>
                                             </div>
                                             <div class="lang-de">
-                                                <span t-if="peace_pct &gt;= 85" style="color: green; font-weight: bold;">Spitzenbeitragender</span>
-                                                <span t-elif="peace_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Starker Beitragender</span>
-                                                <span t-elif="peace_pct &gt;= 50" style="color: orange; font-weight: bold;">Aufstrebender Beitragender</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Verbesserungsbedarf</span>
+                                                <span t-if="peace_pct &gt;= 85"
+                                                      style="color: green; font-weight: bold;">Spitzenbeitragender
+                                                </span>
+                                                <span t-elif="peace_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Starker Beitragender
+                                                </span>
+                                                <span t-elif="peace_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Aufstrebender
+                                                    Beitragender
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">
+                                                    Verbesserungsbedarf
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -316,20 +436,40 @@
                                             <div class="lang-en">Intercultural Understanding</div>
                                             <div class="lang-de">Interkulturelle Kompetenz</div>
                                         </td>
-                                        <td><t t-esc="results[0].intercultural"/></td>
-                                        <td><t t-esc="int_pct"/>%</td>
+                                        <td>
+                                            <t t-esc="results[0].intercultural"/>
+                                        </td>
+                                        <td><t t-esc="int_pct"/>%
+                                        </td>
                                         <td>
                                             <div class="lang-en">
-                                                <span t-if="int_pct &gt;= 85" style="color: green; font-weight: bold;">Top Contributor</span>
-                                                <span t-elif="int_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Strong Contributor</span>
-                                                <span t-elif="int_pct &gt;= 50" style="color: orange; font-weight: bold;">Emerging Contributor</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Requires Contribution</span>
+                                                <span t-if="int_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Top Contributor
+                                                </span>
+                                                <span t-elif="int_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Strong Contributor
+                                                </span>
+                                                <span t-elif="int_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Emerging Contributor
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">Requires
+                                                    Contribution
+                                                </span>
                                             </div>
                                             <div class="lang-de">
-                                                <span t-if="int_pct &gt;= 85" style="color: green; font-weight: bold;">Spitzenbeitragender</span>
-                                                <span t-elif="int_pct &gt;= 70" style="color: #28a745; font-weight: bold;">Starker Beitragender</span>
-                                                <span t-elif="int_pct &gt;= 50" style="color: orange; font-weight: bold;">Aufstrebender Beitragender</span>
-                                                <span t-else="" style="color: red; font-weight: bold;">Verbesserungsbedarf</span>
+                                                <span t-if="int_pct &gt;= 85" style="color: green; font-weight: bold;">
+                                                    Spitzenbeitragender
+                                                </span>
+                                                <span t-elif="int_pct &gt;= 70"
+                                                      style="color: #28a745; font-weight: bold;">Starker Beitragender
+                                                </span>
+                                                <span t-elif="int_pct &gt;= 50"
+                                                      style="color: orange; font-weight: bold;">Aufstrebender
+                                                    Beitragender
+                                                </span>
+                                                <span t-else="" style="color: red; font-weight: bold;">
+                                                    Verbesserungsbedarf
+                                                </span>
                                             </div>
                                         </td>
                                     </tr>
@@ -361,150 +501,173 @@
 
             <!-- Chart.js -->
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-       <script>
-document.addEventListener("DOMContentLoaded", function () {
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
 
-    const canvas = document.getElementById("gdfhChart");
-    if (!canvas) return;
+                const canvas = document.getElementById("gdfhChart");
+                if (!canvas) return;
 
-    /* FIX: Define mobile check inside this script */
-    const isMobile = window.innerWidth = 768;
+                /* FIX: Define mobile check inside this script */
+                const isMobile = window.innerWidth = 768;
 
-    const ctx = canvas.getContext("2d");
+                const ctx = canvas.getContext("2d");
 
-    /* Language detection */
-    const htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
-    const isDE = htmlLang.indexOf("de") === 0;
+                /* Language detection */
+                const htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
+                const isDE = htmlLang.indexOf("de") === 0;
 
-    /* Scores from QWeb */
-    const scores = [
-        <t t-esc="results[0].global_awareness"/>,
-        <t t-esc="results[0].civic_participation"/>,
-        <t t-esc="results[0].environment"/>,
-        <t t-esc="results[0].ethical"/>,
-        <t t-esc="results[0].peace"/>,
-        <t t-esc="results[0].intercultural"/>
-    ];
+                /* Scores from QWeb */
+                const scores = [
+                <t t-esc="results[0].global_awareness"/>,
+                <t t-esc="results[0].civic_participation"/>,
+                <t t-esc="results[0].environment"/>,
+                <t t-esc="results[0].ethical"/>,
+                <t t-esc="results[0].peace"/>,
+                <t t-esc="results[0].intercultural"/>
+                ];
 
-    /* Percentages from QWeb */
-    const percentages = [
-        <t t-esc="results[0].global_awareness_pct"/>,
-        <t t-esc="results[0].civic_participation_pct"/>,
-        <t t-esc="results[0].environment_pct"/>,
-        <t t-esc="results[0].ethical_pct"/>,
-        <t t-esc="results[0].peace_pct"/>,
-        <t t-esc="results[0].intercultural_pct"/>
-    ];
+                /* Percentages from QWeb */
+                const percentages = [
+                <t t-esc="results[0].global_awareness_pct"/>,
+                <t t-esc="results[0].civic_participation_pct"/>,
+                <t t-esc="results[0].environment_pct"/>,
+                <t t-esc="results[0].ethical_pct"/>,
+                <t t-esc="results[0].peace_pct"/>,
+                <t t-esc="results[0].intercultural_pct"/>
+                ];
 
-    /* English labels */
-    const labelsEn = [
-        "Global Awareness",
-        "Civic Participation",
-        "Environmental Awareness",
-        "Ethical Understanding",
-        "Peace &amp; Conflict Resolution",
-        "Intercultural Understanding"
-    ];
+                /* English labels */
+                const labelsEn = [
+                "Global Awareness",
+                "Civic Participation",
+                "Environmental Awareness",
+                "Ethical Understanding",
+                "Peace &amp; Conflict Resolution",
+                "Intercultural Understanding"
+                ];
 
-    /* German labels */
-    const labelsDe = [
-        "Globales Bewusstsein",
-        "Aktive Bürgerbeteiligung",
-        "Umweltschutz",
-        "Ethischer Konsum",
-        "Frieden &amp; Konfliktmanagement",
-        "Interkulturelle Kompetenz"
-    ];
+                /* German labels */
+                const labelsDe = [
+                "Globales Bewusstsein",
+                "Aktive Bürgerbeteiligung",
+                "Umweltschutz",
+                "Ethischer Konsum",
+                "Frieden &amp; Konfliktmanagement",
+                "Interkulturelle Kompetenz"
+                ];
 
-    const labels = isDE ? labelsDe : labelsEn;
+                const labels = isDE ? labelsDe : labelsEn;
 
-    /* Axis text */
-    const labelScore = isDE ? "Punktzahl in jedem Bereich" : "Score in each area";
-    const labelPercentage = isDE ? "Prozentsatz" : "Percentage";
+                /* Axis text */
+                const labelScore = isDE ? "Punktzahl in jedem Bereich" : "Score in each area";
+                const labelPercentage = isDE ? "Prozentsatz" : "Percentage";
 
-    /* Score colors */
-    const colors = scores.map(score => {
-        if (score >= 25.5) return "#1ba14b";
-        else if (score >= 21) return "#017F36";
-        else if (score >= 15) return "orange";
-        else return "red";
-    });
+                /* Score colors */
+                const colors = scores.map(score => {
+                if (score >= 25.5) return "#1ba14b";
+                else if (score >= 21) return "#017F36";
+                else if (score >= 15) return "orange";
+                else return "red";
+                });
 
-    /* Chart.js */
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [
+                /* Chart.js */
+                new Chart(ctx, {
+                type: "bar",
+                data: {
+                labels: labels,
+                datasets: [
                 {
-                    label: labelScore,
-                    data: scores,
-                    backgroundColor: colors,
-                    borderColor: "rgba(0,0,0,0.2)",
-                    borderWidth: 1
+                label: labelScore,
+                data: scores,
+                backgroundColor: colors,
+                borderColor: "rgba(0,0,0,0.2)",
+                borderWidth: 1
                 },
                 {
-                    label: labelPercentage,
-                    data: percentages,
-                    type: "line",
-                    borderColor: "blue",
-                    borderWidth: 2,
-                    fill: false,
-                    yAxisID: "y1"
+                label: labelPercentage,
+                data: percentages,
+                type: "line",
+                borderColor: "blue",
+                borderWidth: 2,
+                fill: false,
+                yAxisID: "y1"
                 }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
+                ]
+                },options: {
+                responsive: true,
+                maintainAspectRatio: false,
 
-            interaction: { mode: "index", intersect: false },
+                interaction: { mode: "index", intersect: false },
 
-            plugins: {
-                legend: { display: false },
+                plugins: {
+                legend: {
+                display: false,
+                labels: {
+                font: { weight: "bold" } // BOLD LEGEND LABELS
+                }
+                },
                 tooltip: {
-                    callbacks: {
-                        label: function (context) {
-                            if (context.datasetIndex === 0) {
-                                return labelScore + ": " + context.formattedValue;
-                            } else {
-                                return labelPercentage + ": " + context.formattedValue;
-                            }
-                        }
-                    }
+                titleFont: { weight: "bold" }, // BOLD TOOLTIP TITLE
+                bodyFont: { weight: "bold" }, // BOLD TOOLTIP TEXT
+                callbacks: {
+                label: function (context) {
+                if (context.datasetIndex === 0) {
+                return labelScore + ": " + context.formattedValue;
+                } else {
+                return labelPercentage + ": " + context.formattedValue;
                 }
-            },
+                }
+                }
+                }
+                },
 
-            scales: {
+                scales: {
                 x: {
-                    ticks: {
-                        autoSkip: false,
-                        maxRotation: isMobile ? 60 : 45,
-                        minRotation: isMobile ? 45 : 0,
-                        font: { size: isMobile ? 9 : 11 }
-                    }
+                ticks: {
+                autoSkip: false,
+                maxRotation: isMobile ? 60 : 45,
+                minRotation: isMobile ? 45 : 0,
+                font: {
+                size: isMobile ? 9 : 11,
+                weight: "bold" // BOLD X-AXIS LABELS
+                }
+                }
                 },
                 y: {
-                    beginAtZero: true,
-                    title: { display: true, text: labelScore },
-                    suggestedMax: 30
+                beginAtZero: true,
+                title: {
+                display: true,
+                text: labelScore,
+                font: { weight: "bold" } // BOLD Y-AXIS TITLE
+                },
+                suggestedMax: 30,
+                ticks: {
+                font: { weight: "bold" } // BOLD Y-AXIS NUMBERS
+                }
                 },
                 y1: {
-                    beginAtZero: true,
-                    position: "right",
-                    title: {
-                        display: true,
-                        text: labelPercentage + " (%)",
-                        rotation: -90
-                    },
-                    suggestedMax: 100,
-                    grid: { drawOnChartArea: false }
+                beginAtZero: true,
+                position: "right",
+                title: {
+                display: true,
+                text: labelPercentage + " (%)",
+                rotation: -90,
+                font: { weight: "bold" } // BOLD RIGHT AXIS TITLE
+                },
+                suggestedMax: 100,
+                grid: { drawOnChartArea: false },
+                ticks: {
+                font: { weight: "bold" } // BOLD RIGHT AXIS NUMBERS
                 }
-            }
-        }
-    });
-});
-</script>
+                }
+                }
+                }
+
+                }
+                }
+                });
+                });
+            </script>
 
         </t>
     </template>
@@ -523,30 +686,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     html[lang^="de"] .lang-de { display: inline; }
 
                     .gdfh-chart-wrapper {
-                        position: relative;
-                        width: 100%;
-                        min-height: 260px;
+                    position: relative;
+                    width: 100%;
+                    min-height: 260px;
                     }
                     #gdfhChart {
-                        width: 100% !important;
-                        height: 100% !important;
+                    width: 100% !important;
+                    height: 100% !important;
                     }
 
                     @media (max-width: 768px) {
-                        .gdfh-result-wrapper {
-                            padding-left: 0.75rem;
-                            padding-right: 0.75rem;
-                        }
+                    .gdfh-result-wrapper {
+                    padding-left: 0.75rem;
+                    padding-right: 0.75rem;
+                    }
                     }
                 </style>
 
                 <t t-if="results">
                     <h2 class="mb-4">
                         <span class="lang-en">
-                            Thank you, <t t-esc="results[0].name"/>!
+                            Thank you,<t t-esc="results[0].name"/>!
                         </span>
                         <span class="lang-de">
-                            Vielen Dank, <t t-esc="results[0].name"/>!
+                            Vielen Dank,<t t-esc="results[0].name"/>!
                         </span>
                     </h2>
 
@@ -611,17 +774,34 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div class="col-md-3 mt-4 mt-md-0">
                             <div class="lang-en">
                                 <h3 class="mb-3">Legend</h3>
-                                <p><span style="color: green; font-weight: bold;">85-100: Top Contributor</span></p>
-                                <p><span style="color: #28a745; font-weight: bold;">70-84: Strong Contributor</span></p>
-                                <p><span style="color: orange; font-weight: bold;">50-69: Emerging Contributor</span></p>
-                                <p><span style="color: red; font-weight: bold;">Below 50: Requires Contribution</span></p>
+                                <p>
+                                    <span style="color: green; font-weight: bold;">85-100: Top Contributor</span>
+                                </p>
+                                <p>
+                                    <span style="color: #28a745; font-weight: bold;">70-84: Strong Contributor</span>
+                                </p>
+                                <p>
+                                    <span style="color: orange; font-weight: bold;">50-69: Emerging Contributor</span>
+                                </p>
+                                <p>
+                                    <span style="color: red; font-weight: bold;">Below 50: Requires Contribution</span>
+                                </p>
                             </div>
                             <div class="lang-de">
                                 <h3 class="mb-3">Legende</h3>
-                                <p><span style="color: green; font-weight: bold;">85-100: Spitzenbeitragender</span></p>
-                                <p><span style="color: #28a745; font-weight: bold;">70-84: Starker Beitragender</span></p>
-                                <p><span style="color: orange; font-weight: bold;">50-69: Aufstrebender Beitragender</span></p>
-                                <p><span style="color: red; font-weight: bold;">Unter 50: Verbesserungsbedarf</span></p>
+                                <p>
+                                    <span style="color: green; font-weight: bold;">85-100: Spitzenbeitragender</span>
+                                </p>
+                                <p>
+                                    <span style="color: #28a745; font-weight: bold;">70-84: Starker Beitragender</span>
+                                </p>
+                                <p>
+                                    <span style="color: orange; font-weight: bold;">50-69: Aufstrebender Beitragender
+                                    </span>
+                                </p>
+                                <p>
+                                    <span style="color: red; font-weight: bold;">Unter 50: Verbesserungsbedarf</span>
+                                </p>
                             </div>
                         </div>
                     </div>
