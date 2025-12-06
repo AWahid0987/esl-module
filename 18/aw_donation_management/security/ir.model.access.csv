@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_donation_region,access_model_donation_region,model_donation_region,base.group_user,1,1,1,1
+access_donation_product_line,access_model_donation_product_line,model_donation_product_line,base.group_user,1,1,1,1
+access_donation_order,access_model_donation_order,model_donation_order,base.group_user,1,1,1,1
+access_donation_account_report,access_model_donation_account_report,model_donation_account_report,base.group_user,1,1,1,1
+access_donation_report_wizard,access_model_donation_report_wizard,model_donation_report_wizard,base.group_user,1,1,1,1
+access_donation_account_report_zone_user,access.donation.account.report.zone.user,model_donation_account_report_zone,base.group_user,1,1,1,1
+access_donation_report_wizard_zone,access_donation_report_wizard_zone,model_donation_report_wizard_zone,base.group_user,1,1,1,1

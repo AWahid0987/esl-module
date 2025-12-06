@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="donation_multi_company_rule" model="ir.rule">
+        <field name="name">Donation multi company</field>
+        <field name="model_id" ref="model_donation_order" />
+        <field name="domain_force">
+            ['|',('company_id','=',False),('company_id','in',company_ids)]
+        </field>
+         <field name="groups" eval="[(4, ref('base.group_user'))]"/>  <!-- Apply to all internal users -->
+    </record>
+
+     <record id="donation_own_user_rule" model="ir.rule">
+            <field name="name">Donation Own User</field>
+            <field name="model_id" ref="model_donation_order"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+</odoo>
+
+<!-- <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field> -->

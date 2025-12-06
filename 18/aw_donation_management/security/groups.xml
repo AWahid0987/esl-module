@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Group: Users Restricted to Their Own Donation Records -->
+        <record id="group_donation_own_record" model="res.groups">
+            <field name="name">Donation Own Record</field>
+            <field name="category_id" ref="base.module_category_usability"/>
+            <field name="comment">Restrict users to access their own donation records, except for admins.</field>
+        </record>
+
+        <!-- Admin Rule: See All Records -->
+        <record id="rule_donation_admin_all_records" model="ir.rule">
+            <field name="name">Admins See All Donation Records</field>
+            <field name="model_id" ref="aw_donation_management.model_donation_order"/>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <!-- User Rule: Only Access Own Records -->
+        <record id="rule_donation_own_record" model="ir.rule">
+            <field name="name">See Own Donation Records</field>
+            <field name="model_id" ref="aw_donation_management.model_donation_order"/>
+            <field name="groups" eval="[(4, ref('aw_donation_management.group_donation_own_record'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="global" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

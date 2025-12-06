@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record model="ir.module.category" id="donation_module_management">
+    <field name="name">Donations</field>
+    <field name="description">User access levels for Donation module</field>
+    <field name="sequence">10</field>
+</record>
+
+<record id="donation_user_access" model="res.groups">
+    <field name="name">User</field>
+    <field name="category_id" ref="donation_module_management"/>
+</record>
+
+<record id="donation_manager_access" model="res.groups">
+    <field name="name">Manager</field>
+    <field name="category_id" ref="donation_module_management"/>
+    <field name="implied_ids" eval="[(4, ref('donation_user_access'))]"/>
+</record>
+
+
+</odoo>

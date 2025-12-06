@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+        <record id="custom_donation_format" model="report.paperformat">
+            <field name="name">French Bank Check</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">290</field>
+            <field name="page_width">235</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">82</field>
+            <field name="margin_bottom">67</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">82</field>
+            <field name="dpi">80</field>
+        </record>
+ 
+    <record id="action_donation_report" model="ir.actions.report">
+        <field name="name">Recipt</field>
+        <field name="model">donation.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">aw_donation_management.custom_print</field>
+        <field name="report_file">aw_donation_management.custom_print</field>
+        <field name="print_report_name">'Invoice - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="aw_donation_management.custom_donation_format"/>   
+        <field name="binding_model_id" ref="aw_donation_management.model_donation_order"/>
+    </record>
+
+     <template id="custom_report_layout" inherit_id="web.external_layout_standard">
+     
+        <xpath expr="//div[1]" position="attributes">
+            <attribute name="style">height: 300px;</attribute>
+        </xpath>
+    </template>
+
+   <template id="custom_standard_external_layout"
+             inherit_id="web.external_layout_standard">
+       <xpath expr="//div[1]" position="replace">
+           <div t-attf-class="header o_company_#{company.id}_layout nastaleeq-text"
+     style="position:absolute;top:-15px;">
+            <div class="row">
+                <span style="position:absolute;top:210px;font-size:28px;color:#127a2b;">
+                    <span t-esc="o.collection_center_id.name"/> <span t-esc="o.region_id.name"/>
+                </span>
+                <img src="/aw_donation_management/static/description/backg.png" alt="Image Description" height="275px" width="100%" />
+            </div>
+        </div>
+        </xpath>
+        <xpath expr="//div[3]" position="replace">
+        <style>
+                    @font-face {
+                        font-family: 'Jameel Noori Nastaleeq Regular';
+                        src: url('aw_donation_management/static/src/fonts/Jameel Noori Nastaleeq Regular.ttf') format('truetype');
+                        }
+                </style>
+        
+           <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout nastaleeq-text" style="width:102%;position:absolute;left:-1px;">
+                <div>
+                        <div style=" text-align: right; direction: rtl; border: 1px solid black; padding: 10px; width: 100%;">
+                           
+                            <p >ہم (نام) ......................................... والدیت .......................................</p>
+                            <p >نام ......................................... والدیت .......................................</p>
+                            <p >مورخہ ............................... کو مبلغ ............................. نمبر .............................</p>
+                            <p >سے وصول کئے، جو کہ سنٹرل فنڈ کمیٹی کو جمع کروا کر رسید واپس مقامی فنڈ کے سپرد کرنے کے ذمہ دار ہیں۔</p>
+                            <p >دستخط .......................................... دستخط ..........................................</p>
+                        </div>
+                    </div>
+           </div>
+       </xpath>
+   </template>
+
+    <template id="custom_print">
+        <t t-call="web.html_container">
+
+
+            <t t-call="web.external_layout">
+                <style>
+                    @font-face {
+                        font-family: 'Jameel Noori Nastaleeq Regular';
+                        src: url('aw_donation_management/static/src/fonts/Jameel Noori Nastaleeq Regular.ttf') format('truetype');
+                        }
+                </style>
+
+                <t t-foreach="docs" t-as="o">
+                <div class="page">
+
+<div class="text-center" style="color:#127a2b;">
+                    Created by <t t-esc="o.created_by"/>
+                </div>
+                <div class="row mx-3" style="font-size:18px;font-weight:bold;color:#127a2b;">
+                
+                    
+                    
+            <div class="col-2" style="text-align:left;">Date</div>
+                                <div class="col-4" style="border-bottom:1px black solid;text-align:left;">
+                                    <span t-esc="o.donantion_date.strftime('%d-%m-%y')"></span>
+                                </div>
+                    <div class="col-2" style="font-family: 'Jameel Noori Nastaleeq Regular';">واپس مقامی</div>
+                    
+                <div class="col-2">
+                                                            Month
+                                                            
+                                    </div>
+                                    <div class="col-2" style="border-bottom:1px black solid;text-align:left;"><span t-esc="o.months"></span></div>
+                                    
+                    
+                </div>
+
+                <br/>
+
+                <div class="row mx-3" style="font-size:18px;font-weight:bold;color:#127a2b;">
+            
+                  
+
+                    <div class="col-2" style="text-align:left;color:#127a2b;">Invoice</div>
+                    <div class="col-4" style="border-bottom:1px black solid;text-align:left;color:#127a2b;">
+                        <span t-esc="o.invoice_name"></span> 
+                    </div>
+
+
+                    <div class="col-2"></div>
+                        <div class="col-2" style="text-align:left;">
+                         Zone
+
+                    </div>
+                  
+                       <div class="col-2" style="border-bottom:1px black solid;text-align:right;"><span t-esc="o.region_id.name"></span></div>
+                    
+                   
+                    
+                </div>
+
+                <br/>
+                <br/>
+
+
+                    
+
+                    <table class=" mx-3" style="font-size:18px;width:96%;color:#1f3b61;font-weight:bolder;border :1.5px solid gray;">
+                        <thead>
+
+
+                                        <tr>
+                                            <td style="border-bottom:2px gray solid;padding:2px 5px;background-color:#127a2b;color:white;text-align:left;">
+                                                Nature of Donation
+                                                
+                                            </td>
+                                            <td style="border-bottom:2px gray solid;padding:2px 5px;background-color:#127a2b;color:white;text-align:right;">Amount</td>
+                                           
+                                        </tr>
+
+                                       <t t-foreach="o.order_line_ids" t-as="l">
+                                         <tr t-if="l.amount">
+                                           
+                                            <td style="font-size:14px;text-align:left;padding:2px 5px;"> <span t-field="l.product_id.name"></span></td>
+                                             <td style="font-size:14px;text-align:right;padding:2px 5px;">
+                                                <span t-esc="'{:,.0f}'.format(l.amount)"></span>
+
+                                            </td>
+                                        </tr>
+                                       </t>
+
+                                        <tr>
+                                            
+                                            <td style="font-size:14px;text-align:right;padding:2px 5px;"> Total Amount</td>
+                                            <td style="font-size:14px;text-align:right;padding:2px 5px;">
+                                           
+                                            <span t-esc="'{:,.0f}'.format(o.total_amount)"></span>
+                                            
+                                            </td>
+                                        </tr>
+                                       
+                        </thead>
+                    </table>
+                <br/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

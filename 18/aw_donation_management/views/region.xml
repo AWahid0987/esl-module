@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="action_donation_region" model="ir.actions.act_window">
+        <field name="name">Region</field>
+        <field name="res_model">donation.region</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="tree_donation_region" model="ir.ui.view">
+        <field name="name">Region</field>
+        <field name="model">donation.region</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="form_donation_region" model="ir.ui.view">
+        <field name="name">Region</field>
+        <field name="model">donation.region</field>
+        <field name="arch" type="xml">
+            <form string="Region ">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <menuitem
+            id="menu_donation_region"
+            parent="aw_donation_management.menu_donation_management"
+            name="Region"
+            action="aw_donation_management.action_donation_region"
+            sequence="30"/>
+</odoo>

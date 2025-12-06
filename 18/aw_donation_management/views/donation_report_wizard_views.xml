@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_donation_report_wizard_form" model="ir.ui.view">
+        <field name="name">donation.report.wizard.form</field>
+        <field name="model">donation.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Donation Report">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date_start" string="Dates" widget="daterange"
+                                   options="{'end_date_field': 'date_end'}"/>
+                            <field name="date_end" invisible="1"/>
+                            <field name="company_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="paid" invisible="unpaid or total"/>
+                            <field name="unpaid" invisible="paid or total"/>
+                            <field name="total" invisible="paid or unpaid"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Generate Report"
+                            type="object"
+                            name="generate_report"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_donation_report_wizard_zone_form" model="ir.ui.view">
+        <field name="name">donation.report.wizard.zone.form</field>
+        <field name="model">donation.report.wizard.zone</field>
+        <field name="arch" type="xml">
+            <form string="Generate Donation Report">
+                <group>
+                    <group string="Single Period Selection">
+                        <field name="month"/>
+                        <field name="year"/>
+                    </group>
+
+                    <group string="Multiple Period Options">
+                        <field name="enable_multiple_months"/>
+                        <field name="month_from" invisible="not enable_multiple_months"/>
+                        <field name="month_to" invisible="not enable_multiple_months"/>
+                        <field name="year_from" invisible="not enable_multiple_months"/>
+                        <field name="year_to" invisible="not enable_multiple_months"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="generate_report" string="Generate Report"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_donation_report_wizard" model="ir.actions.act_window">
+        <field name="name">Donation Report Wizard</field>
+        <field name="res_model">donation.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_donation_report_wizard_zone" model="ir.actions.act_window">
+        <field name="name">Donation Report Wizard Zone</field>
+        <field name="res_model">donation.report.wizard.zone</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item for Year -->
+    <menuitem
+            id="menu_report"
+            parent="aw_donation_management.menu_donation_management"
+            name="HO Reports"
+            action="action_donation_report_wizard"
+            sequence="44"/>
+    <!--    <menuitem-->
+    <!--            id="menu_report_zone"-->
+    <!--            parent="aw_donation_management.menu_donation_management"-->
+    <!--            name="Zone Reports"-->
+    <!--            action="action_donation_report_wizard_zone"-->
+    <!--            sequence="45"/>-->
+</odoo>

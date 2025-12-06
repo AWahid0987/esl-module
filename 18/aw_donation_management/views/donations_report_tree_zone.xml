@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_donation_report_tree_zone" model="ir.ui.view">
+    <field name="name">donation.account.report.zone.tree</field>
+    <field name="model">donation.account.report.zone</field>
+    <field name="arch" type="xml">
+        <tree string="Donation Account Report">
+            <field name="company_id" optional="show"/>
+            <field name="zakat" optional="show"/>
+            <field name="sadqa" optional="show"/>
+            <field name="fitrana" optional="show"/>
+            <field name="hadiya_imam_hussain" optional="show"/>
+            <field name="sadqa_mulaqat" optional="show"/>
+            <field name="multan_sharif_fund" optional="show"/>
+            <field name="naat_khaani" optional="show"/>
+            <field name="qurbani_wala_mamla" optional="show"/>
+            <field name="hadia" optional="show"/>
+            <field name="sadqa_shifa" optional="show"/>
+            <field name="special_fund_lahore" optional="show"/>
+            <field name="langer_shareef_multan" optional="show"/>
+            <field name="langer_shareef" optional="show"/>
+            <field name="syedi_g_ki_neeyat_se_sadqa" optional="show"/>
+            <field name="hadia_aqa_ji" optional="show"/>
+            <field name="faisal_town_purchase_fund" optional="show"/>
+            <field name="qurbani_zati" optional="show"/>
+            <field name="qurbani_sarkari" optional="show"/>
+            <field name="hadia_saad_bin_waqas" optional="show"/>
+            <field name="hadia_ameer_hamza" optional="show"/>
+            <field name="total_amount" optional="show"/>
+        </tree>
+    </field>
+   </record>
+
+   <!-- Correct action -->
+   <record id="action_donation_account_report" model="ir.actions.act_window">
+      <field name="name">Donation Account Report</field>
+      <field name="res_model">donation.account.report.zone</field>
+      <field name="view_mode">tree,form</field>
+      <!-- Use user.company_id.id to filter -->
+      <field name="domain">[('company_id', '=', user.company_id.id)]</field>
+      <field name="context">{'default_company_id': user.company_id.id}</field>
+      <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+              Create a new donation account report
+          </p>
+      </field>
+   </record>
+</odoo>

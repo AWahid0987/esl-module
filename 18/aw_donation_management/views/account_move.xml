@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_donatation_order" model="ir.ui.view">
+        <field name="name">account.move.form.donatation.order</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="donation_order_id" />
+                <field name="received_by" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

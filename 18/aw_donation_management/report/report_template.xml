@@ -1,0 +1,33 @@
+<odoo>
+    <template id="donation_report_template">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="doc">
+                <h2>Donation Report</h2>
+                <p>Company: <t t-esc="doc.company_id.name"/></p>
+                <p>Months: <t t-esc="doc.months"/> | Years: <t t-esc="doc.years"/></p>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Sadqa</th>
+                            <th>Zakat</th>
+                            <th>Fidya</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><t t-esc="doc.account_id.name"/></td>
+                            <td><t t-esc="doc.sadqa"/></td>
+                            <td><t t-esc="doc.zakat"/></td>
+                            <td><t t-esc="doc.fidya"/></td>
+                            <td><t t-esc="doc.total_amount"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr/>
+            </t>
+        </t>
+    </template>
+</odoo>

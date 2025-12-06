@@ -1,0 +1,193 @@
+<odoo>
+    <record id="view_donation_order_form" model="ir.ui.view">
+        <field name="name">donation.order.form</field>
+        <field name="model">donation.order</field>
+        <field name="arch" type="xml">
+        
+            <form string="Donation Order">
+            
+                <header>
+                    <button name="action_confirm" type="object" class="oe_highlight" string="Confirm" invisible="state in ['confirmed','done']"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state in ['draft','cancel']"/>
+                    <button name="action_done" type="object" string="Mark as Done" invisible="state != 'confirmed'"/>
+                    
+
+                    <field name="state" widget='statusbar' statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+
+
+                
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_invoices"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                    >
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+
+                </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                 
+                    <group>
+                        <group>
+                            <field name="collection_center_id" readonly="state in ['confirmed','done','cancel']"/>
+                            <field name="created_by"/>
+                            <!-- <field name="collecter"/> -->
+                        </group>
+                        <group>
+                            <field name="father" readonly="state in ['confirmed','done','cancel']"/>
+                             <field name="donantion_date" readonly="state in ['confirmed','done','cancel']"/>
+			    <field name="region_id" readonly="state in ['confirmed','done','cancel']"/>
+                            <field name="months" readonly="state in ['confirmed','done','cancel']"/>
+                        </group>
+                      
+                    </group>
+
+                    <group string="Receipt">
+                        <group>
+                            <field name="collecter" readonly="state in ['confirmed','done','cancel']"/>
+                        </group>
+                        <group>
+                            <field name="father_name" readonly="state in ['confirmed','done','cancel']"/>
+                        </group>
+                      
+                    </group>
+                    <notebook >
+                        <page string="Donation Lines" >
+                        <group>
+                            <group >
+
+
+                                 <field name="order_line_ids" readonly="state in ('confirmed','done','cancel')">
+                                <tree editable="bottom" >
+                                    <!-- <field name="product_id" string="تفصیل" readonly="parent.state in ['confirmed','done','cancel']" options="{'no_create': True, 'no_edit': True}"/> -->
+                                    <field name="account_id" string="تفصیل" readonly="parent.state in ['confirmed','done','cancel']" options="{'no_create': True, 'no_edit': True}"/>
+                                    <field name="name" column_invisible="1" readonly="parent.state in ['confirmed','done','cancel']"/>
+                                    <field name="amount" string="رقم" widget='monetary' options="{'currency_field': 'currency_id'}" readonly="parent.state in ['confirmed','done','cancel']"/>
+                                </tree>
+                            </field>
+
+
+                             
+                            </group>
+
+
+
+                            <group>
+                            
+                            </group>
+                            <group col="6" class="oe_invoice_lines_tab">
+                                    <group colspan="3">
+                                        <field name="narration" placeholder="Note" colspan="2" nolabel="1"/>
+                                    </group>
+                                    <group colspan="3">
+                                        <group class="oe_subtotal_footer" >
+                                      
+                                        
+                                            <field name="total_amount"  />
+                                        </group>
+                                    </group>
+                                </group>
+                        </group>
+                        
+                           
+                        </page>
+
+                        <page string="Other Info" readonly="state in ['confirmed','done','cancel']">
+                            <group>
+                                <group>
+                                    <field name="donor_ref"/>
+                                </group>
+                                <group>
+                                   
+                                </group>
+                            
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_donation_order_tree" model="ir.ui.view">
+        <field name="name">donation.order.tree</field>
+        <field name="model">donation.order</field>
+        <field name="arch" type="xml">
+            <tree string="Donation Orders">
+                <field name="collection_center_id"/>
+                <field name="months"/>
+                <field name="invoice_name"/>
+                <!-- <field name="donantion_date"/> -->
+		<field name="state" widget="badge"/>
+                <field name="payment_status" widget="badge"/>
+                <field name="total_amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="donation_order_see_own_records" model="ir.rule">
+        <field name="name">See Own Donation Orders</field>
+        <field name="model_id" ref="model_donation_order"/>
+        <field name="domain_force">[
+            '|', 
+            ('user_id', '=', user.id), 
+            ('user_id', '=', False)
+        ]</field>
+        <field name="groups" eval="[(4, ref('aw_donation_management.donation_user_access'))]"/>
+    </record> -->
+
+    <!-- <record id="donation_order_see_own_records_manager" model="ir.rule">
+        <field name="name">See Own Donation Orders (Managers)</field>
+        <field name="model_id" ref="model_donation_order"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('aw_donation_management.donation_manager_access'))]"/>
+    </record> -->
+
+    <!-- Donation Orders Action -->
+    <record id="action_donation_order" model="ir.actions.act_window">
+        <field name="name">Donations</field>
+        <field name="res_model">donation.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Main Menu -->
+    <menuitem id="aw_donation_management.menu_donation_management"
+            name="Donation Management"
+            web_icon="aw_donation_management,static/description/icon.png"
+            sequence="0"/>
+
+    <!-- Donation Orders Menu (Restricted to Users) -->
+    <!-- <menuitem id="aw_donation_management.menu_donation_orders"
+            name="Donations"
+            parent="aw_donation_management.menu_donation_management"
+            action="aw_donation_management.action_donation_order"
+            groups="aw_donation_management.donation_user_access"/> -->
+            <!-- <menuitem id="aw_donation_management.menu_donation_orders"
+            name="Donations"
+            parent="aw_donation_management.menu_donation_management"
+            action="aw_donation_management.action_donation_order"
+            /> -->
+
+    <!-- Donation Orders Menu (Restricted to Managers) -->
+    <menuitem id="aw_donation_management.menu_donation_orders_manager"
+            name="Donations"
+            parent="aw_donation_management.menu_donation_management"
+            action="aw_donation_management.action_donation_order"
+            />
+
+    <!-- <menuitem id="menu_donation_orders_user" name="Region" parent="menu_donation_management" action="aw_donation_management.action_donation_region" /> -->
+   
+    <menuitem
+            id="menu_recipent"
+            parent="aw_donation_management.menu_donation_management"
+            name="Collection Center"
+            action="base.action_res_users"
+            sequence="30"/>
+</odoo>

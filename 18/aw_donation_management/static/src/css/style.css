@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Jameel Noori Nastaleeq Regular';
+  src: url('aw_donation_management/static/src/fonts/Jameel Noori Nastaleeq Regular.ttf') format('truetype');
+}
+.nastaleeq-text {
+  font-family: 'Jameel Noori Nastaleeq', serif;
+  direction: rtl;
+  text-align: right;
+}
+
+.nastaleeq {
+  font-family: 'Jameel Noori Nastaleeq', serif;
+}
