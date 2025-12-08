@@ -27,15 +27,21 @@ class HrEmployee(models.Model):
             'hr_attendance.group_hr_attendance_user,'
             '!hr_attendance.group_hr_attendance_use_pin'
         )
+        # Allow portal users to check in/out for their own employee record
+        is_portal_user_own_employee = (
+            self.user_id == self.env.user and 
+            self.env.user.has_group('base.group_portal') and
+            entered_pin is None
+        )
         can_check_without_pin = attendance_user_and_no_pin or (
             self.user_id == self.env.user and entered_pin is None
-        )
+        ) or is_portal_user_own_employee
 
         if can_check_without_pin or (entered_pin is not None and entered_pin == self.sudo().pin):
             # IMPORTANT: keep original signature here
             return self._attendance_action(next_action)
 
-        if not self.user_has_groups('hr_attendance.group_hr_attendance_user'):
+        if not self.user_has_groups('hr_attendance.group_hr_attendance_user') and not is_portal_user_own_employee:
             return {
                 'warning': _(
                     'To activate Kiosk mode without pin code, you must have '
@@ -155,33 +161,68 @@ class HrEmployee(models.Model):
         latitude = _to_float(latitude)
         longitude = _to_float(longitude)
 
-        # Try to get human-readable address from coordinates
+        # Try to get human-readable address from coordinates with retry
         if latitude is not None and longitude is not None:
-            try:
-                geolocator = Nominatim(user_agent='odoo-attendance-geo', timeout=5)
-                # Nominatim expects "lat, lon"
-                location = geolocator.reverse(
-                    f"{latitude}, {longitude}",
-                    language='en'  # ALWAYS RETURN ENGLISH ADDRESS
-                )
-                if location:
-                    location_address = location.address
-            except Exception:
-                location_address = False
+            location_address = False
+            import logging
+            _logger = logging.getLogger(__name__)
+            
+            # Use exact coordinates (don't round) for 100% accurate geocoding
+            lat_exact = float(latitude)
+            lon_exact = float(longitude)
+            
+            # Try reverse geocoding with retry mechanism
+            for retry in range(3):  # Try 3 times
+                try:
+                    geolocator = Nominatim(
+                        user_agent=f'odoo-attendance-geo-v1.0-retry{retry}',
+                        timeout=15  # Increased timeout
+                    )
+                    # Nominatim expects "lat, lon" format - use exact coordinates for 100% accuracy
+                    location = geolocator.reverse(
+                        f"{lat_exact}, {lon_exact}",
+                        language='en',  # ALWAYS RETURN ENGLISH ADDRESS
+                        exactly_one=True,
+                        timeout=15
+                    )
+                    if location and hasattr(location, 'address') and location.address:
+                        location_address = location.address
+                        _logger.info(f"Location reverse geocoded (attempt {retry+1}): {location_address} for coords: {lat_exact}, {lon_exact}")
+                        break  # Success, exit retry loop
+                except Exception as e:
+                    _logger.warning(f"Geocoding attempt {retry+1} failed for {lat_exact}, {lon_exact}: {str(e)}")
+                    if retry == 2:  # Last attempt
+                        location_address = False
+                    else:
+                        import time
+                        time.sleep(1)  # Wait 1 second before retry
 
         # ===== Check In =====
         if self.attendance_state != 'checked_in':
+            # Ensure latitude and longitude are properly converted to string for storage
+            # Use original float values for map link, string for storage
+            checkin_lat = str(latitude) if latitude is not None else False
+            checkin_lon = str(longitude) if longitude is not None else False
+            
+            # Validate coordinates are present
+            if latitude is None or longitude is None:
+                raise exceptions.UserError(_('Location coordinates are required. Please allow location access.'))
+            
             vals = {
                 'employee_id': self.id,
                 'checkin_address': location_address or False,
-                'checkin_latitude': latitude or False,
-                'checkin_longitude': longitude or False,
+                'checkin_latitude': checkin_lat,
+                'checkin_longitude': checkin_lon,
                 'checkin_location': (
                     f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}"
                     if latitude is not None and longitude is not None else False
                 ),
             }
-            return self.env['hr.attendance'].create(vals)
+            attendance = self.env['hr.attendance'].create(vals)
+            # Verify location was saved
+            if not attendance.checkin_latitude or not attendance.checkin_longitude:
+                raise exceptions.UserError(_('Failed to save location. Please try again.'))
+            return attendance
 
         # ===== Check Out =====
         attendance = self.env['hr.attendance'].search(
@@ -189,16 +230,27 @@ class HrEmployee(models.Model):
             limit=1,
         )
         if attendance:
+            # Validate coordinates are present
+            if latitude is None or longitude is None:
+                raise exceptions.UserError(_('Location coordinates are required. Please allow location access.'))
+            
+            # Ensure latitude and longitude are properly converted to string for storage
+            checkout_lat = str(latitude) if latitude is not None else False
+            checkout_lon = str(longitude) if longitude is not None else False
+            
             attendance.write({
                 'checkout_address': location_address or False,
-                'checkout_latitude': latitude or False,
-                'checkout_longitude': longitude or False,
+                'checkout_latitude': checkout_lat,
+                'checkout_longitude': checkout_lon,
                 'checkout_location': (
                     f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}"
                     if latitude is not None and longitude is not None else False
                 ),
                 'check_out': action_date,
             })
+            # Verify location was saved
+            if not attendance.checkout_latitude or not attendance.checkout_longitude:
+                raise exceptions.UserError(_('Failed to save location. Please try again.'))
         else:
             raise exceptions.UserError(_(
                 'Cannot perform check out on %(empl_name)s, could not find '

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Portal Attendance Page -->
+        <template id="portal_attendance_page" name="My Attendance">
+            <t t-call="portal.frontend_layout">
+                <t t-set="title">My Attendance</t>
+                <div class="container mt-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title mb-0">
+                                        <i class="fa fa-clock-o me-2"/>Attendance
+                                    </h3>
+                                </div>
+                                <div class="card-body o_portal_attendance">
+                                    <!-- Attendance Status -->
+                                    <div t-attf-class="alert alert-#{attendance_state == 'checked_in' and 'success' or 'info'}" role="alert">
+                                        <h5 class="alert-heading">
+                                            <i t-attf-class="fa fa-#{attendance_state == 'checked_in' and 'check-circle' or 'info-circle'} me-2"/>
+                                            <t t-esc="attendance_state == 'checked_in' and 'Checked In' or 'Checked Out'"/>
+                                        </h5>
+                                        <p class="mb-0" t-if="last_attendance">
+                                            <t t-if="attendance_state == 'checked_in'">
+                                                Check In Time: <strong t-esc="last_attendance.check_in"/>
+                                            </t>
+                                            <t t-if="attendance_state == 'checked_out' and last_attendance.check_out">
+                                                Last Check Out Time: <strong t-esc="last_attendance.check_out"/>
+                                            </t>
+                                        </p>
+                                    </div>
+
+                                    <!-- Location Status -->
+                                    <div id="location_status" class="alert alert-warning" role="alert" style="display: none;">
+                                        <i class="fa fa-map-marker me-2"/>Waiting for location...
+                                    </div>
+
+                                    <!-- Commit Field for Check In -->
+                                    <div id="checkin_commit_div" class="mt-3" t-if="attendance_state == 'checked_out'">
+                                        <label for="checkin_commit" class="form-label">
+                                            <strong>Commit <span class="text-danger">*</span> (Required):</strong>
+                                        </label>
+                                        <textarea 
+                                            id="checkin_commit" 
+                                            class="form-control" 
+                                            rows="3" 
+                                            placeholder="Enter your commit message here (required)..."
+                                            required="required"></textarea>
+                                        <small class="form-text text-muted text-danger">Commit message is required before checking in. Location will be captured automatically.</small>
+                                    </div>
+
+                                    <!-- Commit Field for Check Out -->
+                                    <div id="checkout_commit_div" class="mt-3" t-if="attendance_state == 'checked_in'" style="display: none;">
+                                        <label for="checkout_commit" class="form-label">
+                                            <strong>Commit (Optional):</strong>
+                                        </label>
+                                        <textarea 
+                                            id="checkout_commit" 
+                                            class="form-control" 
+                                            rows="3" 
+                                            placeholder="Enter your commit message here (optional)..."></textarea>
+                                        <small class="form-text text-muted">You can add a commit message (optional). Location will be captured automatically.</small>
+                                    </div>
+
+                                    <!-- Check In/Out Buttons -->
+                                    <div class="text-center mt-4">
+                                        <button type="button" 
+                                                class="btn btn-lg" 
+                                                id="check_in_btn"
+                                                t-attf-class="btn btn-lg #{attendance_state == 'checked_out' and 'btn-success' or 'btn-secondary'}"
+                                                style="min-width: 200px; margin: 10px;"
+                                                t-att-disabled="attendance_state == 'checked_in'">
+                                            <i class="fa fa-sign-in me-2"/>Check In
+                                        </button>
+                                        <button type="button" 
+                                                class="btn btn-lg" 
+                                                id="check_out_btn"
+                                                t-attf-class="btn btn-lg #{attendance_state == 'checked_in' and 'btn-danger' or 'btn-secondary'}"
+                                                style="min-width: 200px; margin: 10px;"
+                                                t-att-disabled="attendance_state == 'checked_out'">
+                                            <i class="fa fa-sign-out me-2"/>Check Out
+                                        </button>
+                                    </div>
+
+                                    <!-- Last Attendance Details -->
+                                    <div class="mt-4" t-if="last_attendance">
+                                        <h5>Last Attendance Details</h5>
+                                        <table class="table table-bordered">
+                                            <tr t-if="last_attendance.check_in">
+                                                <th width="30%">Check In</th>
+                                                <td t-esc="last_attendance.check_in"/>
+                                            </tr>
+                                            <tr t-if="last_attendance.checkin_address">
+                                                <th>Check In Address</th>
+                                                <td t-esc="last_attendance.checkin_address"/>
+                                            </tr>
+                                            <tr t-if="last_attendance.checkin_location">
+                                                <th>Check In Location</th>
+                                                <td>
+                                                    <a t-attf-href="#{last_attendance.checkin_location}" target="_blank" class="btn btn-sm btn-link">
+                                                        <i class="fa fa-map-marker"/> View on Map
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="last_attendance.checkin_commit">
+                                                <th>Check In Commit</th>
+                                                <td t-esc="last_attendance.checkin_commit"/>
+                                            </tr>
+                                            <tr t-if="last_attendance.check_out">
+                                                <th>Check Out</th>
+                                                <td t-esc="last_attendance.check_out"/>
+                                            </tr>
+                                            <tr t-if="last_attendance.checkout_address">
+                                                <th>Check Out Address</th>
+                                                <td t-esc="last_attendance.checkout_address"/>
+                                            </tr>
+                                            <tr t-if="last_attendance.checkout_location">
+                                                <th>Check Out Location</th>
+                                                <td>
+                                                    <a t-attf-href="#{last_attendance.checkout_location}" target="_blank" class="btn btn-sm btn-link">
+                                                        <i class="fa fa-map-marker"/> View on Map
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr t-if="last_attendance.checkout_commit">
+                                                <th>Check Out Commit</th>
+                                                <td t-esc="last_attendance.checkout_commit"/>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Portal No Employee Template -->
+        <template id="portal_attendance_no_employee" name="No Employee">
+            <t t-call="portal.frontend_layout">
+                <t t-set="title">My Attendance</t>
+                <div class="container mt-4">
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">No Employee Found</h4>
+                        <p>No employee is linked to your user account. Please contact your administrator.</p>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Add Attendance Card to Portal My Account Page -->
+        <template id="portal_my_account_attendance_card" inherit_id="portal.portal_my_home" name="Portal My Account Attendance Card">
+            <xpath expr="//div[contains(@class, 'o_portal_docs') and contains(@class, 'row') and contains(@class, 'g-2')]" position="inside">
+                <div class="col-lg-4 col-md-6 col-12 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fa fa-clock-o fa-3x text-primary mb-3"/>
+                            <h5 class="card-title">My Attendance</h5>
+                            <p class="text-muted">Check in and check out with location tracking</p>
+                            <a href="/my/attendance" class="btn btn-primary">
+                                <i class="fa fa-sign-in me-2"/>Go to Attendance
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>
+

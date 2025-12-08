@@ -46,3 +46,13 @@ class HrAttendances(models.Model):
         store=True,
         help="Check out location link of the User",
     )
+    checkin_commit = fields.Text(
+        string='Check In Commit',
+        store=True,
+        help="Commit message when checking in",
+    )
+    checkout_commit = fields.Text(
+        string='Check Out Commit',
+        store=True,
+        help="Commit message when checking out",
+    )

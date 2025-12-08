@@ -7,13 +7,17 @@
     'company': 'Ebitda Solutions',
     'website': 'https://www.ebitdasolutions.com',
     'category': 'Human Resources',
-    'depends': ['base', 'hr', 'hr_attendance'],
+    'depends': ['base', 'hr', 'hr_attendance', 'portal'],
     'data': [
         'views/hr_attendance_views.xml',
+        'views/portal_attendance_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'odoo_attendance/static/src/js/my_attendances.js',
+        ],
+        'web.assets_frontend': [
+            'odoo_attendance/static/src/js/portal_attendance.js',
         ],
     },
     'images': ['static/description/banner.jpg'],

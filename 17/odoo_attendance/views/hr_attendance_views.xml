@@ -14,6 +14,8 @@
                     <field name="checkout_latitude"/>
                     <field name="checkin_longitude"/>
                     <field name="checkout_longitude"/>
+                    <field name="checkin_commit"/>
+                    <field name="checkout_commit"/>
                 </field>
             </field>
         </record>
@@ -29,12 +31,14 @@
                             <field name="checkin_latitude" column_invisible="1"/>
                             <field name="checkin_longitude" column_invisible="1"/>
                             <field name="checkin_location" widget="url"/>
+                            <field name="checkin_commit"/>
                         </group>
                         <group name="checkout" string="Check Out">
                             <field name="checkout_address"/>
                             <field name="checkout_latitude" column_invisible="1"/>
                             <field name="checkout_longitude" column_invisible="1"/>
                             <field name="checkout_location" widget="url"/>
+                            <field name="checkout_commit"/>
                         </group>
                 </xpath>
             </field>
