@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Paperformat for Statement of Account -->
+
+        <record id="paperformat_statement_of_account" model="report.paperformat">
+            <field name="name">Challan Report Format</field>
+            <field name="default" eval="False"/>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">8</field>
+            <field name="header_line" eval="False"/>
+            <field name="dpi">90</field>
+        </record>
+
+    <!-- Statement of Account Report -->
+    <record id="action_report_statement_of_account" model="ir.actions.report">
+        <field name="name">Statement of Account</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Land_management_system.report_statement_of_account</field>
+        <field name="report_file">Land_management_system.report_statement_of_account</field>
+        <field name="print_report_name">'Statement of Account - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_statement_of_account"/>
+    </record>
+
+
+    <!-- Statement of Account Template -->
+    <template id="report_statement_of_account">
+        <t t-name="Land_management_system.report_statement_of_account">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page" style="page-break-inside: avoid;">
+                            <!-- Header Section -->
+                            <div class="header-section"
+                                 style="background-color: #1e3a5f; padding: 8px 15px; color: white; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center;">
+                                    <img t-att-src="'/Land_management_system/static/src/img/logo_left.webp'" 
+                                         style="height: 50px; max-width: 150px; object-fit: contain;"/>
+                                </div>
+                                <div style="text-align: center; flex: 1;">
+                                    <img t-att-src="'/Land_management_system/static/src/img/logo_center.webp'" 
+                                         style="height: 60px; max-width: 200px; object-fit: contain; margin: 0 auto;"/>
+                                </div>
+                                <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end;">
+                                    <img t-att-src="'/Land_management_system/static/src/img/logo_right.webp'" 
+                                         style="height: 50px; max-width: 150px; object-fit: contain;"/>
+                                </div>
+                            </div>
+                            <div style="text-align: center; background-color: #1e3a5f; padding: 8px;">
+                                <h1 style="color: white; margin: 0; font-size: 20px; font-weight: bold;">STATEMENT OF ACCOUNT</h1>
+                            </div>
+
+                            <!-- Customer and Project Information -->
+                            <div style="padding: 8px 15px; background-color: white;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 9px;">
+                                    <div style="flex: 1;">
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Customer Name:</strong>
+                                            <span t-field="o.partner_id.name" t-options="{'widget': 'text'}"/>
+                                        </div>
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Address:</strong>
+                                            <span t-field="o.partner_id.street" t-options="{'widget': 'text'}"/>
+                                            <span t-field="o.partner_id.city" t-options="{'widget': 'text'}"/>
+                                        </div>
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Booking Date:</strong>
+                                            <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
+                                        </div>
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Statement Date:</strong>
+                                            <span t-esc="o._get_statement_date()"/>
+                                        </div>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Project:</strong>
+                                        </div>
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Unit No:</strong>
+                                            <span t-field="o.name" t-options="{'widget': 'text'}"/>
+                                        </div>
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Unit Type:</strong>
+                                            <span t-esc="''"/>
+                                        </div>
+                                        <div style="margin-bottom: 4px;">
+                                            <strong>Unit Category:</strong>
+                                            <span t-esc="''"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Financial Summary -->
+                                <div style="margin-bottom: 8px; border: 1px solid #ddd; padding: 8px; font-size: 9px;">
+                                    <h3 style="font-weight: bold; margin-bottom: 6px; font-size: 11px;">Financial Summary</h3>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <div style="flex: 1;">
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>Sale Price:</strong>
+                                                <span t-field="o.amount_total"
+                                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                            </div>
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>Total Due Amount Till Date:</strong>
+                                                <span t-esc="o._get_total_due_amount()"/>
+                                            </div>
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>Total Paid Amount:</strong>
+                                                <span t-esc="o._get_total_paid_amount()"/>
+                                            </div>
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>Balance to be Paid:</strong>
+                                                <span t-esc="o._get_balance_to_be_paid()"/>
+                                            </div>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>Total Overdue Amount:</strong>
+                                                <span t-esc="o._get_total_overdue_amount()"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Plan Table -->
+                                <div style="margin-bottom: 8px;">
+                                    <h3 style="font-weight: bold; margin-bottom: 6px; font-size: 11px;">Payment Plan</h3>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 7px;">
+                                        <thead>
+                                            <tr style="background-color: #1e3a5f; color: white;">
+                                                <th style="padding: 4px; text-align: left; border: 1px solid #ddd;">Description</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Percentage</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Due Date</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Instalment Amount</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">VAT Amount</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Instalment Amount S-L VAT</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Payment Date</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Paid Amount</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Outstanding Amount</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Balance Sale Price S-L VAT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="payment_plan_data" t-value="o._get_payment_plan_data()"/>
+                                            <tr t-foreach="payment_plan_data" t-as="plan" style="border-bottom: 1px solid #ddd;">
+                                                <td style="padding: 3px; border: 1px solid #ddd;" t-esc="plan.get('description', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="plan.get('percentage', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="plan.get('due_date', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('installment_amount', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('vat_amount', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('installment_amount_sl_vat', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="plan.get('payment_date', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('paid_amount', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('outstanding_amount', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('balance_sale_price_sl_vat', '')"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Additional Charges Table -->
+                                <div style="margin-bottom: 8px;">
+                                    <h3 style="font-weight: bold; margin-bottom: 6px; font-size: 11px;">Additional Charges</h3>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 7px;">
+                                        <thead>
+                                            <tr style="background-color: #1e3a5f; color: white;">
+                                                <th style="padding: 4px; text-align: left; border: 1px solid #ddd;">Description</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Due Date</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Fees Amount</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Payment Date</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Paid Amount</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Outstanding Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="additional_charges" t-value="o._get_additional_charges()"/>
+                                            <tr t-foreach="additional_charges" t-as="charge" style="border-bottom: 1px solid #ddd;">
+                                                <td style="padding: 3px; border: 1px solid #ddd;" t-esc="charge.get('description', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="charge.get('due_date', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="charge.get('fees_amount', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="charge.get('payment_date', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="charge.get('paid_amount', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="charge.get('outstanding_amount', '')"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Receipts Table -->
+                                <div style="margin-bottom: 8px;">
+                                    <h3 style="font-weight: bold; margin-bottom: 6px; font-size: 11px;">Receipts</h3>
+                                    <table style="width: 100%; border-collapse: collapse; font-size: 7px;">
+                                        <thead>
+                                            <tr style="background-color: #1e3a5f; color: white;">
+                                                <th style="padding: 4px; text-align: left; border: 1px solid #ddd;">Receipt No</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Receipt Date</th>
+                                                <th style="padding: 4px; text-align: left; border: 1px solid #ddd;">Payment Type</th>
+                                                <th style="padding: 4px; text-align: left; border: 1px solid #ddd;">Cheque / Ref No</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Cheque Date</th>
+                                                <th style="padding: 4px; text-align: center; border: 1px solid #ddd;">Status</th>
+                                                <th style="padding: 4px; text-align: right; border: 1px solid #ddd;">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="receipts" t-value="o._get_receipts()"/>
+                                            <tr t-foreach="receipts" t-as="receipt" style="border-bottom: 1px solid #ddd;">
+                                                <td style="padding: 3px; border: 1px solid #ddd;" t-esc="receipt.get('receipt_no', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="receipt.get('receipt_date', '')"/>
+                                                <td style="padding: 3px; border: 1px solid #ddd;" t-esc="receipt.get('payment_type', '')"/>
+                                                <td style="padding: 3px; border: 1px solid #ddd;" t-esc="receipt.get('cheque_ref_no', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="receipt.get('cheque_date', '')"/>
+                                                <td style="padding: 3px; text-align: center; border: 1px solid #ddd;" t-esc="receipt.get('status', '')"/>
+                                                <td style="padding: 3px; text-align: right; border: 1px solid #ddd;" t-esc="receipt.get('amount', '')"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Footer Notes -->
+                                <div style="margin-top: 8px; font-size: 8px;">
+                                    <p style="margin: 2px 0;">*The customer statement generated as on <span t-esc="o._get_statement_date()"/></p>
+                                    <p style="margin: 2px 0;">*All Receipts are subject to realization of the amount</p>
+                                    <p style="margin: 2px 0;"><strong>Note:</strong> Please pay the due amounts on or before the SPA due date to avoid any late payment fees.</p>
+                                </div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div style="text-align: center; margin-top: 8px; padding: 8px; font-size: 9px;">
+                                <div style="font-weight: bold; margin-bottom: 2px;">Neoterra Real Estate Development LLC</div>
+                                <div>Office 303 &amp; 304, Building 12, Bay Square, Business Bay, Dubai</div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

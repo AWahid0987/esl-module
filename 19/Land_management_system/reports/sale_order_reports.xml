@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Paperformat for Tax Invoice (Escrow) -->
+    <record id="paperformat_tax_invoice_escrow" model="report.paperformat">
+        <field name="name">Tax Invoice (Escrow) A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+    </record>
+
+    <!-- Paperformat for Tax Invoice (Corporate) -->
+    <record id="paperformat_tax_invoice_corporate" model="report.paperformat">
+        <field name="name">Tax Invoice (Corporate) A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+    </record>
+
+    <!-- Tax Invoice Report (Escrow Account) -->
+    <record id="action_report_tax_invoice_escrow" model="ir.actions.report">
+        <field name="name">Tax Invoice (Escrow)</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Land_management_system.report_tax_invoice_escrow</field>
+        <field name="report_file">Land_management_system.report_tax_invoice_escrow</field>
+        <field name="print_report_name">'Tax Invoice - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_tax_invoice_escrow"/>
+    </record>
+
+    <!-- Tax Invoice Report (Corporate Bank Account) -->
+    <record id="action_report_tax_invoice_corporate" model="ir.actions.report">
+        <field name="name">Tax Invoice (Corporate)</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Land_management_system.report_tax_invoice_corporate</field>
+        <field name="report_file">Land_management_system.report_tax_invoice_corporate</field>
+        <field name="print_report_name">'Tax Invoice - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_tax_invoice_corporate"/>
+    </record>
+
+    <!-- Statement of Account Template -->
+    <template id="report_statement_of_account">
+        <t t-name="Land_management_system.report_statement_of_account">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header Section -->
+                        <div class="header-section" style="background-color: #1e3a5f; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 50px; height: 50px; background-color: white; border-radius: 50%; margin-right: 10px;"></div>
+                                <div>
+                                    <div style="font-size: 18px; font-weight: bold;">NEOTERRA DEVELOPMENTS</div>
+                                </div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">ELMORA</div>
+                                <div style="font-size: 10px;">MODERN LUXURY LIVING</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 14px; font-weight: bold;">GRID</div>
+                                <div style="font-size: 12px;">DLM PARTNER</div>
+                            </div>
+                        </div>
+                        <div style="text-align: center; background-color: #1e3a5f; padding: 15px;">
+                            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">STATEMENT OF ACCOUNT</h1>
+                        </div>
+
+                        <!-- Customer and Project Information -->
+                        <div style="padding: 20px; background-color: white;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                                <div style="flex: 1;">
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Customer Name:</strong> <span t-field="o.partner_id.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Address:</strong> 
+                                        <span t-field="o.partner_id.street" t-options="{'widget': 'text'}"/>
+                                        <span t-field="o.partner_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Booking Date:</strong> <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Statement Date:</strong> <span t-esc="o._get_statement_date()"/>
+                                    </div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Project:</strong>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Unit No:</strong> <span t-field="o.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Unit Type:</strong> <span t-esc="''"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Unit Category:</strong> <span t-esc="''"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Financial Summary -->
+                            <div style="margin-bottom: 20px; border: 1px solid #ddd; padding: 15px;">
+                                <h3 style="font-weight: bold; margin-bottom: 15px;">Financial Summary</h3>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div style="flex: 1;">
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>Sale Price:</strong> 
+                                            <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </div>
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>Total Due Amount Till Date:</strong> 
+                                            <span t-esc="o._get_total_due_amount()"/>
+                                        </div>
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>Total Paid Amount:</strong> 
+                                            <span t-esc="o._get_total_paid_amount()"/>
+                                        </div>
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>Balance to be Paid:</strong> 
+                                            <span t-esc="o._get_balance_to_be_paid()"/>
+                                        </div>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>Total Overdue Amount:</strong> 
+                                            <span t-esc="o._get_total_overdue_amount()"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Plan Table -->
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-weight: bold; margin-bottom: 15px;">Payment Plan</h3>
+                                <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                    <thead>
+                                        <tr style="background-color: #1e3a5f; color: white;">
+                                            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Description</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Percentage</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Due Date</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Instalment Amount</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">VAT Amount</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Instalment Amount S-L VAT</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Payment Date</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Paid Amount</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Outstanding Amount</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Balance Sale Price S-L VAT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="payment_plan_data" t-value="o._get_payment_plan_data()"/>
+                                        <tr t-foreach="payment_plan_data" t-as="plan" style="border-bottom: 1px solid #ddd;">
+                                            <td style="padding: 6px; border: 1px solid #ddd;" t-esc="plan.get('description', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="plan.get('percentage', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="plan.get('due_date', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('installment_amount', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('vat_amount', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('installment_amount_sl_vat', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="plan.get('payment_date', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('paid_amount', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('outstanding_amount', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="plan.get('balance_sale_price_sl_vat', '')"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Additional Charges Table -->
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-weight: bold; margin-bottom: 15px;">Additional Charges</h3>
+                                <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                    <thead>
+                                        <tr style="background-color: #1e3a5f; color: white;">
+                                            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Description</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Due Date</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Fees Amount</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Payment Date</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Paid Amount</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Outstanding Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="additional_charges" t-value="o._get_additional_charges()"/>
+                                        <tr t-foreach="additional_charges" t-as="charge" style="border-bottom: 1px solid #ddd;">
+                                            <td style="padding: 6px; border: 1px solid #ddd;" t-esc="charge.get('description', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="charge.get('due_date', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="charge.get('fees_amount', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="charge.get('payment_date', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="charge.get('paid_amount', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="charge.get('outstanding_amount', '')"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Receipts Table -->
+                            <div style="margin-bottom: 20px;">
+                                <h3 style="font-weight: bold; margin-bottom: 15px;">Receipts</h3>
+                                <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                                    <thead>
+                                        <tr style="background-color: #1e3a5f; color: white;">
+                                            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Receipt No</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Receipt Date</th>
+                                            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Payment Type</th>
+                                            <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Cheque / Ref No</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Cheque Date</th>
+                                            <th style="padding: 8px; text-align: center; border: 1px solid #ddd;">Status</th>
+                                            <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="receipts" t-value="o._get_receipts()"/>
+                                        <tr t-foreach="receipts" t-as="receipt" style="border-bottom: 1px solid #ddd;">
+                                            <td style="padding: 6px; border: 1px solid #ddd;" t-esc="receipt.get('receipt_no', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="receipt.get('receipt_date', '')"/>
+                                            <td style="padding: 6px; border: 1px solid #ddd;" t-esc="receipt.get('payment_type', '')"/>
+                                            <td style="padding: 6px; border: 1px solid #ddd;" t-esc="receipt.get('cheque_ref_no', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="receipt.get('cheque_date', '')"/>
+                                            <td style="padding: 6px; text-align: center; border: 1px solid #ddd;" t-esc="receipt.get('status', '')"/>
+                                            <td style="padding: 6px; text-align: right; border: 1px solid #ddd;" t-esc="receipt.get('amount', '')"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Footer Notes -->
+                            <div style="margin-top: 30px; font-size: 10px;">
+                                <p>*The customer statement generated as on <span t-esc="o._get_statement_date()"/></p>
+                                <p>*All Receipts are subject to realization of the amount</p>
+                                <p><strong>Note:</strong> Please pay the due amounts on or before the SPA due date to avoid any late payment fees.</p>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="text-align: center; margin-top: 40px; padding: 20px;">
+                            <div style="font-weight: bold; margin-bottom: 5px;">Neoterra Real Estate Development LLC</div>
+                            <div>Office 303 &amp; 304, Building 12, Bay Square, Business Bay, Dubai</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+        </t>
+    </template>
+
+    <!-- Tax Invoice Template (Escrow Account) -->
+    <template id="report_tax_invoice_escrow">
+        <t t-name="Land_management_system.report_tax_invoice_escrow">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header Section -->
+                        <div class="header-section" style="background-color: #1e3a5f; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center;">
+                                <img t-att-src="'/Land_management_system/static/src/img/logo_left.webp'" 
+                                     style="height: 60px; max-width: 180px; object-fit: contain;"/>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <img t-att-src="'/Land_management_system/static/src/img/logo_center.webp'" 
+                                     style="height: 70px; max-width: 220px; object-fit: contain; margin: 0 auto;"/>
+                            </div>
+                            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end;">
+                                <img t-att-src="'/Land_management_system/static/src/img/logo_right.webp'" 
+                                     style="height: 60px; max-width: 180px; object-fit: contain;"/>
+                            </div>
+                        </div>
+                        <div style="text-align: center; background-color: #1e3a5f; padding: 15px;">
+                            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">TAX INVOICE</h1>
+                        </div>
+
+                        <!-- Invoice Details Section -->
+                        <div style="padding: 20px; background-color: white;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                                <div style="flex: 1;">
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Customer Name:</strong> <span t-field="o.partner_id.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Address:</strong> 
+                                        <span t-field="o.partner_id.street" t-options="{'widget': 'text'}"/>
+                                        <span t-field="o.partner_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Booking Date:</strong> <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
+                                    </div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Project:</strong>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Unit No:</strong> <span t-field="o.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Invoice Number:</strong> 
+                                        <span t-esc="o._get_latest_invoice_number()"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Invoice Date:</strong> 
+                                        <span t-esc="o._get_latest_invoice_date()"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Due Date:</strong> 
+                                        <span t-esc="o._get_latest_invoice_due_date()"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Currency:</strong> <span t-field="o.currency_id.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing Information -->
+                            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                                <div style="flex: 1; border: 1px solid #d4a574; padding: 15px;">
+                                    <div style="font-weight: bold; margin-bottom: 10px;">Bill To:</div>
+                                    <div style="min-height: 80px; margin-bottom: 10px;">
+                                        <div t-field="o.partner_id.name" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.partner_id.street" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.partner_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div>
+                                        <strong>TRN:</strong> <span t-field="o.partner_id.vat" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                </div>
+                                <div style="flex: 1; border: 1px solid #d4a574; padding: 15px;">
+                                    <div style="font-weight: bold; margin-bottom: 10px;">Bill From:</div>
+                                    <div style="min-height: 80px; margin-bottom: 10px;">
+                                        <div t-field="o.company_id.name" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.company_id.street" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.company_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div>
+                                        <strong>TRN:</strong> <span t-field="o.company_id.vat" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Itemized Table -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                                <thead>
+                                    <tr style="background-color: #1e3a5f; color: white;">
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Sr.No.</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Description</th>
+                                        <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Amount Excluding VAT</th>
+                                        <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">VAT Rate</th>
+                                        <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">VAT Amount</th>
+                                        <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Amount Including VAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="numbered_lines" t-value="o._get_numbered_order_lines()"/>
+                                    <tr t-foreach="numbered_lines" t-as="line_data" style="border-bottom: 1px solid #ddd;">
+                                        <td style="padding: 10px; border: 1px solid #ddd;" t-esc="line_data['sr_no']"/>
+                                        <t t-set="line" t-value="line_data['line']"/>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                        <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                            <span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">
+
+                                        </td>
+                                        <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                            <span t-field="line.price_tax" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                        <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                            <span t-field="line.price_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Total Amount -->
+                            <div style="margin-bottom: 20px;">
+                                <div style="margin-bottom: 10px;">
+                                    <strong>Total Amount:</strong> 
+                                    <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+                                <div>
+                                    <strong>Amount in Words:</strong> 
+                                    <span t-esc="o._get_amount_in_words(o.amount_total, o.currency_id.name)"/>
+                                </div>
+                            </div>
+
+                            <!-- Escrow Account Details -->
+                            <div style="margin-top: 30px;">
+                                <h3 style="font-weight: bold; margin-bottom: 15px;">Escrow Account Details:</h3>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px; width: 200px;"><strong>Name of Bank:</strong></td>
+                                        <td style="padding: 5px;">National Bank of Fujairah PJSC</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Account Number:</strong></td>
+                                        <td style="padding: 5px;">012302244268</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>IBAN No.:</strong></td>
+                                        <td style="padding: 5px;">AE480380000012302244268</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Account Name:</strong></td>
+                                        <td style="padding: 5px;">ELMORA</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>AC Currency:</strong></td>
+                                        <td style="padding: 5px;">AED</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Branch Name/Address:</strong></td>
+                                        <td style="padding: 5px;">P.O. Box 2979, Dubai, U.A.E</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Swift Code:</strong></td>
+                                        <td style="padding: 5px;">NBFUAEAFDXB</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="text-align: center; margin-top: 40px; padding: 20px;">
+                            <div style="font-size: 11px; margin-bottom: 10px;">This is a computer-generated document. Signature not required.</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">Neoterra Real Estate Development LLC</div>
+                            <div>Office 303 &amp; 304, Building 12, Bay Square, Business Bay, Dubai</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+        </t>
+    </template>
+
+    <!-- Tax Invoice Template (Corporate Bank Account) -->
+    <template id="report_tax_invoice_corporate">
+        <t t-name="Land_management_system.report_tax_invoice_corporate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header Section -->
+                        <div class="header-section" style="background-color: #1e3a5f; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center;">
+                                <img t-att-src="'/Land_management_system/static/src/img/logo_left.webp'" 
+                                     style="height: 60px; max-width: 180px; object-fit: contain;"/>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <img t-att-src="'/Land_management_system/static/src/img/logo_center.webp'" 
+                                     style="height: 70px; max-width: 220px; object-fit: contain; margin: 0 auto;"/>
+                            </div>
+                            <div style="text-align: right; display: flex; align-items: center; justify-content: flex-end;">
+                                <img t-att-src="'/Land_management_system/static/src/img/logo_right.webp'" 
+                                     style="height: 60px; max-width: 180px; object-fit: contain;"/>
+                            </div>
+                        </div>
+                        <div style="text-align: center; background-color: #1e3a5f; padding: 15px;">
+                            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">TAX INVOICE</h1>
+                        </div>
+
+                        <!-- Invoice Details Section -->
+                        <div style="padding: 20px; background-color: white;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                                <div style="flex: 1;">
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Customer Name:</strong> <span t-field="o.partner_id.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Address:</strong> 
+                                        <span t-field="o.partner_id.street" t-options="{'widget': 'text'}"/>
+                                        <span t-field="o.partner_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Booking Date:</strong> <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
+                                    </div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Project:</strong>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Unit No:</strong> <span t-field="o.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Invoice Number:</strong> 
+                                        <span t-esc="o._get_latest_invoice_number()"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Invoice Date:</strong> 
+                                        <span t-esc="o._get_latest_invoice_date()"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Due Date:</strong> 
+                                        <span t-esc="o._get_latest_invoice_due_date()"/>
+                                    </div>
+                                    <div style="margin-bottom: 10px;">
+                                        <strong>Currency:</strong> <span t-field="o.currency_id.name" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Billing Information -->
+                            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                                <div style="flex: 1; border: 1px solid #d4a574; padding: 15px;">
+                                    <div style="font-weight: bold; margin-bottom: 10px;">Bill To:</div>
+                                    <div style="min-height: 80px; margin-bottom: 10px;">
+                                        <div t-field="o.partner_id.name" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.partner_id.street" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.partner_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div>
+                                        <strong>TRN:</strong> <span t-field="o.partner_id.vat" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                </div>
+                                <div style="flex: 1; border: 1px solid #d4a574; padding: 15px;">
+                                    <div style="font-weight: bold; margin-bottom: 10px;">Bill From:</div>
+                                    <div style="min-height: 80px; margin-bottom: 10px;">
+                                        <div t-field="o.company_id.name" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.company_id.street" t-options="{'widget': 'text'}"/>
+                                        <div t-field="o.company_id.city" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                    <div>
+                                        <strong>TRN:</strong> <span t-field="o.company_id.vat" t-options="{'widget': 'text'}"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Itemized Table -->
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                                <thead>
+                                    <tr style="background-color: #1e3a5f; color: white;">
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Sr.No.</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Description</th>
+                                        <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Amount Excluding VAT</th>
+                                        <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">VAT Rate</th>
+                                        <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">VAT Amount</th>
+                                        <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Amount Including VAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="numbered_lines" t-value="o._get_numbered_order_lines()"/>
+                                    <tr t-foreach="numbered_lines" t-as="line_data" style="border-bottom: 1px solid #ddd;">
+                                        <td style="padding: 10px; border: 1px solid #ddd;" t-esc="line_data['sr_no']"/>
+                                        <t t-set="line" t-value="line_data['line']"/>
+                                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                        <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                            <span t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                        <td style="padding: 10px; text-align: center; border: 1px solid #ddd;">
+
+                                        </td>
+                                        <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                            <span t-field="line.price_tax" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                        <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                            <span t-field="line.price_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Total Amount -->
+                            <div style="margin-bottom: 20px;">
+                                <div style="margin-bottom: 10px;">
+                                    <strong>Total Amount:</strong> 
+                                    <span t-field="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </div>
+                                <div>
+                                    <strong>Amount in Words:</strong> 
+                                    <span t-esc="o._get_amount_in_words(o.amount_total, o.currency_id.name)"/>
+                                </div>
+                            </div>
+
+                            <!-- Corporate Bank Account Details -->
+                            <div style="margin-top: 30px;">
+                                <h3 style="font-weight: bold; margin-bottom: 15px;">Corporate Bank Account Details:</h3>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 5px; width: 200px;"><strong>Name of Bank:</strong></td>
+                                        <td style="padding: 5px;">National Bank of Fujairah</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Account Number:</strong></td>
+                                        <td style="padding: 5px;">012008694988</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>IBAN No.:</strong></td>
+                                        <td style="padding: 5px;">AE870380000012008694988</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Account Name:</strong></td>
+                                        <td style="padding: 5px;">NEOTERRA REAL ESTATE DEVELOPMENT LLC</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>AC Currency:</strong></td>
+                                        <td style="padding: 5px;">AED</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Branch Name/Address:</strong></td>
+                                        <td style="padding: 5px;">DUBAI, UAE</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Swift Code:</strong></td>
+                                        <td style="padding: 5px;">NBFUAEAFDXB</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="text-align: center; margin-top: 40px; padding: 20px;">
+                            <div style="font-size: 11px; margin-bottom: 10px;">This is a computer-generated document. Signature not required.</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">Neoterra Real Estate Development LLC</div>
+                            <div>Office 303 &amp; 304, Building 12, Bay Square, Business Bay, Dubai</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+        </t>
+    </template>
+
+</odoo>
+
