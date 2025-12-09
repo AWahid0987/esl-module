@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add Create Ticket Button directly in template - Method 1: After portal_docs -->
+        <template id="portal_my_home_add_create_button" name="Add Create Ticket Button"
+                  inherit_id="portal.portal_my_home" priority="50">
+            <!-- Add button after portal_docs container -->
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="after">
+                <div class="portal-create-ticket-wrapper" style="width: 100%; margin-top: 20px; margin-bottom: 20px; display: block !important;">
+                    <a href="/my/tickets/new" class="btn btn-primary" 
+                       style="width: 100%; padding: 12px; font-size: 16px; display: block !important; text-align: center; text-decoration: none;">
+                        Create Ticket
+                    </a>
+                </div>
+            </xpath>
+        </template>
+
+
+        <!-- Modify Tickets tile text + move it to top (Orders ki jagah) -->
+        <template id="portal_my_home_modify_tickets" name="Modify Tickets Tile"
+                  inherit_id="portal.portal_my_home" priority="40">
+            <!-- CHANGED: yahi JS title/description change karega
+                 aur Tickets card ko sab se pehle card bana dega -->
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="after">
+                <style>
+                    /* Ensure parent uses flexbox */
+                    .o_portal_docs {
+                        display: flex !important;
+                        flex-wrap: wrap !important;
+                    }
+                </style>
+                <script>
+                    <![CDATA[
+                    (function() {
+                        function modifyTicketsTile() {
+                            // Portal cards container
+                            var portalDocs = document.querySelector('.o_portal_docs');
+                            if (!portalDocs) {
+                                // Even if portalDocs doesn't exist, try to add button
+                                addCreateTicketButton();
+                                return;
+                            }
+
+                            // Find Tickets card by runtime href - try multiple selectors
+                            var ticketsLink = document.querySelector('a[href="/my/tickets"]') || 
+                                             document.querySelector('a[href*="/my/tickets"]') ||
+                                             document.querySelector('a[href*="tickets"]');
+                            
+                            if (ticketsLink) {
+                                var ticketsDiv = ticketsLink.closest('.o_portal_index_card');
+                                if (ticketsDiv) {
+                                    // Remove d-none if any
+                                    ticketsDiv.classList.remove('d-none');
+
+                                    // Set order to position 4 (Talk to Us - Tell us more)
+                                    ticketsDiv.className = 'o_portal_index_card col-md-6 order-4';
+
+                                    // ---- Change TITLE -> "Talk to Us" ----
+                                    var titleSelectors = ['h5', '.fs-5', '[class*="fw"]', 'div.fs-5', 'div[class*="fw"]'];
+                                    for (var i = 0; i < titleSelectors.length; i++) {
+                                        var title = ticketsDiv.querySelector(titleSelectors[i]);
+                                        if (title) {
+                                            title.textContent = 'Talk to Us';
+                                            title.innerHTML = 'Talk to Us';
+                                            break;
+                                        }
+                                    }
+
+                                    // Extra safety: change any heading which still has "Tickets" or "Talk to Us"
+                                    var allElements = ticketsDiv.querySelectorAll('*');
+                                    for (var j = 0; j < allElements.length; j++) {
+                                        var el = allElements[j];
+                                        if (el.textContent &&
+                                            (el.textContent.includes('Tickets') || el.textContent.includes('tickets') || 
+                                             el.textContent.includes('Talk to Us'))) {
+                                            if (el.tagName === 'H5' || el.tagName === 'H4' || el.tagName === 'H3' || el.classList.contains('fs-5')) {
+                                                el.textContent = 'Talk to Us';
+                                                el.innerHTML = 'Talk to Us';
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    // ---- Change DESCRIPTION -> "For Any Query Talk To Us" ----
+                                    var descSelectors = ['p', '.opacity-75', '[class*="opacity"]', 'div.opacity-75', '.text-muted'];
+                                    for (var k = 0; k < descSelectors.length; k++) {
+                                        var desc = ticketsDiv.querySelector(descSelectors[k]);
+                                        if (desc) {
+                                            desc.textContent = 'For Any Query Talk To Us';
+                                            desc.innerHTML = 'For Any Query Talk To Us';
+                                            break;
+                                        }
+                                    }
+
+                                    // Extra safety by text search
+                                    var allPElements = ticketsDiv.querySelectorAll('p');
+                                    for (var m = 0; m < allPElements.length; m++) {
+                                        var pEl = allPElements[m];
+                                        if (pEl.textContent &&
+                                            (pEl.textContent.includes('helpdesk') || pEl.textContent.includes('Follow') || 
+                                             pEl.textContent.includes('Query'))) {
+                                            pEl.textContent = 'For Any Query Talk To Us';
+                                            pEl.innerHTML = 'For Any Query Talk To Us';
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            // ---- Always Add "Create Ticket" button ----
+                            addCreateTicketButton();
+                        }
+                        
+                        function addCreateTicketButton() {
+                            // Check if button already exists (from QWeb template or previous JS)
+                            var existingButton = document.querySelector('a.btn-primary[href="/my/tickets/new"]') ||
+                                                document.querySelector('a[href="/my/tickets/new"]') ||
+                                                document.querySelector('.portal-create-ticket-wrapper a');
+                            
+                            if (existingButton) {
+                                // Update existing button to ensure it's visible
+                                existingButton.textContent = 'Create Ticket';
+                                existingButton.className = 'btn btn-primary';
+                                existingButton.href = '/my/tickets/new';
+                                existingButton.style.width = '100%';
+                                existingButton.style.padding = '12px';
+                                existingButton.style.fontSize = '16px';
+                                existingButton.style.display = 'block';
+                                existingButton.style.textAlign = 'center';
+                                existingButton.style.textDecoration = 'none';
+                                
+                                // Ensure parent is visible
+                                if (existingButton.parentNode) {
+                                    existingButton.parentNode.style.display = 'block';
+                                    existingButton.parentNode.style.width = '100%';
+                                    existingButton.parentNode.style.marginTop = '20px';
+                                    existingButton.parentNode.style.marginBottom = '20px';
+                                }
+                                console.log('Create Ticket button found and updated');
+                                return;
+                            }
+                            
+                            console.log('Create Ticket button not found, creating new one...');
+                            
+                            // Try to find portal_docs container first
+                            var portalDocs = document.querySelector('.o_portal_docs');
+                            
+                            // Create a wrapper div for the button
+                            var buttonWrapper = document.createElement('div');
+                            buttonWrapper.className = 'portal-create-ticket-wrapper';
+                            buttonWrapper.style.width = '100%';
+                            buttonWrapper.style.marginTop = '20px';
+                            buttonWrapper.style.marginBottom = '20px';
+                            buttonWrapper.style.display = 'block';
+                            
+                            // Create the button
+                            var createTicketBtn = document.createElement('a');
+                            createTicketBtn.className = 'btn btn-primary';
+                            createTicketBtn.href = '/my/tickets/new';
+                            createTicketBtn.textContent = 'Create Ticket';
+                            createTicketBtn.style.width = '100%';
+                            createTicketBtn.style.padding = '12px';
+                            createTicketBtn.style.fontSize = '16px';
+                            createTicketBtn.style.display = 'block';
+                            createTicketBtn.style.textAlign = 'center';
+                            createTicketBtn.style.textDecoration = 'none';
+                            
+                            buttonWrapper.appendChild(createTicketBtn);
+                            
+                            // Try multiple insertion strategies
+                            var inserted = false;
+                            
+                            // Strategy 1: Insert after portal_docs
+                            if (portalDocs && portalDocs.parentNode) {
+                                var container = portalDocs.parentNode;
+                                if (portalDocs.nextSibling) {
+                                    container.insertBefore(buttonWrapper, portalDocs.nextSibling);
+                                    inserted = true;
+                                } else {
+                                    container.appendChild(buttonWrapper);
+                                    inserted = true;
+                                }
+                            }
+                            
+                            // Strategy 2: If portal_docs not found, try to find main content area
+                            if (!inserted) {
+                                var mainContent = document.querySelector('.container') || 
+                                                 document.querySelector('main') ||
+                                                 document.querySelector('.o_portal_wrap') ||
+                                                 document.querySelector('[class*="portal"]');
+                                if (mainContent) {
+                                    mainContent.appendChild(buttonWrapper);
+                                    inserted = true;
+                                }
+                            }
+                            
+                            // Strategy 3: Last resort - append to body (but try to find a better container)
+                            if (!inserted) {
+                                var bodyContent = document.querySelector('body > .container') ||
+                                                 document.querySelector('body > main') ||
+                                                 document.body;
+                                if (bodyContent) {
+                                    bodyContent.appendChild(buttonWrapper);
+                                    inserted = true;
+                                }
+                            }
+                            
+                            if (inserted) {
+                                console.log('Create Ticket button added successfully');
+                            } else {
+                                console.error('Failed to add Create Ticket button - no suitable container found');
+                            }
+                        }
+
+                        function runModifications() {
+                            modifyTicketsTile();
+                            addCreateTicketButton();
+                        }
+
+                        // Function to run with debouncing
+                        var lastRun = 0;
+                        var debounceDelay = 200;
+                        function debouncedRun() {
+                            var now = Date.now();
+                            if (now - lastRun < debounceDelay) {
+                                return;
+                            }
+                            lastRun = now;
+                            runModifications();
+                        }
+
+                        // Try immediately
+                        runModifications();
+
+                        // On DOMContentLoaded
+                        if (document.readyState === 'loading') {
+                            document.addEventListener('DOMContentLoaded', runModifications);
+                        } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
+                            runModifications();
+                        }
+
+                        // Multiple retries in case portal cards load later
+                        setTimeout(runModifications, 100);
+                        setTimeout(runModifications, 300);
+                        setTimeout(runModifications, 500);
+                        setTimeout(runModifications, 1000);
+                        setTimeout(runModifications, 2000);
+
+                        // MutationObserver to catch dynamic changes
+                        if (window.MutationObserver) {
+                            var observer = new MutationObserver(function(mutations) {
+                                // Only run if relevant changes detected
+                                var shouldRun = false;
+                                for (var i = 0; i < mutations.length; i++) {
+                                    var mutation = mutations[i];
+                                    if (mutation.addedNodes.length > 0) {
+                                        for (var j = 0; j < mutation.addedNodes.length; j++) {
+                                            var node = mutation.addedNodes[j];
+                                            if (node.nodeType === 1 && (
+                                                node.classList && (
+                                                    node.classList.contains('o_portal_docs') ||
+                                                    node.classList.contains('o_portal_index_card') ||
+                                                    node.querySelector && node.querySelector('.o_portal_docs')
+                                                )
+                                            )) {
+                                                shouldRun = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (shouldRun) break;
+                                }
+                                if (shouldRun) {
+                                    debouncedRun();
+                                }
+                            });
+                            observer.observe(document.body, {
+                                childList: true,
+                                subtree: true
+                            });
+                        }
+                    })();
+                    ]]>
+                </script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
+
