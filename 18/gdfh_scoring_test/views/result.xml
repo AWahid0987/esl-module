@@ -593,7 +593,7 @@
                 yAxisID: "y1"
                 }
                 ]
-                },options: {
+                }, options: {
                 responsive: true,
                 maintainAspectRatio: false,
 
@@ -662,10 +662,8 @@
                 }
                 }
                 }
-
-                }
-                }
                 });
+
                 });
             </script>
 
@@ -818,6 +816,172 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Chart.js -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+
+                const canvas = document.getElementById("gdfhChart");
+                if (!canvas) return;
+
+                const isMobile = window.innerWidth = 768;
+                const ctx = canvas.getContext("2d");
+
+                /* Language detection */
+                const htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
+                const isDE = htmlLang.indexOf("de") === 0;
+
+                /* Scores from QWeb */
+                const scores = [
+                <t t-esc="results[0].global_awareness"/>,
+                <t t-esc="results[0].civic_participation"/>,
+                <t t-esc="results[0].environment"/>,
+                <t t-esc="results[0].ethical"/>,
+                <t t-esc="results[0].peace"/>,
+                <t t-esc="results[0].intercultural"/>
+                ];
+
+                /* Percentages from QWeb */
+                const percentages = [
+                <t t-esc="results[0].global_awareness_pct"/>,
+                <t t-esc="results[0].civic_participation_pct"/>,
+                <t t-esc="results[0].environment_pct"/>,
+                <t t-esc="results[0].ethical_pct"/>,
+                <t t-esc="results[0].peace_pct"/>,
+                <t t-esc="results[0].intercultural_pct"/>
+                ];
+
+                /* English labels */
+                const labelsEn = [
+                "Global Awareness",
+                "Civic Participation",
+                "Environmental Awareness",
+                "Ethical Understanding",
+                "Peace &amp; Conflict Resolution",
+                "Intercultural Understanding"
+                ];
+
+                /* German labels */
+                const labelsDe = [
+                "Globales Bewusstsein",
+                "Aktive Bürgerbeteiligung",
+                "Umweltschutz",
+                "Ethischer Konsum",
+                "Frieden &amp; Konfliktmanagement",
+                "Interkulturelle Kompetenz"
+                ];
+
+                const labels = isDE ? labelsDe : labelsEn;
+
+                /* Axis text */
+                const labelScore = isDE ? "Punktzahl in jedem Bereich" : "Score in each area";
+                const labelPercentage = isDE ? "Prozentsatz" : "Percentage";
+
+                /* Score colors */
+                const colors = scores.map(score => {
+                if (score >= 25.5) return "#1ba14b";
+                else if (score >= 21) return "#017F36";
+                else if (score >= 15) return "orange";
+                else return "red";
+                });
+
+                /* Chart.js */
+                new Chart(ctx, {
+                type: "bar",
+                data: {
+                labels: labels,
+                datasets: [
+                {
+                label: labelScore,
+                data: scores,
+                backgroundColor: colors,
+                borderColor: "rgba(0,0,0,0.2)",
+                borderWidth: 1
+                },
+                {
+                label: labelPercentage,
+                data: percentages,
+                type: "line",
+                borderColor: "blue",
+                borderWidth: 2,
+                fill: false,
+                yAxisID: "y1"
+                }
+                ]
+                }, options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                interaction: { mode: "index", intersect: false },
+
+                plugins: {
+                legend: {
+                display: false,
+                labels: {
+                font: { weight: "bold" }
+                }
+                },
+                tooltip: {
+                titleFont: { weight: "bold" },
+                bodyFont: { weight: "bold" },
+                callbacks: {
+                label: function (context) {
+                if (context.datasetIndex === 0) {
+                return labelScore + ": " + context.formattedValue;
+                } else {
+                return labelPercentage + ": " + context.formattedValue;
+                }
+                }
+                }
+                }
+                },
+
+                scales: {
+                x: {
+                ticks: {
+                autoSkip: false,
+                maxRotation: isMobile ? 60 : 45,
+                minRotation: isMobile ? 45 : 0,
+                font: {
+                size: isMobile ? 9 : 11,
+                weight: "bold"
+                }
+                }
+                },
+                y: {
+                beginAtZero: true,
+                title: {
+                display: true,
+                text: labelScore,
+                font: { weight: "bold" }
+                },
+                suggestedMax: 30,
+                ticks: {
+                font: { weight: "bold" }
+                }
+                },
+                y1: {
+                beginAtZero: true,
+                position: "right",
+                title: {
+                display: true,
+                text: labelPercentage + " (%)",
+                rotation: -90,
+                font: { weight: "bold" }
+                },
+                suggestedMax: 100,
+                grid: { drawOnChartArea: false },
+                ticks: {
+                font: { weight: "bold" }
+                }
+                }
+                }
+                }
+                });
+
+                });
+            </script>
         </t>
     </template>
 
