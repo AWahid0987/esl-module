@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+
+        <record id="invoice_due_reminder_action" model="ir.actions.server">
+            <field name="name">Invoice Due Reminder (2 Days Before)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+
+            <field name="code">
+records = env['account.move'].search([
+    ('move_type', '=', 'out_invoice'),
+    ('invoice_date_due', '!=', False),
+    ('payment_state', 'in', ('not_paid', 'partial')),
+])
+
+template = env.ref('land_plot_manager.email_invoice_due_reminder', raise_if_not_found=False)
+
+if template:
+    for rec in records:
+        if rec._check_due_date_for_reminder():
+            if rec.partner_id and rec.partner_id.email:
+                template.send_mail(rec.id, force_send=True)
+            </field>
+        </record>
+
+        <!-- CRON: runs every 24 hours -->
+        <record id="invoice_due_reminder_cron" model="ir.cron">
+            <field name="name">Invoice Due Reminder Cron</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">
+env['account.move']._cron_invoice_due_reminder()
+            </field>
+            <field name="interval_number">24</field>
+            <field name="interval_type">hours</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,43 @@
+<odoo>
+    <!-- Tree view for Land Notebook -->
+
+    <!-- Purchase Order Form with Land Notebook Tab -->
+    <record id="view_purchase_order_form_inherit_land" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.land.notebook</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add Land Purchase Checkbox -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <group>
+                    <field name="land_purchase"/>
+                </group>
+            </xpath>
+
+            <!-- Add new tab inside notebook -->
+            <xpath expr="//sheet/notebook" position="inside">
+                <!-- Land Details Tab -->
+                <page string="Land Details">
+                    <group>
+                        <field name="total_land"/>
+                        <field name="plotted_land"/>
+                        <field name="notes"/>
+                    </group>
+                </page>
+
+                <!-- Land Documents Tab -->
+                <page string="Land Documents" modifiers="{'invisible': [('land_purchase', '=', False)]}">
+                       <group>
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="name"/>
+                            <field name="doc_attachment_ids" widget="many2many_binary" filename="name"/>
+                           
+                        </list>
+                        </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

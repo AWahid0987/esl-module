@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_sale" model="ir.actions.report">
+
+        <field name="name">Allotment Letter</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">land_plot_manager.action_report_sale_document</field>
+        <field name="report_file">land_plot_manager.action_report_sale_document</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Allotment_Letter_%s' % (object.name)</field>
+    </record>
+
+    <!-- Paperformat for Installment -->
+    <record id="paperformat_no_allotment_letter" model="report.paperformat">
+        <field name="name">No Header Format (Installment)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+        <field name="report_ids" eval="[(4, ref('land_plot_manager.action_report_sale'))]"/>
+    </record>
+
+    <!-- Report Template -->
+    <template id="action_report_sale_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <main class="page">
+
+                        <!-- Header -->
+                        <div class="row" style="margin-bottom:16px;">
+                            <div class="col-6">
+                                <h3 style="margin:0;"><t t-esc="doc.company_id.name or ''"/></h3>
+                                <div>
+                                    <t t-esc="doc.company_id.street or ''"/><br/>
+                                    <t t-esc="doc.company_id.city or ''"/>
+                                    <t t-if="doc.company_id.state_id">, <t t-esc="doc.company_id.state_id.name"/></t>
+                                    <t t-if="doc.company_id.country_id">, <t t-esc="doc.company_id.country_id.name"/></t><br/>
+                                    <t t-if="doc.company_id.phone">Tel: <t t-esc="doc.company_id.phone"/></t>
+                                </div>
+                            </div>
+                            <div class="col-6" style="text-align:right;">
+                                <h4 style="margin:0;">ALLOTMENT LETTER OF  PLOT</h4>
+                                <div>Date: <t t-esc="doc.date_order and doc.date_order.strftime('%d %B, %Y') or ''"/></div>
+                                <div>Sale Order: <t t-esc="doc.name or '-'"/></div>
+                            </div>
+                        </div>
+
+                        <!-- Recipient -->
+                        <div style="margin: 14px 0;">
+                            <p>
+                                We are pleased to inform that the following plot(s) at
+                                <strong><t t-esc="doc.company_id.name or '-'"/></strong>
+                                has/have been allotted to you against your Allotment no.
+                                <strong><t t-esc="doc.allotment_no or '-'"/></strong>.
+                            </p>
+                            <p>
+                                To,<br/>
+                                <strong><t t-esc="doc.partner_id.name or '-'"/></strong><br/>
+                                <t t-esc="doc.partner_id.contact_address or ''"/>
+                            </p>
+                        </div>
+
+                        <!-- Plot Details -->
+                        <t t-foreach="doc.order_line" t-as="line">
+                            <!-- If your custom fields are on product.template (typical) -->
+                            <t t-set="p" t-value="line.product_id and line.product_id.product_tmpl_id or False"/>
+                            <!-- If they are on product.product, use: <t t-set="p" t-value="line.product_id or False"/> -->
+
+                            <table class="table table-sm" style="width:100%; border-collapse:collapse; margin:10px 0;" border="1">
+                                <colgroup>
+                                    <col style="width:20%;"/>
+                                    <col style="width:30%;"/>
+                                    <col style="width:20%;"/>
+                                    <col style="width:30%;"/>
+                                </colgroup>
+
+                                <!-- Row 1: Plot Name / Area -->
+                                <tr style="background:#f7f7f7;">
+                                    <th style="padding:6px;">Plot Name</th>
+                                    <td style="padding:6px;">
+                                        <t t-esc="line.product_id and line.product_id.name or '-'"/>
+                                    </td>
+                                    <th style="padding:6px;">Area (Marla)</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('marla')">
+                                            <t t-esc="(p.marla if p.marla not in (False, None) else '-')"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 2: North ft / North Place -->
+                                <tr>
+                                    <th style="padding:6px;">North (ft)</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('north')">
+                                            <t t-esc="(p.north if p.north not in (False, None) else 0.0)"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                    <th style="padding:6px;">North Place</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('north_place')">
+                                            <t t-esc="p.north_place or '-'"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 3: South ft / South Place -->
+                                <tr>
+                                    <th style="padding:6px;">South (ft)</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('south')">
+                                            <t t-esc="(p.south if p.south not in (False, None) else 0.0)"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                    <th style="padding:6px;">South Place</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('south_place')">
+                                            <t t-esc="p.south_place or '-'"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 4: East ft / East Place -->
+                                <tr>
+                                    <th style="padding:6px;">East (ft)</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('east')">
+                                            <t t-esc="(p.east if p.east not in (False, None) else 0.0)"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                    <th style="padding:6px;">East Place</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('east_place')">
+                                            <t t-esc="p.east_place or '-'"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 5: West ft / West Place -->
+                                <tr>
+                                    <th style="padding:6px;">West (ft)</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('west')">
+                                            <t t-esc="(p.west if p.west not in (False, None) else 0.0)"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                    <th style="padding:6px;">West Place</th>
+                                    <td style="padding:6px;">
+                                        <t t-if="p and p._fields.get('west_place')">
+                                            <t t-esc="p.west_place or '-'"/>
+                                        </t>
+                                        <t t-else="True">-</t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+
+                        <!-- Terms -->
+                        <div style="margin-top:14px;">
+                            <ol style="padding-left:18px;">
+                                <li>The authority reserves the right to cancel/alter the location and dimension of the plot until physical possession is handed over. No construction is permitted unless physical possession is handed over.</li>
+                                <li>Member will pay additional charges @10% for corner, 5% for park facing, and 5% for main boulevard plots before obtaining NOC for sale/transfer/possession.</li>
+                                <li>Member must abide by the terms &amp; conditions mentioned on the overleaf / brochure / agreement.</li>
+                            </ol>
+                        </div>
+
+                        <!-- Signatures -->
+                        <div class="row" style="margin-top:40px;">
+                            <div class="col-6" style="text-align:left;">
+                                <strong>Project Director</strong><br/>
+                                <span><t t-esc="doc.company_id.name or '' "/></span><br/>
+                                <span>Tel: <t t-esc="doc.company_id.phone or ''"/></span>
+                            </div>
+                            <div class="col-6" style="text-align:right;">
+                                <strong>Assistant Chief of the Navy Staff </strong><br/>
+                                <span>Navy Headquarters, Lahore</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:30px; font-size:12px; color:#666;">
+                            <em>This is a computer-generated allotment letter and requires no signature unless otherwise stated.</em>
+                        </div>
+
+                    </main>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

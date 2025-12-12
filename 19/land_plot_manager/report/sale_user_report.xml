@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_sale_user" model="ir.actions.report">
+        <field name="name">Plot Sale </field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">land_plot_manager.action_report_sale_user_document</field>
+        <field name="report_file">land_plot_manager.action_report_sale_user_document</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Plot_Sale_%s' % (object.name)</field>
+    </record>
+    <!-- Paperformat for Installment -->
+    <record id="paperformat_no_sale_user" model="report.paperformat">
+        <field name="name">No Header Format (Installment)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+        <field name="report_ids" eval="[(4, ref('land_plot_manager.action_report_sale_user'))]"/>
+    </record>
+    <!-- Report Template -->
+    <template id="action_report_sale_user_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <main class="page">
+
+                        <!-- Header -->
+                        <div class="row" style="margin-bottom:16px;">
+                            <div class="col-6">
+                                <h3 style="margin:0;">
+                                    <t t-esc="doc.company_id.name or ''"/>
+                                </h3>
+                                <div>
+                                    <t t-esc="doc.company_id.street or ''"/>
+                                    <br/>
+                                    <t t-esc="doc.company_id.city or ''"/>
+                                    <t t-if="doc.company_id.state_id">,
+                                        <t t-esc="doc.company_id.state_id.name"/>
+                                    </t>
+                                    <t t-if="doc.company_id.country_id">,
+                                        <t t-esc="doc.company_id.country_id.name"/>
+                                    </t>
+                                    <br/>
+                                    <t t-if="doc.company_id.phone">Tel:
+                                        <t t-esc="doc.company_id.phone"/>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Right side: Company Logo -->
+                            <div class="col-6" style="text-align:right;">
+                                <t t-if="doc.company_id.logo">
+                                    <img t-att-src="'data:image/png;base64,%s' % (doc.company_id.logo.decode() if doc.company_id.logo else '')"
+                                         style="max-height:80px; max-width:180px;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="font-size:12px; color:#888;">No Logo</div>
+                                </t>
+                            </div>
+                        </div>
+
+
+                        <!-- Customer Info -->
+                        <div class="row" style="margin:14px 0;">
+
+                            <div class="col-9">
+                                <p>
+                                    <strong>Name:</strong>
+                                    <t t-esc="doc.partner_id.name or '-'"/>
+                                    <br/>
+                                    <strong>Email:</strong>
+                                    <t t-esc="doc.partner_id.email or '-'"/>
+                                    <br/>
+                                    <strong>Contact No:</strong>
+                                    <t t-esc="doc.partner_id.phone or '-'"/>
+                                    <br/>
+                                    <strong>CNIC:</strong>
+                                    <t t-esc="doc.partner_id.cnic or '-'"/>
+                                </p>
+                            </div>
+                            <div class="col-3" style="text-align:center;">
+                                <t t-if="doc.partner_id.image_1920">
+                                    <img t-att-src="'data:image/png;base64,%s' % (doc.partner_id.image_1920.decode() if doc.partner_id.image_1920 else '')"
+                                         style="max-width:100px; max-height:100px; border:1px solid #ccc;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="width:100px; height:100px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:10px; color:#666;">
+                                        No Photo
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Products -->
+                        <h5 style="margin-top:20px;">Allotted Plots</h5>
+                        <table class="table table-sm" style="width:100%; border-collapse:collapse; margin:10px 0;"
+                               border="1">
+                            <thead>
+                                <tr style="background:#f7f7f7;">
+                                    <th style="padding:6px;">Product</th>
+                                    <th style="padding:6px;">Description</th>
+                                    <th style="padding:6px; text-align:right;">Qty</th>
+                                    <th style="padding:6px; text-align:right;">Unit Price</th>
+                                    <th style="padding:6px; text-align:right;">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.order_line" t-as="line">
+                                    <tr>
+                                        <td style="padding:6px;">
+                                            <t t-esc="line.product_id.display_name or '-'"/>
+                                        </td>
+                                        <td style="padding:6px;">
+                                            <t t-esc="line.name or ''"/>
+                                        </td>
+                                        <td style="padding:6px; text-align:right;">
+                                            <t t-esc="line.product_uom_qty"/>
+                                        </td>
+                                        <td style="padding:6px; text-align:right;">
+                                            <t t-esc="line.price_unit"/>
+                                        </td>
+                                        <td style="padding:6px; text-align:right;">
+                                            <t t-esc="line.price_subtotal"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Footer / Signature -->
+                        <div class="row" style="margin-top:40px;">
+                            <div class="col-6" style="text-align:left;">
+                                <strong>Project Director</strong>
+                                <br/>
+                                <span>
+                                    <t t-esc="doc.company_id.name or ''"/>
+                                </span>
+                                <br/>
+                                <span>Tel:
+                                    <t t-esc="doc.company_id.phone or ''"/>
+                                </span>
+                            </div>
+                            <div class="col-6" style="text-align:right;">
+                                <strong>Authorized Signatory</strong>
+                                <br/>
+                                <span>Signature &amp; Stamp</span>
+                            </div>
+                        </div>
+
+                    </main>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

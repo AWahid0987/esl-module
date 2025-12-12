@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_final_file" model="ir.actions.report">
+        <field name="name">Confirmation Letter</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">land_plot_manager.action_report_final_file_document</field>
+        <field name="report_file">land_plot_manager.action_report_final_file_document</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Plot_File_%s' % (object.name)</field>
+    </record>
+
+    <!-- Paperformat -->
+    <record id="paperformat_no_final_file" model="report.paperformat">
+        <field name="name">No Header Format (Installment)</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="orientation">Portrait</field>
+        <field name="header_line" eval="False"/>
+        <field name="report_ids" eval="[(4, ref('land_plot_manager.action_report_final_file'))]"/>
+    </record>
+
+    <!-- Report Template -->
+    <template id="action_report_final_file_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <main class="page">
+
+                        <!-- Header -->
+                        <table style="width:100%; border-collapse:none;  border: 0px solid #fff;">
+                            <tr>
+                                <!-- Left Logo -->
+                                <td style="width:25%; border:none; text-align:left; vertical-align:middle;">
+                                    <img src="/land_plot_manager/static/src/img/leftlogo.png"
+                                         style="width: 100%; max-width: 150px; height: auto;"/>
+                                </td>
+
+                                <!-- Center Text -->
+                                <td style="width:50%; border:none; text-align:center; vertical-align:middle;">
+                                    <h1 style="margin:0; font-size:22px;">ANCHORAGE LAHORE</h1>
+                                    <h2 style="margin:0; font-size:16px;">A PROJECT OF PAKISTAN NAVY BENEVOLENT
+                                        ASSOCIATION
+                                    </h2>
+<!--                                    <div style="margin-top:6px; font-size:14px;">-->
+<!--                                        RESIDENTIAL PLOTS-->
+<!--                                        <br/>-->
+<!--                                        <span>APPLICATION FORM</span>-->
+<!--                                        <br/>-->
+<!--                                        <span style="font-size:10px; letter-spacing:3px;">N O N R E F U N D A B L E-->
+<!--                                        </span>-->
+<!--                                    </div>-->
+                                </td>
+
+                                <!-- Right Logo -->
+                                <td style="width:25%; border:none; text-align:right; vertical-align:middle;">
+                                    <img src="/land_plot_manager/static/src/img/rightlogo.png"
+                                         style="width: 100%; max-width: 250px; height: auto;"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <br></br>
+                        <br></br>
+                        <!-- Customer Info -->
+                        <p>
+                            <strong>
+                                <t t-esc="doc.partner_id.name"/>
+                            </strong>
+                        </p>
+                        <p>
+                            <strong>
+                                <t t-esc="doc.partner_id.street"/>
+                            </strong>
+                        </p>
+
+                        <div style="display:flex; justify-content:space-between; width:100%;">
+                            <p style="margin:0;">
+                                <strong>Date:</strong>
+                                <t t-esc="doc.date_order"/>
+                            </p>
+                            <p style="margin:0; text-align:right;">
+                                <strong>Ref:</strong>
+                                <t t-esc="doc.allotment_no"/>
+                            </p>
+                        </div>
+
+                        <!-- Title -->
+                        <p style="text-align: center; margin-top:15px;">
+                            <strong>
+                                Confirmation of Full Payment &amp; Issuance of Provisional Allotment Letter -
+                                <t t-esc="', '.join(doc.order_line.mapped('product_id.name'))"/>
+                            </strong>
+                        </p>
+
+                        <!-- Letter Body -->
+                        <p>
+                            We hereby confirm that<strong>
+                            <t t-esc="doc.partner_id.name"/></strong>
+                            has paid the full amount of
+                            <strong>
+                                <t t-esc="'{:,.0f}'.format(doc.amount_total)"/>
+                            </strong>
+                            for the <strong>Provisional Allotment Letter</strong> of a
+                            <strong>
+                                <t t-esc="', '.join(doc.order_line.mapped('product_id.name'))"/>
+                            </strong>
+                            .
+                            The payment has been received in full, and the original Provisional Allotment Letter is
+                            attached herewith.
+                        </p>
+
+                        <p>
+                            Additionally, a
+                            <strong>photocopy of the allotment letter</strong> is attached which may please be
+                            duly signed and returned to our office address will be forwarded to
+                            <strong>Pakistan Navy (PN)</strong>
+                            for their official record and filing.
+                        </p>
+
+                        <!-- Allottee Details -->
+                        <p>
+                            <strong>Allottee Details:</strong>
+                        </p>
+                        <p>
+                            <strong>Name:</strong>
+                            <t t-esc="doc.partner_id.name"/>
+                        </p>
+                        <p>
+                            <strong>Plot Details:</strong>
+                            <t t-esc="', '.join(doc.order_line.mapped('product_id.name'))"/>
+                            file in Anchorage, Lahore
+                        </p>
+                        <p>
+                            <strong>Reference:</strong>
+                            Registration Form Serial No.
+                            <t t-esc="doc.allotment_no"/>
+                        </p>
+
+<!--                        <p>-->
+<!--                            Kindly be advised that your-->
+<!--                            <strong>Provisional Allotment Letter (PAL)</strong>-->
+<!--                            is currently held with us and will be handed over to you upon full and final payment.-->
+<!--                        </p>-->
+                        <br></br>
+                        <!-- Signature -->
+                        <p>Yours Sincerely,</p>
+<!--                        <p>-->
+<!--                            <strong>ACCOUNT DEPT</strong>-->
+<!--                        </p>-->
+                        <p>A &amp; A ASSOCIATES</p>
+
+                    </main>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

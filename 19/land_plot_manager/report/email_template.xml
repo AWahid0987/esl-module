@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Sale Order Confirmed Notification -->
+        <record id="email_template_sale_order_confirmed" model="mail.template">
+            <field name="name">Sale Order Confirmed Notification</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="email_from">ebitdasolutionsllc@gmail.com</field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="subject">Your Request Has Been Approved - ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <p>Dear <t t-esc="object.partner_id.name"/>,</p>
+                <p>We are pleased to inform you that your request for Sale Order
+                    <strong><t t-esc="object.name"/></strong> has been <strong>approved</strong>.
+                </p>
+                <p><strong>Order Details:</strong></p>
+                <ul>
+                    <li><strong>Sale Order:</strong> <t t-esc="object.name"/></li>
+                    <li><strong>Date:</strong> <t t-esc="object.date_order"/></li>
+                    <li><strong>Total Amount:</strong> <t t-esc="object.amount_total"/></li>
+                    <li><strong>Project:</strong> <t t-esc="object.land_project_id.name or 'N/A'"/></li>
+                </ul>
+                <p>Your order is now confirmed and ready for processing.</p>
+                <p>Thank you for your business.</p>
+                <p><strong><t t-esc="object.company_id.name"/></strong></p>
+            ]]></field>
+        </record>
+
+        <!-- Invoice Created Notification (used by action_send_invoice_with_challan) -->
+        <record id="email_template_invoice_created" model="mail.template">
+            <field name="name">Invoice Created Notification</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="email_from">ebitdasolutionsllc@gmail.com</field>
+            <field name="email_to">${object.partner_id.email}</field>
+
+            <!-- YEH DO LINES ADD KARO -->
+
+            <field name="subject">Invoice ${object.name} Created - ${object.company_id.name}</field>
+            <field name="body_html"><![CDATA[
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <p>Dear <strong><t t-esc="object.partner_id.name or 'Valued Customer'"/></strong>,</p>
+            <p>A new invoice has been created for you:</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #ddd;">
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; background-color: #f5f5f5;"><strong>Invoice Number:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;"><t t-esc="object.name"/></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; background-color: #f5f5f5;"><strong>Amount:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        <t t-esc="object.currency_id.symbol or ''"/> <t t-esc="object.amount_total"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; background-color: #f5f5f5;"><strong>Invoice Date:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;"><t t-esc="object.invoice_date"/></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; background-color: #f5f5f5;"><strong>Due Date:</strong></td>
+                    <td style="padding: 8px;"><t t-esc="object.invoice_date_due"/></td>
+                </tr>
+            </table>
+            <p>Please find the challan attached for your records.</p>
+            <p>Thank you for your business.</p>
+            <p><strong><t t-esc="object.company_id.name"/></strong></p>
+        </div>
+    ]]></field>
+        </record>
+
+
+        <!-- Invoice Due Reminder -->
+        <record id="email_invoice_due_reminder" model="mail.template">
+            <field name="name">Invoice Due Reminder (2 Days Before)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="email_from">ebitdasolutionsllc@gmail.com</field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="subject">Reminder: Invoice ${object.name} Due Soon</field>
+            <field name="body_html"><![CDATA[
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <p>Dear <strong><t t-esc="object.partner_id.name or 'Valued Customer'"/></strong>,</p>
+            <p>This is a friendly reminder that your invoice <strong><t t-esc="object.name"/></strong> is due soon.</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid #ddd;">
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; background-color: #f5f5f5;"><strong>Invoice Number:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;"><t t-esc="object.name"/></td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; background-color: #f5f5f5;"><strong>Amount Due:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        <t t-esc="object.currency_id.symbol or ''"/> <t t-esc="object.amount_residual"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; background-color: #f5f5f5;"><strong>Total Amount:</strong></td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        <t t-esc="object.currency_id.symbol or ''"/> <t t-esc="object.amount_total"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; background-color: #f5f5f5;"><strong>Due Date:</strong></td>
+                    <td style="padding: 8px; color: #d9534f;"><strong><t t-esc="object.invoice_date_due"/></strong></td>
+                </tr>
+            </table>
+            <p style="color: #d9534f; font-weight: bold;">
+                Please make the payment before the due date to avoid any inconvenience.
+            </p>
+            <p>Thank you for your prompt attention to this matter.</p>
+            <p><strong><t t-esc="object.company_id.name"/></strong></p>
+        </div>
+            ]]></field>
+        </record>
+
+    </data>
+</odoo>

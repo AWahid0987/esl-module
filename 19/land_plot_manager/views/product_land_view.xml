@@ -1,0 +1,57 @@
+<odoo>
+    <record id="view_product_land_form" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.land.notebook</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='responsible_id']" position="after">
+                     <field name="size_marla"/>
+                     <field name="categ_id"/>
+                </xpath>
+            <xpath expr="//sheet/notebook" position="inside">
+
+                <!-- 🧭 Land Details Page -->
+                <page string="Land Details">
+                    <group col="2">
+                        <group>
+                            <field name="north"/>
+                            <field name="south"/>
+                            <field name="east"/>
+                            <field name="west"/>
+                        </group>
+                        <group>
+                            <field name="marla" readonly="1"/>
+                            <field name="map_parameter"/>
+                        </group>
+                    </group>
+                </page>
+
+                <!-- 📍 Near Plots Page -->
+                <page string="Near Plots">
+                    <group col="2">
+                        <group>
+                            <field name="north_place"/>
+                            <field name="south_place"/>
+                            <field name="east_place"/>
+                            <field name="west_place"/>
+                        </group>
+                        <group>
+                            <field name="north_image" widget="image" class="oe_avatar"/>
+                            <field name="south_image" widget="image" class="oe_avatar"/>
+                            <field name="east_image" widget="image" class="oe_avatar"/>
+                            <field name="west_image" widget="image" class="oe_avatar"/>
+                        </group>
+                    </group>
+                </page>
+
+               
+
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_sale_advance_payment_inv_form_inherit_custom" model="ir.ui.view">
+        <field name="name">sale.advance.payment.inv.form.inherit.custom</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+        <field name="arch" type="xml">
+
+            <!-- Show Invoice Summary -->
+            <xpath expr="//group" position="before">
+                <group string="Invoice Summary" colspan="2">
+                    <field name="already_invoiced_amount" readonly="1"/>
+                    <field name="remaining_amount" readonly="1"/>
+                </group>
+            </xpath>
+
+            <!-- Replace the advance_payment_method field -->
+            <xpath expr="//field[@name='advance_payment_method']" position="replace">
+                <group>
+                    <!-- Custom payment method -->
+                    <field name="custom_method" widget="radio" required="1"/>
+
+                    <!-- Custom amount field -->
+                    <field name="custom_amount"
+                           string="Payment Amount"
+                           placeholder="Enter amount"
+                           invisible="not custom_method"/>
+
+                    <!-- PAL Number: visible only when Possession is selected -->
+                    <field name="pal_number"
+                           string="PAL Number"
+                           placeholder="Enter PAL Number"
+                           invisible="custom_method not in ['possession','regular']"/>
+
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

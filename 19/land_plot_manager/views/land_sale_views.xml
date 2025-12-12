@@ -1,0 +1,110 @@
+<odoo>
+    <!-- Tree View for Sale Agreements -->
+    <record id="view_land_sale_list" model="ir.ui.view">
+        <field name="name">land.sale.agreement.list</field>
+        <field name="model">land.sale.agreement</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="property_id"/>
+                <field name="plan_type"/>
+                <field name="marla_qty"/>
+                <field name="total_price"/>
+                <field name="paid_amount"/>
+                <field name="remaining_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View for Sale Agreements -->
+    <record id="view_land_sale_form" model="ir.ui.view">
+        <field name="name">land.sale.agreement.form</field>
+        <field name="model">land.sale.agreement</field>
+        <field name="arch" type="xml">
+            <form string="Sale Agreement">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,paid,cancel"/>
+                </header>
+
+                <sheet>
+                    <!-- Action Buttons -->
+                    <group>
+                        <button name="action_confirm" type="object" class="btn-primary"
+                                string="Confirm" modifiers="{'invisible': [('state','!=','draft')]}"/>
+                        <button name="action_mark_paid_if_done" type="object"
+                                string="Mark Paid If Done" modifiers="{'invisible': [('state','!=','in_progress')]}"/>
+                    </group>
+
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="partner_id"/>
+                        <field name="property_id"/>
+                        <field name="plan_type"/>
+                    </group>
+
+                    <group>
+                        <field name="marla_qty"/>
+                        <field name="price_per_acre"/>
+                        <field name="price_per_marla" readonly="1"/>
+                        <field name="total_price" readonly="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Full Payment" modifiers="{'invisible': [('plan_type','!=','full')]}">
+                            <group>
+                                <field name="full_invoice_id" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Installment" modifiers="{'invisible': [('plan_type','!=','installment')]}">
+                            <group>
+                                <field name="duration_years"/>
+                                <field name="start_date"/>
+                                <field name="monthly_amount" readonly="1"/>
+                                <field name="next_invoice_date" readonly="1"/>
+                            </group>
+                            <group string="Invoices">
+                                <field name="invoice_ids" context="{'default_land_sale_id': id}" readonly="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="invoice_date"/>
+                                        <field name="state"/>
+                                        <field name="payment_state"/>
+                                        <field name="amount_total"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+
+                    <group string="Amounts">
+                        <field name="posted_amount" readonly="1"/>
+                        <field name="paid_amount" readonly="1"/>
+                        <field name="remaining_amount" readonly="1"/>
+                    </group>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_open_invoices" icon="fa-file-text-o">
+                            <field name="invoice_ids" widget="statinfo" string="Invoices"/>
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Sale Agreements -->
+    <record id="action_land_sales" model="ir.actions.act_window">
+        <field name="name">Sale Agreements</field>
+        <field name="res_model">land.sale.agreement</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_land_sale_list"/>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_land_root" name="Land Management" sequence="10"/>
+    <menuitem id="menu_land_sales" name="Sale Agreements" parent="menu_land_root" action="action_land_sales"/>
+</odoo>
