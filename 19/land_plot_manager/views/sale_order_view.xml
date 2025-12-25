@@ -49,6 +49,7 @@
                 <field name="plan_type"/>
                 <field name="pal_number" readonly="1"/>
                 <field name="reg_number"/>
+                <field name="app_no"/>
                 <field name="allotment_no"/>
                 <field name="project_type"/>
             </xpath>

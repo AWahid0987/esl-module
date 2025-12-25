@@ -17,8 +17,17 @@
             <!-- Replace the advance_payment_method field -->
             <xpath expr="//field[@name='advance_payment_method']" position="replace">
                 <group>
-                    <!-- Custom payment method -->
-                    <field name="custom_method" widget="radio" required="1"/>
+                    <!-- Hidden fields to trigger selection refresh -->
+                    <field name="sale_order_id" invisible="1"/>
+                    <field name="plan_type_for_selection" invisible="1"/>
+                    
+                    <!-- Custom payment method - dynamically shows options based on plan_type -->
+                    <!-- Selection options are controlled by _get_custom_method_selection method -->
+                    <field name="custom_method" 
+                           widget="radio" 
+                           required="1"
+                           invisible="not sale_order_id"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
 
                     <!-- Custom amount field -->
                     <field name="custom_amount"
@@ -26,15 +35,20 @@
                            placeholder="Enter amount"
                            invisible="not custom_method"/>
 
-                    <!-- PAL Number: visible only when Possession is selected -->
+                    <!-- PAL Number: 
+                         - Required for Regular (always)
+                         - Required for Possession (standard plans only: full/installment)
+                         - Required for Installment (Navy plans only) -->
                     <field name="pal_number"
                            string="PAL Number"
                            placeholder="Enter PAL Number"
-                           invisible="custom_method not in ['possession','regular']"/>
+                           required="custom_method == 'regular' or (custom_method == 'possession' and sale_order_id.plan_type in ['full', 'installment']) or (custom_method == 'installment' and sale_order_id.plan_type in ['full_navy_1', 'full_navy_2', 'installment_navy_1', 'installment_navy_2'])"
+                           invisible="custom_method not in ['regular', 'possession', 'installment'] or (custom_method == 'possession' and sale_order_id.plan_type not in ['full', 'installment']) or (custom_method == 'installment' and sale_order_id.plan_type not in ['full_navy_1', 'full_navy_2', 'installment_navy_1', 'installment_navy_2'])"/>
 
                 </group>
             </xpath>
 
         </field>
     </record>
+    
 </odoo>

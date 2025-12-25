@@ -17,7 +17,7 @@ class AccountMove(models.Model):
     sale_id = fields.Many2one("sale.order", string="Sale Order", index=True)
     pal_number = fields.Char(
         string="PAL Number",
-        help="PAL Number for Regular and Possession payments."
+        help="PAL Number for Regular, Possession and All Invoice payments."
     )
     journal_id = fields.Many2one(
         'account.journal',
@@ -26,10 +26,19 @@ class AccountMove(models.Model):
         required=True
     )
     plan_type = fields.Selection(
-        [('full', 'Full Payment'), ('installment', 'Installment')],
+        [
+            ('full', 'Full Payment'), 
+            ('installment', 'Installment'), 
+            ('full_navy_1', 'Full Payment Navy 1'),
+            ('full_navy_2', 'Full Payment Navy 2'),
+            ('installment_navy_1', 'Installment Navy 1'),
+            ('installment_navy_2', 'Installment Navy 2'),
+        ],
         string="Plan Type",
-        default='full',
-        store=True
+        default='installment',
+        store=True,
+        compute='_compute_plan_type',
+        readonly=True
     )
     duration_years = fields.Selection(
         [('1', '1 Year'), ('2', '2 Years'), ('3', '3 Years')],
@@ -89,15 +98,60 @@ class AccountMove(models.Model):
     )
 
     # ---------------- Payment type ----------------
-    custom_method = fields.Selection([
-        ('regular', 'Cash Full Invoice'),
-        ('down_payment', 'Down Payment'),
-        ('confirmation', 'Confirmation'),
-        ('installment', 'Installment Plan'),
-        ('ballot', 'Ballot'),
-        ('possession', 'Possession'),
-    ], string='Payment Type', compute='_compute_custom_method',
-        store=True, readonly=False)
+    def _get_custom_method_selection(self):
+        """Return selection options based on plan_type"""
+        try:
+            plan_type = ''
+            
+            # Try to get plan_type from recordset (when called on a record)
+            try:
+                if hasattr(self, '__len__') and len(self) > 0:
+                    move = self[0]
+                    plan_type = move.plan_type or ''
+                    # Fallback: try to get from sale order
+                    if not plan_type and move.sale_id:
+                        plan_type = move.sale_id.plan_type or ''
+            except (AttributeError, TypeError, IndexError):
+                pass
+            
+            # Navy plans - show only three options
+            if plan_type in ['full_navy_1', 'full_navy_2', 'installment_navy_1', 'installment_navy_2']:
+                return [
+                    ('regular', 'Cash Full Invoice'),
+                    ('down_payment', 'Down Payment'),
+                    ('installment', 'Installment Plan'),
+                ]
+            # Standard plans (full, installment) - show 6 options
+            elif plan_type in ['full', 'installment']:
+                return [
+                    ('regular', 'Cash Full Invoice'),
+                    ('down_payment', 'Down Payment'),
+                    ('confirmation', 'Confirmation'),
+                    ('installment', 'Installment Plan'),
+                    ('ballot', 'Ballot'),
+                    ('possession', 'Possession'),
+                ]
+        except Exception:
+            pass
+        
+        # Default - show all 6 options (fallback when plan_type not detected or when called as model method)
+        return [
+            ('regular', 'Cash Full Invoice'),
+            ('down_payment', 'Down Payment'),
+            ('confirmation', 'Confirmation'),
+            ('installment', 'Installment Plan'),
+            ('ballot', 'Ballot'),
+            ('possession', 'Possession'),
+        ]
+
+    custom_method = fields.Selection(
+        selection=_get_custom_method_selection,
+        string='Payment Type',
+        compute='_compute_custom_method',
+        store=True,
+        readonly=False,
+        default='regular'
+    )
 
     amount_down_payment = fields.Monetary(
         string="Down Payment Amount",
@@ -116,17 +170,65 @@ class AccountMove(models.Model):
         compute='_compute_payment_amounts', store=True)
 
     # ---------------- HELPERS / COMPUTE METHODS ----------------
-    @api.depends('invoice_line_ids', 'invoice_line_ids.sale_line_ids', 'sale_id')
+    @api.depends('invoice_line_ids', 'invoice_line_ids.sale_line_ids', 'sale_id', 'plan_type')
     def _compute_custom_method(self):
         """
         Attempt to infer custom_method from the related sale.order.
-        If custom_method is already set on the move, do not override.
+        If custom_method is already set on the move, validate it against plan_type.
+        If invalid, reset to False.
         """
         for move in self:
-            if move.custom_method:
+            plan_type = move.plan_type or ''
+            
+            # Get valid methods for current plan_type
+            # Navy plans - only 3 options
+            if plan_type in ['full_navy_1', 'full_navy_2', 'installment_navy_1', 'installment_navy_2']:
+                valid_methods = ['regular', 'down_payment', 'installment']
+            # Standard plans (full, installment) - 6 options
+            elif plan_type in ['full', 'installment']:
+                valid_methods = ['regular', 'down_payment', 'confirmation', 'installment', 'ballot', 'possession']
+            # Default - 6 options (when plan_type not set or unknown)
+            else:
+                valid_methods = ['regular', 'down_payment', 'confirmation', 'installment', 'ballot', 'possession']
+            
+            # Validate current custom_method if set
+            if move.custom_method and move.custom_method not in valid_methods:
+                move.custom_method = False
+            
+            # If custom_method is not set, try to infer from sale order
+            if not move.custom_method:
+                sale_order = move.sale_id or False
+
+                # fallback: try to get sale order from invoice lines
+                if not sale_order:
+                    for line in move.invoice_line_ids:
+                        if line.sale_line_ids:
+                            sale_order = line.sale_line_ids[0].order_id
+                            break
+
+                if sale_order and getattr(sale_order, 'custom_method', False):
+                    sale_custom_method = sale_order.custom_method
+                    # Only set if it's valid for current plan_type
+                    if sale_custom_method in valid_methods:
+                        move.custom_method = sale_custom_method
+                    else:
+                        # Default to 'regular' if invalid
+                        move.custom_method = 'regular' if 'regular' in valid_methods else False
+                else:
+                    # Default to 'regular' if no sale order custom_method found
+                    move.custom_method = 'regular' if 'regular' in valid_methods else False
+
+    @api.depends('sale_id', 'invoice_line_ids', 'invoice_line_ids.sale_line_ids')
+    def _compute_plan_type(self):
+        """
+        Copy plan_type from sale order to invoice.
+        If plan_type is already set on the move, do not override.
+        """
+        for move in self:
+            if move.plan_type:
                 continue
 
-            move.custom_method = False
+            move.plan_type = False
             sale_order = move.sale_id or False
 
             # fallback: try to get sale order from invoice lines
@@ -136,8 +238,8 @@ class AccountMove(models.Model):
                         sale_order = line.sale_line_ids[0].order_id
                         break
 
-            if sale_order and getattr(sale_order, 'custom_method', False):
-                move.custom_method = sale_order.custom_method
+            if sale_order and sale_order.plan_type:
+                move.plan_type = sale_order.plan_type
 
     @api.depends('custom_method', 'amount_total')
     def _compute_payment_amounts(self):
@@ -219,6 +321,79 @@ class AccountMove(models.Model):
         self.ensure_one()
         report = self.env.ref('land_plot_manager.challan_report_action')
         return report.report_action(self)
+
+    def _validate_report_plan_type(self, report_name):
+        """
+        Validate plan_type for specific reports.
+        Report 1: Only allowed for 'installment_navy_1'
+        Report 2: Only allowed for 'installment_navy_2'
+        """
+        self.ensure_one()
+        
+        # Get plan_type from sale order if not set on invoice
+        plan_type = self.plan_type
+        if not plan_type and self.sale_id:
+            plan_type = self.sale_id.plan_type
+        
+        # Fallback: try to get from invoice lines
+        if not plan_type:
+            for line in self.invoice_line_ids:
+                if line.sale_line_ids:
+                    sale_order = line.sale_line_ids[0].order_id
+                    if sale_order and sale_order.plan_type:
+                        plan_type = sale_order.plan_type
+                        break
+        
+        if report_name == 'category_payment_plan_report_1':
+            if plan_type != 'installment_navy_1':
+                raise UserError(_(
+                    "This report can only be generated for plan type 'Installment Navy 1'.\n"
+                    "Current plan type: %s\n"
+                    "Please select an invoice with plan type 'Installment Navy 1'."
+                ) % (plan_type or 'Not Set'))
+        
+        elif report_name == 'category_payment_plan_report_2':
+            if plan_type != 'installment_navy_2':
+                raise UserError(_(
+                    "This report can only be generated for plan type 'Installment Navy 2'.\n"
+                    "Current plan type: %s\n"
+                    "Please select an invoice with plan type 'Installment Navy 2'."
+                ) % (plan_type or 'Not Set'))
+        
+        return True
+
+
+# ---------------- Custom Report Action ----------------
+class IrActionsReport(models.Model):
+    _inherit = 'ir.actions.report'
+
+    def _render_qweb_pdf(self, reportname, docids=None, data=None):
+        """Override to validate plan_type for specific reports"""
+        # Check if this is one of our custom reports
+        report_name = self.report_name or reportname or ''
+        
+        # Get docids/res_ids from various possible sources
+        res_ids = docids
+        if not res_ids and hasattr(self, '_context'):
+            res_ids = self._context.get('active_ids', [])
+        
+        if 'category_payment_plan_report_1' in report_name:
+            # Validate plan_type for report 1
+            for doc_id in res_ids or []:
+                move = self.env['account.move'].browse(doc_id)
+                if move.exists():
+                    move._validate_report_plan_type('category_payment_plan_report_1')
+        
+        elif 'category_payment_plan_report_2' in report_name:
+            # Validate plan_type for report 2
+            for doc_id in res_ids or []:
+                move = self.env['account.move'].browse(doc_id)
+                if move.exists():
+                    move._validate_report_plan_type('category_payment_plan_report_2')
+        
+        # Call parent method - parent expects res_ids parameter name
+        # Map docids to res_ids for parent call
+        return super()._render_qweb_pdf(reportname, res_ids=res_ids if res_ids else docids, data=data)
 
     def _send_invoice_email(self):
         """Basic invoice email (without forcing challan attachment)."""

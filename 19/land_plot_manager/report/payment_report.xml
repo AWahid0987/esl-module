@@ -16,7 +16,7 @@
 
     <!-- Installment Report Action -->
     <record id="action_installment_acknowledgement" model="ir.actions.report">
-        <field name="name">Installment Payment</field>
+        <field name="name">Acknowledgement Letter</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">land_plot_manager.report_installment_acknowledgement</field>
@@ -96,7 +96,7 @@
                         <!-- Body -->
                         <p>
                             <strong>Date:</strong>
-                            <t t-esc="doc.date_order"/>
+                           <t t-esc="doc.date_order.strftime('%d-%m-%Y')"/>
                         </p>
                         <p>
                             <strong>Ref:</strong>
@@ -247,7 +247,7 @@
                         <!-- Body -->
                         <p>
                             <strong>Date:</strong>
-                            <t t-esc="doc.date_order"/>
+                           <t t-esc="doc.date_order.strftime('%d-%m-%Y')"/>
                         </p>
                         <p>
                             <strong>Ref:</strong>
@@ -354,6 +354,13 @@
                         <div style="text-align: right; margin-top: 50px;">
                             <p>
                                 <strong>Yours sincerely,</strong>
+                            </p>
+                            <p>
+                                  <img src="/land_plot_manager/static/src/img/sign.png"
+                                         style="width: 100%; max-width: 150px; height: auto;"/>
+                            </p>
+                            <p>
+                               <strong> Administration </strong>
                             </p>
 
                             <p>

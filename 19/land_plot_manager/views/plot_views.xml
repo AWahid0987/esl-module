@@ -116,7 +116,7 @@
                                 <list editable="bottom">
                                     <field name="name"/>
 
-                                    <field name="category"/>
+                                    <field name="display_category" string="Category"/>
                                     <field name="number"/>
                                     <field name="size_marla"/>
                                     <field name="cost"/>
@@ -152,7 +152,7 @@
         <field name="arch" type="xml">
             <list string="Plots">
                 <field name="project_id"/>
-                <field name="category"/>
+                <field name="display_category" string="Category"/>
                 <field name="number"/>
                 <field name="name"/>
                 <field name="size_marla"/>

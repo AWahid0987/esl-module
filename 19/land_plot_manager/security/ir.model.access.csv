@@ -16,3 +16,4 @@ land_plot_manager.access_journey_label,access_journey_label,land_plot_manager.mo
 
 
 access_land_project_summary,access_land_project_summary,model_land_project_summary,,1,1,1,1
+access_category_invoice_report,Category Invoice Report,land_plot_manager.model_category_invoice_report,base.group_user,1,0,0,0

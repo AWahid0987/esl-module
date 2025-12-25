@@ -145,6 +145,22 @@ class LandProject(models.Model):
             rec.cost_r5 = round(rec.cost_per_marla * FIVE_MARLA, 2)
             rec.cost_c8 = round(rec.cost_per_marla * EIGHT_MARLA_C * 1.2, 2)
             rec.cost_c4 = round(rec.cost_per_marla * FOUR_MARLA_C * 1.2, 2)
+            # Trigger recomputation of plot costs when project cost changes
+            if rec.plot_ids:
+                rec.plot_ids._compute_cost()
+
+    def write(self, vals):
+        """Override write to recompute plot costs when project costs change"""
+        result = super().write(vals)
+        # If cost-related fields changed, recompute plot costs
+        cost_fields = ['land_base_cost', 'registry_fee', 'fard_fee', 'land_price', 
+                       'intiqal_fee', 'purchase_tax', 'commission_amount', 'other_fee',
+                       'total_cost', 'cost_per_marla']
+        if any(field in vals for field in cost_fields):
+            for rec in self:
+                if rec.plot_ids:
+                    rec.plot_ids._compute_cost()
+        return result
 
     @api.depends("project_type")
     def _compute_security_pct(self):
@@ -227,42 +243,196 @@ class LandProject(models.Model):
                 parent_indexes = []
 
                 # ------ NORMAL PLOTS ------
+                sequence_code = code_map[cat]  # e.g., "RES_10", "COM_4"
+                
+                # Get existing plot names and numbers to avoid duplicates
+                existing_plot_names_for_normal = set()
+                existing_numbers_for_normal = set()
+                if rec.plot_ids:
+                    existing_plot_names_for_normal.update([p.name for p in rec.plot_ids if not p.is_security])
+                    existing_numbers_for_normal.update([p.number for p in rec.plot_ids if not p.is_security and p.category == cat])
+                
+                # Check database for existing plots
+                existing_db_plots_normal = self.env['land.plot'].search([
+                    ('name', 'like', f'{prefix}_%'),
+                    ('is_security', '=', False)
+                ])
+                existing_plot_names_for_normal.update([p.name for p in existing_db_plots_normal])
+                existing_numbers_for_normal.update([p.number for p in existing_db_plots_normal if p.category == cat])
+                
                 for i in range(normal_cnt):
-                    idx = i + 1
+                    # Use ir.sequence to get next number for normal plots
+                    seq_name = self.env['ir.sequence'].next_by_code(sequence_code)
+                    
+                    if seq_name:
+                        # Extract number from sequence name (e.g., "RES_10_005" -> 5)
+                        try:
+                            name_parts = seq_name.split("_")
+                            if len(name_parts) >= 3:
+                                idx = int(name_parts[-1])
+                            else:
+                                idx = i + 1
+                        except (ValueError, IndexError):
+                            idx = i + 1
+                        
+                        plot_name = seq_name  # Use sequence name directly
+                    else:
+                        # Fallback if sequence doesn't exist
+                        idx = i + 1
+                        plot_name = f"{prefix}_{idx:03d}"
+                    
+                    # Ensure number is unique - if conflict, find next available
+                    while idx in existing_numbers_for_normal:
+                        idx += 1
+                        plot_name = f"{prefix}_{idx:03d}"
+                    
+                    # Ensure name is unique
+                    while plot_name in existing_plot_names_for_normal:
+                        idx += 1
+                        plot_name = f"{prefix}_{idx:03d}"
+                    
+                    # Add to tracking sets
+                    existing_plot_names_for_normal.add(plot_name)
+                    existing_numbers_for_normal.add(idx)
+                    
                     cmds.append((0, 0, {
-                        "category": cat,
+                        "category": cat,  # Required field - must be set
                         "number": idx,
-                        "name": f"{prefix}_{idx:03d}",
-                        "size_marla": size,
+                        "name": plot_name,
                         "is_security": False,
+                        # size_marla will be computed automatically based on category
                     }))
                     parent_indexes.append(idx)
 
                 # ------ SECURITY PLOTS ------
                 sec_cnt_int = int(sec_cnt)  # <-- truncate decimals
+                
+                # Get all existing plot names (including in database) to avoid duplicates
+                existing_plot_names = set()
+                if rec.plot_ids:
+                    existing_plot_names.update([p.name for p in rec.plot_ids])
+                
+                # CRITICAL: Get numbers from normal plots that were just created in this batch
+                # Extract numbers from parent_indexes (normal plots just created)
+                normal_plot_numbers_from_batch = set(parent_indexes) if parent_indexes else set()
+                
+                # Get existing numbers used by ALL plots (normal + security) to avoid ANY conflicts
+                existing_numbers = set()
+                if rec.plot_ids:
+                    existing_numbers.update([
+                        p.number for p in rec.plot_ids 
+                        if p.category == cat  # Check all plots of this category
+                    ])
+                
+                # Add normal plot numbers from current batch to existing_numbers
+                existing_numbers.update(normal_plot_numbers_from_batch)
+                
+                # Also check database for existing plots with same prefix
+                existing_db_plots = self.env['land.plot'].search([
+                    ('name', 'like', f'{prefix}_%')
+                ])
+                existing_plot_names.update([p.name for p in existing_db_plots])
+                existing_numbers.update([
+                    p.number for p in existing_db_plots 
+                    if p.category == cat
+                ])
+                
                 for i in range(sec_cnt_int):
-                    idx = i + 1
                     parent_id = parent_indexes[0] if parent_indexes else False
+                    
+                    # IMPORTANT: Don't use ir.sequence for security plots to avoid conflicts
+                    # Instead, find the next available number that doesn't conflict with normal plots
+                    plot_name = None
+                    plot_number = None
+                    
+                    # Start from max existing number + 1 to ensure uniqueness
+                    # This guarantees security plots get numbers AFTER normal plots
+                    start_num = max(existing_numbers) + 1 if existing_numbers else 1
+                    base_num = start_num + i  # Offset by security plot index
+                    
+                    # Find next available number
+                    while base_num < 10000:
+                        candidate_name = f"{prefix}_{base_num:03d}_SEC"
+                        
+                        # Check if both name and number are unique
+                        if candidate_name not in existing_plot_names and base_num not in existing_numbers:
+                            plot_name = candidate_name
+                            plot_number = base_num
+                            break
+                        base_num += 1
+                    
+                    # Fallback if we couldn't find a unique number
+                    if not plot_name:
+                        # Last resort - use a very high starting number
+                        base_num = 1000 + i
+                        while base_num < 10000:
+                            candidate_name = f"{prefix}_{base_num:03d}_SEC"
+                            if candidate_name not in existing_plot_names and base_num not in existing_numbers:
+                                plot_name = candidate_name
+                                plot_number = base_num
+                                break
+                            base_num += 1
+                        if not plot_name:
+                            # Absolute last resort
+                            plot_number = max(existing_numbers) + 1 + i if existing_numbers else 1000 + i
+                            plot_name = f"{prefix}_{plot_number:03d}_SEC"
+                    
+                    # Add to tracking sets
+                    existing_plot_names.add(plot_name)
+                    existing_numbers.add(plot_number)
+                    
                     cmds.append((0, 0, {
-                        "category": cat,
-                        "number": idx,
-                        "name": f"{prefix}_{idx:03d}_SEC",
-                        "size_marla": size,
+                        "category": cat,  # Required field - must be set (keep original category for size calculation)
+                        "number": plot_number,
+                        "name": plot_name,
                         "is_security": True,
                         "parent_plot_id": parent_id,
+                        # size_marla will be computed automatically based on category and parent_plot_id
                     }))
 
             rec.plot_ids = cmds
+            
+            # Ensure computed fields are calculated after plot creation
+            if rec.plot_ids:
+                rec.plot_ids._compute_size_marla()
+                rec.plot_ids._compute_cost()
 
     # ---------------- FIX CREATE METHOD ----------------
     @api.model
     def create(self, vals_list):
         records = super().create(vals_list)
         for rec in records:
+            # Ensure all plots have category set
+            for plot in rec.plot_ids:
+                if not plot.category:
+                    # Try to determine category from name
+                    if plot.name.startswith("RES_10"):
+                        plot.category = "r10"
+                    elif plot.name.startswith("RES_5"):
+                        plot.category = "r5"
+                    elif plot.name.startswith("COM_8"):
+                        plot.category = "c8"
+                    elif plot.name.startswith("COM_4"):
+                        plot.category = "c4"
+                    elif plot.is_security:
+                        plot.category = "sec"
+            
+            # Set parent for security plots
             normal_plots = rec.plot_ids.filtered(lambda p: not p.is_security)
             for plot in rec.plot_ids.filtered(lambda p: p.is_security):
+                # Check if parent_plot_id exists, if not, set it to first normal plot
+                if plot.parent_plot_id and not plot.parent_plot_id.exists():
+                    plot.parent_plot_id = False  # Clear invalid reference
                 if normal_plots and not plot.parent_plot_id:
                     plot.parent_plot_id = normal_plots[0].id
+            
+            # Clean up any orphaned parent_plot_id references
+            for plot in rec.plot_ids.filtered(lambda p: p.parent_plot_id and not p.parent_plot_id.exists()):
+                plot.parent_plot_id = False
+            
+            # Trigger recomputation of all computed fields
+            rec.plot_ids._compute_size_marla()
+            rec.plot_ids._compute_cost()
         return records
 
     # ---------------- Security Counts & Totals ----------------
@@ -317,16 +487,17 @@ class LandProject(models.Model):
                 continue
 
             # set attachments and product info depending on security
-            if plot.is_security and plot.parent_plot_id:
-                registry_b64 = plot.registry_attachment or plot.parent_plot_id.registry_attachment or rec.registry_attachment_project
-                fard_b64 = plot.fard_attachment or plot.parent_plot_id.fard_attachment or rec.fard_attachment_project
-                intiqal_b64 = plot.intiqal_attachment or plot.parent_plot_id.intiqal_attachment or rec.intiqal_attachment_project
-                registry_fname = plot.registry_filename or plot.parent_plot_id.registry_filename or rec.registry_filename_project
-                fard_fname = plot.fard_filename or plot.parent_plot_id.fard_filename or rec.fard_filename_project
-                intiqal_fname = plot.intiqal_filename or plot.parent_plot_id.intiqal_filename or rec.intiqal_filename_project
-                prod_name = f"{plot.parent_plot_id.name}-SECURITY"
+            if plot.is_security and plot.parent_plot_id and plot.parent_plot_id.exists():
+                parent_plot = plot.parent_plot_id
+                registry_b64 = plot.registry_attachment or parent_plot.registry_attachment or rec.registry_attachment_project
+                fard_b64 = plot.fard_attachment or parent_plot.fard_attachment or rec.fard_attachment_project
+                intiqal_b64 = plot.intiqal_attachment or parent_plot.intiqal_attachment or rec.intiqal_attachment_project
+                registry_fname = plot.registry_filename or parent_plot.registry_filename or rec.registry_filename_project
+                fard_fname = plot.fard_filename or parent_plot.fard_filename or rec.fard_filename_project
+                intiqal_fname = plot.intiqal_filename or parent_plot.intiqal_filename or rec.intiqal_filename_project
+                prod_name = f"{parent_plot.name}-SECURITY"
                 prod_price = plot.security_amount or plot.cost or 0.0
-                cat_name = "Security Charge"
+                cat_name = "Security File"
             else:
                 registry_b64 = plot.registry_attachment or rec.registry_attachment_project
                 fard_b64 = plot.fard_attachment or rec.fard_attachment_project
@@ -352,11 +523,21 @@ class LandProject(models.Model):
             if not product_categ:
                 product_categ = ProductCategory.create({"name": cat_name})
 
+            # Determine purchase and sale amounts
+            # For security plots: use security_amount for both purchase and sale
+            # For normal plots: use cost for purchase, cost for sale (can be adjusted if needed)
+            if plot.is_security:
+                purchase_amount = plot.security_amount or plot.cost or 0.0
+                sale_amount = plot.security_amount or plot.cost or 0.0
+            else:
+                purchase_amount = plot.cost or 0.0
+                sale_amount = plot.cost or 0.0
+            
             # Product Template values
             vals = {
                 "name": prod_name,
-                "list_price": prod_price,
-                "standard_price": prod_price,
+                "list_price": sale_amount,  # Sale amount (selling price)
+                "standard_price": purchase_amount,  # Purchase amount (cost)
                 "sale_ok": True,
                 "purchase_ok": True,
                 "categ_id": product_categ.id,
@@ -425,8 +606,9 @@ class LandProject(models.Model):
 
             uom = self.env.ref("uom.product_uom_unit", raise_if_not_found=False)
             for product in created_products:
-                price = getattr(product, "list_price", False) or (
-                    product.product_tmpl_id.list_price if product.product_tmpl_id else 0.0)
+                # Use standard_price (purchase amount) for purchase order line
+                price = getattr(product, "standard_price", False) or (
+                    product.product_tmpl_id.standard_price if product.product_tmpl_id else 0.0)
                 line_vals = {
                     "order_id": po.id,
                     "name": product.display_name,
@@ -468,8 +650,9 @@ class LandPlot(models.Model):
         ("c4", "Commercial 4 Marla"),
         ("sec", "Security"),
     ], required=True)
+    display_category = fields.Char(string="Category", compute="_compute_display_category", store=False)
     number = fields.Integer(string="No.", required=True)
-    size_marla = fields.Float(string="Size (Marla)", readonly=True)
+    size_marla = fields.Float(string="Size (Marla)", compute="_compute_size_marla", store=True)
     cost = fields.Monetary(string="Cost", compute="_compute_cost", store=True, currency_field="currency_id")
     currency_id = fields.Many2one(related="project_id.currency_id", store=True, readonly=True)
 
@@ -499,32 +682,151 @@ class LandPlot(models.Model):
     ]
 
 
+    @api.depends("category", "is_security", "name")
+    def _compute_display_category(self):
+        """Compute display category - show 'Security File' for security plots"""
+        for rec in self:
+            # Check if plot is security by is_security field OR by name containing _SEC
+            is_security_plot = rec.is_security or (rec.name and '_SEC' in rec.name)
+            
+            if is_security_plot:
+                rec.display_category = "Security File"
+            else:
+                # Get the display name from selection
+                category_dict = dict(rec._fields['category'].selection)
+                rec.display_category = category_dict.get(rec.category, rec.category or "Other")
+    
+    def action_fix_security_plots(self):
+        """Fix existing plots that have _SEC in name but is_security is False"""
+        plots_to_fix = self.search([
+            ('name', 'like', '%_SEC'),
+            ('is_security', '=', False)
+        ])
+        if plots_to_fix:
+            plots_to_fix.write({'is_security': True})
+            plots_to_fix._compute_display_category()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Security Plots Fixed'),
+                    'message': _('Fixed %s plots with _SEC suffix.') % len(plots_to_fix),
+                    'type': 'success',
+                    'sticky': False,
+                }
+            }
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('No Fixes Needed'),
+                'message': _('All security plots are correctly configured.'),
+                'type': 'info',
+                'sticky': False,
+            }
+        }
+
+    @api.depends("category")
+    def _compute_size_marla(self):
+        """Compute size in marla based on category"""
+        for rec in self:
+            if rec.category == "r10":
+                rec.size_marla = TEN_MARLA
+            elif rec.category == "r5":
+                rec.size_marla = FIVE_MARLA
+            elif rec.category == "c8":
+                rec.size_marla = EIGHT_MARLA_C
+            elif rec.category == "c4":
+                rec.size_marla = FOUR_MARLA_C
+            elif rec.category == "sec":
+                # For security plots, try to get size from parent or use default
+                if rec.parent_plot_id and rec.parent_plot_id.exists():
+                    rec.size_marla = rec.parent_plot_id.size_marla or 0.0
+                else:
+                    rec.size_marla = 0.0
+            else:
+                rec.size_marla = 0.0
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create to ensure category and is_security are set correctly"""
+        for vals in vals_list:
+            name = vals.get('name', '')
+            
+            # Set is_security based on name if not explicitly set
+            if 'is_security' not in vals:
+                vals['is_security'] = '_SEC' in name
+            
+            # If category is not set, try to determine from name
+            if not vals.get('category'):
+                if name.startswith("RES_10"):
+                    vals['category'] = "r10"
+                elif name.startswith("RES_5"):
+                    vals['category'] = "r5"
+                elif name.startswith("COM_8"):
+                    vals['category'] = "c8"
+                elif name.startswith("COM_4"):
+                    vals['category'] = "c4"
+                elif vals.get('is_security') or '_SEC' in name:
+                    vals['category'] = "sec"
+        
+        records = super().create(vals_list)
+        # Trigger recomputation of display_category
+        records._compute_display_category()
+        return records
+
+    def write(self, vals):
+        """Override write to ensure category is set and trigger recomputation"""
+        # Clean up invalid parent_plot_id references before write
+        plots_to_fix = self.filtered(lambda p: p.parent_plot_id and not p.parent_plot_id.exists())
+        if plots_to_fix:
+            plots_to_fix.write({'parent_plot_id': False})
+        
+        # Set is_security based on name if name is being updated
+        if 'name' in vals and 'is_security' not in vals:
+            for rec in self:
+                if '_SEC' in vals['name']:
+                    vals['is_security'] = True
+        
+        result = super().write(vals)
+        # If category, is_security, name or cost-related fields changed, recompute
+        if 'category' in vals or 'is_security' in vals or 'name' in vals or 'project_id' in vals or 'parent_plot_id' in vals:
+            self._compute_display_category()
+            self._compute_size_marla()
+            self._compute_cost()
+        return result
+
     @api.depends("category", "project_id.cost_per_marla", "is_security", "project_id.project_type",
-                 "project_id.security_pct")
+                 "project_id.security_pct", "parent_plot_id.cost", "size_marla")
     def _compute_cost(self):
         for rec in self:
             base = rec.project_id.cost_per_marla or 0.0
 
             if rec.category == "r10":
-                size_marla, premium = TEN_MARLA, 1.0
+                premium = 1.0
             elif rec.category == "r5":
-                size_marla, premium = FIVE_MARLA, 1.0
+                premium = 1.0
             elif rec.category == "c8":
-                size_marla, premium = EIGHT_MARLA_C, 1.2
+                premium = 1.2
             elif rec.category == "c4":
-                size_marla, premium = FOUR_MARLA_C, 1.2
+                premium = 1.2
             else:
-                size_marla, premium = 0.0, 1.0
+                premium = 1.0
 
+            size_marla = rec.size_marla or 0.0
             normal_cost = base * size_marla * premium
-            rec.size_marla = size_marla
 
             if rec.is_security:
-                # Calculate security amount as percentage of normal_cost
-                sec_pct = rec.project_id.security_pct or 0.0
-                security_amount = base * size_marla * premium
+                # Security amount should be same as parent plot cost or normal cost
+                if rec.parent_plot_id and rec.parent_plot_id.exists():
+                    # Use parent plot's cost as security amount
+                    security_amount = rec.parent_plot_id.cost or normal_cost
+                else:
+                    # Fallback to normal cost calculation
+                    security_amount = normal_cost
+                
                 rec.security_amount = round(security_amount, 2)
-                rec.cost = round(security_amount, 2)  # If cost is only security amount
+                rec.cost = round(security_amount, 2)
             else:
                 rec.security_amount = 0.0
                 rec.cost = round(normal_cost, 2)
