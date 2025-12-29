@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="website_donation_projects" name="Donation Projects List" page="True">
+        <t t-call="website.layout">
+            <div class="container py-5">
+                <h1 class="text-center mb-4">Support Our Donation Projects</h1>
+                <div class="row">
+                    <t t-foreach="projects" t-as="project">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><t t-esc="project.name"/></h5>
+                                    <p class="card-text"><t t-esc="project.description"/></p>
+                                    <p>Target: <t t-esc="project.target_amount"/> <t t-esc="project.currency_id.symbol"/></p>
+                                    <p>Progress: <t t-esc="project.progress_percentage"/>%</p>
+                                    <a t-att-href="'/donation/pay?amount=50&amp;currency_id=%s&amp;donation_comment=%s&amp;project_id=%s' % (project.currency_id.id, project.name, project.id)" 
+                                    class="btn btn-primary">Donate Now</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+</odoo>

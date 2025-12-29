@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ngo_donation_manager,ngo.donation manager,model_ngo_donation,base.group_user,1,1,1,1
+access_ngo_donation_user,ngo.donation user,model_ngo_donation,base.group_user,1,0,0,0
+access_donation_projects_manager,donation_projects_manager,model_donation_projects,,1,1,1,1
+access_donation_donor_manager,donation_donor_manager,model_donation_donor,base.group_user,1,1,1,1
+access_donation_project_transfer,donation_project_transfer,model_donation_project_transfer,base.group_user,1,1,1,1
+access_donation_project_transfer_wizard,donation_project_transfer_wizard,model_donation_project_transfer_wizard,base.group_user,1,1,1,1

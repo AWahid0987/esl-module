@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Hide Add to Cart button and quantity selector for donation company -->
+        <template id="hide_add_to_cart_donation" inherit_id="website_sale.product_price"
+                  name="Hide Add to Cart for Donation">
+            <!-- Hide the entire CTA wrapper which contains both quantity selector and add to cart button -->
+            <xpath expr="//span[contains(@class, 'oe_price')]" position="replace">
+                <t t-if="website.company_id.name == 'Global Development for Humanity'">
+                    <span class="oe_price">
+                        <span class="oe_currency_value">
+                            <t t-esc="combination_info['price']"/>
+                        </span>
+                    </span>
+                </t>
+                <t t-else="">
+                    <span class="oe_price">
+                        <span class="oe_currency_value">
+                            <t t-esc="combination_info['price']"/>
+                        </span>
+                        <t t-esc="website.currency_id.symbol"/>
+                    </span>
+                </t>
+            </xpath>
+        </template>
+
+        <!-- Donation field INSIDE the form -->
+        <template id="donation_session_method" inherit_id="website_sale.product" name="Donation via Session">
+            <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="attributes">
+                <attribute name="t-if">website.company_id.name != 'Global Development for Humanity'</attribute>
+            </xpath>
+            <xpath expr="//form[@action='/shop/cart/update']//div[@id='o_wsale_cta_wrapper']" position="before">
+                <t t-if="website.company_id.name == 'Global Development for Humanity'">
+                    <t t-set="current_lang" t-value="request.env.context.get('lang') or request.lang or 'en_US'"/>
+                    <t t-set="is_german" t-value="current_lang.startswith('de')"/>
+                    <div class="mb-3 mt-3" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+                        <label class="form-label">
+                            <strong id="donation_amount_label"
+                                    t-esc="website.get_donation_translations()['donation_amount_label']"/>
+                        </label>
+                        <input type="number"
+                               name="donation_amount"
+                               id="donation_session"
+                               class="form-control"
+                               value=""
+                               min="1"
+                               step="0.01"
+                               style="max-width: 200px;"/>
+                        <small class="text-muted" id="donation_amount_help"
+                               t-esc="website.get_donation_translations()['donation_amount_help']"/>
+                    </div>
+
+                    <!-- Donate Button - Direct to Payment Page -->
+                    <div class="mb-3">
+                        <a href="#"
+                           id="donate_button"
+                           class="btn btn-success btn-lg w-100"
+                           style="display: block;">
+                            <i class="fa fa-heart me-2"></i>
+                            <t t-if="is_german">Jetzt spenden</t>
+                            <t t-else="">Donate Now</t>
+                        </a>
+                    </div>
+
+                    
+                    <script>
+                        function updateDonationSession() {
+                        var input = document.getElementById('donation_session');
+                        var price = document.querySelector('.oe_currency_value');
+
+                        if (input &amp;&amp; price) {
+                        var amount = parseFloat(input.value) || 20;
+                        if (amount &lt; 1) {
+                        amount = 1;
+                        input.value = amount;
+                        }
+                        price.textContent = amount.toFixed(2);
+
+                        // Session storage me save karna
+                        sessionStorage.setItem('donation_amount', amount);
+
+                        // Cookie me bhi save kar sakte hain
+                        document.cookie = "donation_amount=" + amount + "; path=/; max-age=3600";
+                        }
+                        }
+
+                        // AJAX call ke through server ko inform karna
+                        function sendDonationToServer() {
+                        var amount = document.getElementById('donation_session').value;
+
+                        fetch('/shop/set_donation', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('input[name="csrf_token"]') ? document.querySelector('input[name="csrf_token"]').value : ''
+                        },
+                        body: JSON.stringify({
+                        'donation_amount': amount
+                        })
+                        });
+                        }
+
+                        // Get product ID from multiple sources
+                        function getProductId() {
+                        // Method 1: From form input
+                        var productForm = document.querySelector('form[action="/shop/cart/update"]');
+                        if (productForm) {
+                        var productIdInput = productForm.querySelector('input[name="product_id"]');
+                        if (productIdInput &amp;&amp; productIdInput.value) {
+                        return productIdInput.value;
+                        }
+                        }
+
+                        // Method 2: From URL parameter
+                        var urlParams = new URLSearchParams(window.location.search);
+                        var productId = urlParams.get('product_id');
+                        if (productId) {
+                        return productId;
+                        }
+
+                        // Method 3: From data attribute on product container
+                        var productContainer = document.querySelector('[data-product-id]');
+                        if (productContainer) {
+                        return productContainer.getAttribute('data-product-id');
+                        }
+
+                        // Method 4: From any input with product_id in name
+                        var anyProductInput = document.querySelector('input[name*="product_id"], input[id*="product_id"]');
+                        if (anyProductInput &amp;&amp; anyProductInput.value) {
+                        return anyProductInput.value;
+                        }
+
+                        // Method 5: From URL path (e.g., /shop/product/123)
+                        var pathMatch = window.location.pathname.match(/\/shop\/product\/(\d+)/);
+                        if (pathMatch &amp;&amp; pathMatch[1]) {
+                        return pathMatch[1];
+                        }
+
+                        return null;
+                        }
+
+                        // Donate button handler
+                        function setupDonateButton() {
+                        var donateButton = document.getElementById('donate_button');
+                        if (!donateButton) {
+                        return;
+                        }
+
+                        // Always show the button
+                        donateButton.style.display = 'block';
+
+                        // Remove existing event listeners by cloning
+                        var newButton = donateButton.cloneNode(true);
+                        donateButton.parentNode.replaceChild(newButton, donateButton);
+                        donateButton = newButton;
+
+                        donateButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        var donationAmount = document.getElementById('donation_session').value || 20;
+                        if (parseFloat(donationAmount) &lt; 1) {
+                        donationAmount = 1;
+                        }
+
+                        // Set cookie for donation amount
+                        document.cookie = "donation_amount=" + donationAmount + "; path=/; max-age=3600";
+
+                        // Get product ID with multiple fallbacks
+                        var productId = getProductId();
+                        if (!productId) {
+                        console.error('Product ID not found');
+                        alert('Unable to proceed. Please refresh the page and try again.');
+                        return;
+                        }
+
+                        // Build URL with product_id and donation_amount
+                        var url = '/shop/donate_payment?product_id=' + productId + '&amp;add_qty=1';
+
+                        // Redirect to donation payment page
+                        window.location.href = url;
+                        });
+                        }
+
+                        // Retry function for setup
+                        function retrySetup(maxRetries, delay) {
+                        maxRetries = maxRetries || 5;
+                        delay = delay || 500;
+                        var retries = 0;
+
+                        function attemptSetup() {
+                        var donateButton = document.getElementById('donate_button');
+                        if (donateButton) {
+                        setupDonateButton();
+                        updateDonationSession();
+                        } else if (retries &lt; maxRetries) {
+                        retries++;
+                        setTimeout(attemptSetup, delay);
+                        }
+                        }
+
+                        attemptSetup();
+                        }
+
+                        // Run on DOMContentLoaded
+                        if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', function() {
+                        // Clear donation amount from sessionStorage and cookie if cart is empty
+                        // This prevents double amounts when refreshing after payment
+                        var donationInput = document.getElementById('donation_session');
+                        if (donationInput) {
+                        // Reset to default or empty
+                        donationInput.value = '';
+                        sessionStorage.removeItem('donation_amount');
+                        // Clear cookie by setting it to expire
+                        document.cookie = "donation_amount=; path=/; max-age=0";
+                        }
+
+                        retrySetup();
+                        });
+                        } else {
+                        // DOM already loaded
+                        retrySetup();
+                        }
+
+                        // Also run on page show (for browser back/forward navigation)
+                        window.addEventListener('pageshow', function(event) {
+                        if (event.persisted) {
+                        // Page was loaded from cache
+                        retrySetup();
+                        }
+                        });
+
+                        document.addEventListener('change', function(e) {
+                        if (e.target.id === 'donation_session') {
+                        updateDonationSession();
+                        sendDonationToServer();
+                        }
+                        });
+                    </script>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="donation_confirmation" inherit_id="website_sale.confirmation">
+
+            <!-- Replace "Thank you for your order" with "Thank you for your donation" -->
+            <xpath expr="//h3[contains(text(), 'Thank you for your order.')]" position="replace">
+                <h3 id="thank_you_donation" t-esc="website.get_donation_translations()['thank_you_donation']"/>
+            </xpath>
+
+            <!-- Replace "Order" span with "Donation" -->
+            <xpath expr="//span[text()='Order']" position="replace">
+                <span id="donation_text" t-esc="website.get_donation_translations()['donation']"/>
+            </xpath>
+
+            <!-- Replace "to follow your order" with "to follow your donation" -->
+            <!--            <xpath expr="//p[@class='alert alert-info mt-3']" position="replace">-->
+            <!--                <p class="alert alert-info mt-3" role="status">-->
+            <!--                    <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary">Sign Up</a>-->
+            <!--                    to follow your donation.-->
+            <!--                </p>-->
+            <!--            </xpath>-->
+
+            <xpath expr="//div[@groups='account.group_delivery_invoice_address'][contains(., 'Delivery:')]"
+                   position="replace">
+                <!--
+                <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address">
+                    <b>Delivery: </b>
+                    <span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/>
+                </div>
+                -->
+            </xpath>
+
+
+        </template>
+
+        <!--        <template id="donation_checkout_layout" inherit_id="website_sale.checkout_layout">-->
+
+        <!--            &lt;!&ndash; Replace "Order summary" with "Donation summary" - try multiple possible locations &ndash;&gt;-->
+        <!--            <xpath expr="//b[contains(text(), 'Order summary')]" position="replace">-->
+        <!--                <b class="w-100" id="donation_summary" t-esc="website.get_donation_translations()['donation_summary']"/>-->
+        <!--            </xpath>-->
+
+        <!--            &lt;!&ndash; Alternative: try strong tag &ndash;&gt;-->
+        <!--            <xpath expr="//strong[contains(text(), 'Order summary')]" position="replace">-->
+        <!--                <strong class="w-100" id="donation_summary" t-esc="website.get_donation_translations()['donation_summary']"/>-->
+        <!--            </xpath>-->
+        <!--            -->
+        <!--            &lt;!&ndash; Alternative: try h5 or h6 tag &ndash;&gt;-->
+        <!--            <xpath expr="//h5[contains(text(), 'Order summary')] | //h6[contains(text(), 'Order summary')]" position="replace">-->
+        <!--                <h5 class="w-100" id="donation_summary" t-esc="website.get_donation_translations()['donation_summary']"/>-->
+        <!--            </xpath>-->
+
+        <!--        </template>-->
+
+        <!-- Inherit product template to translate product name and description -->
+        <template id="product_translation" inherit_id="website_sale.product" name="Product Translation">
+            <!-- Translate product name -->
+            <xpath expr="//h1[@itemprop='name']" position="replace">
+                <h1 itemprop="name">
+                    <t t-esc="website.translate_product(product)['name']"/>
+                </h1>
+            </xpath>
+            
+            <!-- Add rating stars below product name (if not donation company) -->
+            <xpath expr="//h1[@itemprop='name']" position="after">
+                <t t-if="website.company_id.name != 'Global Development for Humanity'">
+                    <div class="mt-2 d-flex align-items-center" itemprop="aggregateRating" itemscope="itemscope" itemtype="http://schema.org/AggregateRating">
+                        <t t-set="rating_avg" t-value="float(product.rating_avg or 0)"/>
+                        <t t-set="rating_count" t-value="int(product.rating_count or 0)"/>
+                        <meta itemprop="ratingValue" t-att-content="rating_avg"/>
+                        <meta itemprop="reviewCount" t-att-content="rating_count"/>
+                        <meta itemprop="bestRating" content="5"/>
+                        <!-- Star 1 -->
+                        <i t-if="rating_avg &gt;= 1" class="fa fa-star text-warning" t-attf-title="Rating: {{rating_avg}}/5"/>
+                        <i t-if="rating_avg &lt; 1" class="fa fa-star-o text-muted"/>
+                        <!-- Star 2 -->
+                        <i t-if="rating_avg &gt;= 2" class="fa fa-star text-warning"/>
+                        <i t-if="rating_avg &lt; 2" class="fa fa-star-o text-muted"/>
+                        <!-- Star 3 -->
+                        <i t-if="rating_avg &gt;= 3" class="fa fa-star text-warning"/>
+                        <i t-if="rating_avg &lt; 3" class="fa fa-star-o text-muted"/>
+                        <!-- Star 4 -->
+                        <i t-if="rating_avg &gt;= 4" class="fa fa-star text-warning"/>
+                        <i t-if="rating_avg &lt; 4" class="fa fa-star-o text-muted"/>
+                        <!-- Star 5 -->
+                        <i t-if="rating_avg &gt;= 5" class="fa fa-star text-warning"/>
+                        <i t-if="rating_avg &lt; 5" class="fa fa-star-o text-muted"/>
+                        <small class="text-muted ms-1" t-if="rating_count &gt; 0">
+                            (<t t-esc="rating_count"/>)
+                        </small>
+                    </div>
+                </t>
+            </xpath>
+
+            <!-- Translate product description_ecommerce -->
+            <xpath expr="//div[@id='product_details']/div[contains(@class, 'oe_structure')][1]" position="replace">
+                <div t-out="website.translate_product(product)['description']" class="oe_structure"
+                     placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."/>
+            </xpath>
+        </template>
+
+        <!-- Inherit products_item template to translate product name in listing -->
+        <template id="products_item_translation" inherit_id="website_sale.products_item"
+                  name="Products Item Translation">
+            <!-- Translate product name in product listing -->
+            <xpath expr="//h6[hasclass('o_wsale_products_item_title')]//a[@itemprop='name']" position="replace">
+                <a class="text-primary text-decoration-none" itemprop="name" t-att-href="product_href"
+                   t-esc="website.translate_product(product)['name']"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

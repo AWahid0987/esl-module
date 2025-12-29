@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bank_receipt_reject_wizard" model="ir.ui.view">
+        <field name="name">bank.receipt.reject.wizard.form</field>
+        <field name="model">bank.receipt.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Bank Receipt">
+                <group>
+                    <field name="receipt_id" readonly="1"/>
+                    <field name="rejection_reason" placeholder="Please provide a reason for rejection..."/>
+                </group>
+                <footer>
+                    <button string="Reject" name="action_reject" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

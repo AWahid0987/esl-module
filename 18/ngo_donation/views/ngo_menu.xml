@@ -1,0 +1,8 @@
+<odoo>
+    <menuitem id="menu_ngo_root" name="NGO Donations" sequence="10" web_icon="ngo_donation,static/description/icon.png" />
+    <!-- <menuitem id="menu_ngo_donor" name="Donors" parent="menu_ngo_root" action="action_ngo_donor" /> -->
+    <menuitem id="project_menu_ngo_donation" name="Donation Projects" parent="menu_ngo_root" action="action_donation_projects" sequence="1" />
+    <!-- <menuitem id="menu_ngo_donation" name="Donations" parent="menu_ngo_root" action="action_ngo_donation" sequence="2" /> -->
+
+
+</odoo>

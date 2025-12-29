@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Category Invoice Reports Menu -->
+    <menuitem id="menu_category_invoice_reports_root"
+              name="Category Reports"
+              parent="menu_land_root"
+              sequence="30"/>
+
+    <!-- Category Payment Plan Reports Submenu -->
+    <menuitem id="menu_category_payment_plan_reports"
+              name="Payment Plan Reports"
+              parent="menu_category_invoice_reports_root"
+              sequence="30"/>
+
+    <!-- Server Action for Report 1 -->
+    <record id="action_category_invoice_report_1_server" model="ir.actions.server">
+        <field name="name">Category Wise Invoice Report 1</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+# Get any invoice to trigger the report (reports will show all invoices)
+if records:
+    invoice = records[0]
+    report = env.ref('land_plot_manager.action_category_invoice_report_1', raise_if_not_found=False)
+    if report:
+        action = report.report_action(invoice)
+        action['context'] = {'active_ids': env['account.move'].search([
+            ('move_type', '=', 'out_invoice'),
+            ('state', 'in', ['draft', 'posted'])
+        ]).ids}
+        action['data'] = None
+        action['res_model'] = 'account.move'
+        action['target'] = 'current'
+    else:
+        action = {'type': 'ir.actions.act_window_close'}
+else:
+    action = {'type': 'ir.actions.act_window_close'}
+        </field>
+    </record>
+
+    <!-- Server Action for Report 2 -->
+    <record id="action_category_invoice_report_2_server" model="ir.actions.server">
+        <field name="name">Category Wise Invoice Report 2</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+# Get any invoice to trigger the report (reports will show all invoices)
+if records:
+    invoice = records[0]
+    report = env.ref('land_plot_manager.action_category_invoice_report_2', raise_if_not_found=False)
+    if report:
+        action = report.report_action(invoice)
+        action['context'] = {'active_ids': env['account.move'].search([
+            ('move_type', '=', 'out_invoice'),
+            ('state', 'in', ['draft', 'posted'])
+        ]).ids}
+        action['data'] = None
+        action['res_model'] = 'account.move'
+        action['target'] = 'current'
+    else:
+        action = {'type': 'ir.actions.act_window_close'}
+else:
+    action = {'type': 'ir.actions.act_window_close'}
+        </field>
+    </record>
+
+    <!-- Window Actions for easier access -->
+    <record id="action_category_invoice_report_1_window" model="ir.actions.act_window">
+        <field name="name">Category Wise Invoice Report 1</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('state', 'in', ['draft', 'posted'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click on any invoice and use the Print button to generate Category Wise Invoice Report 1
+            </p>
+        </field>
+    </record>
+
+    <record id="action_category_invoice_report_2_window" model="ir.actions.act_window">
+        <field name="name">Category Wise Invoice Report 2</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('state', 'in', ['draft', 'posted'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click on any invoice and use the Print button to generate Category Wise Invoice Report 2
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_category_invoice_report_1"
+              name="Category Wise Invoice Report 1"
+              parent="menu_category_invoice_reports_root"
+              action="action_category_invoice_report_1_window"
+              sequence="10"/>
+
+    <menuitem id="menu_category_invoice_report_2"
+              name="Category Wise Invoice Report 2"
+              parent="menu_category_invoice_reports_root"
+              action="action_category_invoice_report_2_window"
+              sequence="20"/>
+
+    <!-- Window Actions for Payment Plan Reports -->
+    <record id="action_category_payment_plan_report_1_window" model="ir.actions.act_window">
+        <field name="name">Category Payment Plan Report 1</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('state', 'in', ['draft', 'posted'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click on any invoice and use the Print button to generate Category Payment Plan Report 1
+            </p>
+        </field>
+    </record>
+
+    <record id="action_category_payment_plan_report_2_window" model="ir.actions.act_window">
+        <field name="name">Category Payment Plan Report 2</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('state', 'in', ['draft', 'posted'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click on any invoice and use the Print button to generate Category Payment Plan Report 2
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items for Payment Plan Reports -->
+    <menuitem id="menu_category_payment_plan_report_1"
+              name="Payment Plan Report 1"
+              parent="menu_category_payment_plan_reports"
+              action="action_category_payment_plan_report_1_window"
+              sequence="10"/>
+
+    <menuitem id="menu_category_payment_plan_report_2"
+              name="Payment Plan Report 2"
+              parent="menu_category_payment_plan_reports"
+              action="action_category_payment_plan_report_2_window"
+              sequence="20"/>
+
+    <!-- Add invisible field for category grouping (if needed in future) -->
+    <record id="view_account_move_tree_category_group" model="ir.ui.view">
+        <field name="name">account.move.tree.category.group</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="invoice_line_ids" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Payment Provider Form -->
+    <record id="payment_provider_form_inherit_bank_details" model="ir.ui.view">
+        <field name="name">payment.provider.form.inherit.bank.details</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Bank Transfer Details" name="bank_details" invisible="code not in ['manual', 'transfer', 'bank']">
+                    <group>
+                        <group string="Bank Information">
+                            <field name="show_bank_details"/>
+                            <field name="bank_name"/>
+                            <field name="bank_iban"/>
+                            <field name="bank_bic"/>
+                        </group>
+                        <group string="Bank Address">
+                            <field name="bank_street"/>
+                            <field name="bank_zip"/>
+                            <field name="bank_city"/>
+                            <field name="bank_country_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

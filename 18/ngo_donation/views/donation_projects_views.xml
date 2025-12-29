@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View donation.projects View List -->
+    <record id="view_donation_projects_list" model="ir.ui.view">
+        <field name="name">view.donation.projects.list</field>
+        <field name="model">donation.projects</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="description" />
+                <field name="target_amount" />
+                <field name="collected_amount" />
+                <field name="spent_amount" />
+                <field name="product_id" />
+                <field name="stage" />
+            </list>
+        </field>
+    </record>
+
+    <!-- View donation.projects form -->
+    <record id="view_donation_projects_form" model="ir.ui.view">
+        <field name="name">view.donation.projects.form</field>
+        <field name="model">donation.projects</field>
+        <field name="arch" type="xml">
+            <form string="Donation Projects">
+                <header>
+                    <!-- <button name="action_open_transfer_wizard" type="object" string="Transfer Funds" class="btn-primary"/> -->
+                    <button name="action_send_donor_email" type="object" string="Send Donor Email" class="btn-primary" invisible="not donor_ids"/>
+
+                    <field name="stage" widget="statusbar" statusbar_visible="draft,in_progress,completed" options="{'clickable':'1'}" />
+
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="Name..." />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description" />
+                        <field name="product_amount" />
+                        <field name="target_amount" />
+                        <field name="currency_id" options="{'no_create': True}"
+                            invisible="1"
+                        />
+                        <field name="collected_amount" readonly="1" />
+                        <field name="spent_amount" readonly="1" />
+                        <field name="product_id" readonly="1" />
+                    </group>
+                    <notebook>
+                        <page string="Donors">
+                            <field name="donor_ids"
+                                readonly="1"
+                            >
+                                <list no_open="True">
+                                    <field name="partner_id" width="20%" />
+                                    <field name="email" width="20%" />
+                                    <field name="phone" width="20%" />
+                                    <field name="date" width="20%" />
+                                    <field name="amount" width="20%" sum="Total Amount" />
+                                    <field name='currency_id' column_invisible="1" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Purchases">
+                            <field name="purchase_order_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="date_order"/>
+                                    <field name="amount_total" sum="Total Amount" />
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <!-- <page string="Transfers">
+                            <group>
+                                <h3>Transfers Given</h3>
+                                <field name="transfer_out_ids" readonly="1">
+                                    <list>
+                                        <field name="recipient_project_id"/>
+                                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        <field name="date"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group>
+                                <h3>Transfers Received</h3>
+                                <field name="transfer_in_ids" readonly="1">
+                                    <list>
+                                        <field name="donor_project_id"/>
+                                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        <field name="date"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page> -->
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- View donation.projects search -->
+    <record id="view_donation_projects_search" model="ir.ui.view">
+        <field name="name">view.donation.projects.search</field>
+        <field name="model">donation.projects</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="target_amount" string="Target Amount" />
+                <field name="collected_amount" string="Collected Amount" />
+                <group expand="1" string="Group By">
+                    <filter string="Name" name="name" domain="[]" context="{'group_by':'name'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- View donation.projects kanban -->
+    <record id="view_donation_projects_kanban" model="ir.ui.view">
+        <field name="name">view.donation.projects.kanban</field>
+        <field name="model">donation.projects</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="progress_percentage" />
+                <field name="target_amount" />
+                <field name="collected_amount" />
+                <field name="currency_id" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <!-- <field name="name" /> -->
+                            <div name="manage_new" class="col-12">
+                                <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                    <field name="name" class="fw-bold text-truncate fs-4" />
+                                </h5>
+                                <div>
+                                    <div t-if="record.collected_amount.raw_value >= record.target_amount.raw_value" class="badge bg-success text-white">
+                                        Goal Successfully Reached
+                                    </div>
+                                    <div t-if="record.collected_amount.raw_value &lt; record.target_amount.raw_value" class="badge bg-warning text-white">
+                                        Goal in Progress
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <!-- <div>
+                                <field name="description" />
+                            </div> -->
+                            <div>
+                                <strong>Target:</strong>
+                                <span style="margin-left: 5px;">
+
+                                    <field name="target_amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                </span>
+                            </div>
+                            <div>
+                                <strong>Collected:</strong>
+                                <span style="margin-left: 5px;">
+
+                                    <field name="collected_amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                </span>
+                            </div>
+
+                            <div>
+                                <strong>Spent:</strong>
+                                <span style="margin-left: 5px;">
+
+                                    <field name="spent_amount" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                                </span>
+                            </div>
+
+
+                            <div class="oe_kanban_footer">
+                                <!-- <div class="col-12 o_dashboard_bottom_block mt-2">
+                                    <field name="collected_amount" widget="sales_team_progressbar" title="Progress" options="{'current_value': 'collected_amount', 'max_value': 'target_amount','editable': false, 'edit_max_value': true,}" />
+                                </div> -->
+
+                                <div class="col-12 o_dashboard_bottom_block mt-2">
+                                    <field name="collected_amount" widget="gauge" options="{'max_field': 'target_amount', 'label_field': 'collected_amount', 'style': 'width:160px; height: 120px;'}" />
+                                </div>
+                                
+
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action donation.projects -->
+    <record id="action_donation_projects" model="ir.actions.act_window">
+        <field name="name">Donation Projects</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">donation.projects</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                There is no examples click here to add new Donation Projects.
+            </p>
+        </field>
+    </record>
+
+</odoo>

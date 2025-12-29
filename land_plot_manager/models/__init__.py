@@ -11,4 +11,5 @@ from . import sale_advance_payment_inv
 from . import land_project_summary
 
 from . import sale_commission_line_inherit
+from . import category_invoice_report
 # from . import sale_commission_plan_ext

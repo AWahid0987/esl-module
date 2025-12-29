@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_form_inherit_ngo" model="ir.ui.view">
+        <field name="name">res.partner.form.ngo.donor</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Donor Info">
+                    <group>
+                        <field name="donor_type" />
+                        <field name="related_projects" widget="many2many_tags" />
+                        <field name="total_donated" readonly="1" />
+                    </group>
+                    <field name="donation_ids">
+                        <list string="Donations" editable="bottom">
+                            <field name="date" />
+                            <field name="amount" />
+                            <field name="project_id" />
+                            <field name="payment_status" />
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

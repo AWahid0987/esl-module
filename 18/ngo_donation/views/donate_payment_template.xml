@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="summary_item_no_currency"
+                  inherit_id="payment.summary_item">
+
+            <!-- Replace the value span -->
+            <xpath expr="//span[@t-attf-id='o_payment_summary_{{name}}']"
+                   position="replace">
+
+                <span t-attf-id="o_payment_summary_{{name}}"
+                      class="fs-5 fw-bold">
+
+                    <!-- If amount → show number only -->
+                    <t t-if="name == 'amount'">
+                        <t t-esc="'%.2f' % value"/>
+                    </t>
+
+                    <!-- Otherwise keep default behavior -->
+                    <t t-else="">
+                        <t t-out="value" t-options="options"/>
+                    </t>
+
+                </span>
+
+            </xpath>
+
+        </template>
+
+
+        <!-- Hide order summary for donation company in checkout layout -->
+        <template id="hide_order_summary_donation" inherit_id="website_sale.checkout_layout"
+                  name="Hide Order Summary for Donation">
+            <xpath expr="//div[@id='o_cart_summary']" position="attributes">
+                <attribute name="t-if">website.company_id.name != 'Global Development for Humanity'</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_wsale_total_accordion']" position="attributes">
+                <attribute name="t-if">website.company_id.name != 'Global Development for Humanity'</attribute>
+            </xpath>
+        </template>
+
+        <!-- Combined Donation Payment Page - Merges Delivery Info + Payment Methods -->
+        <template id="donate_payment" name="Donation Payment">
+            <t t-call="portal.portal_layout">
+                <t t-set="current_lang" t-value="request.env.context.get('lang') or request.lang or 'en_US'"/>
+                <t t-set="is_german" t-value="current_lang.startswith('de')"/>
+                <t t-set="additional_title">
+                    <t t-if="is_german">Spende - Zahlung</t>
+                    <t t-else="">Donation - Payment</t>
+                </t>
+                <t t-set='redirect' t-valuef="/shop/donate_payment"/>
+                <t t-set="show_wizard_checkout" t-value="False"/>
+                <t t-set="show_navigation_button" t-value="False"/>
+                <t t-set="no_breadcrumbs" t-value="True"/>
+
+                <t t-set="oe_structure">
+                    <div class="oe_structure" id="oe_structure_ngo_donation_donate_payment"/>
+                </t>
+
+                <!-- Errors Display -->
+                <!-- Errors Display -->
+                <div class="col-12" t-if="errors">
+                    <t t-set="hide_payment_button" t-value="True"/>
+                    <t t-foreach="errors" t-as="error">
+                        <div class="alert alert-danger" t-if="error" role="alert">
+                            <h4>
+                                <t t-esc="error[0]"/>
+                            </h4>
+                            <t t-esc="error[1]"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Payment Methods Section -->
+                <!-- Errors Display -->
+                <div class="col-12" t-if="errors">
+                    <t t-set="hide_payment_button" t-value="True"/>
+                    <t t-foreach="errors" t-as="error">
+                        <div class="alert alert-danger" t-if="error" role="alert">
+                            <h4>
+                                <t t-esc="error[0]"/>
+                            </h4>
+                            <t t-esc="error[1]"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Payment Section -->
+                <div class="row g-4 mt-2">
+
+
+                    <div class="col-12 col-md-6">
+                        <!-- Paragraph -->
+                        <div class="mb-4 w-100">
+                            <h5 style="color:green;">
+                                <t t-if="is_german">
+                                    Wenn Sie eine Spendenquittung für steuerliche Zwecke erhalten möchten, geben Sie bitte die unten stehenden Informationen ein.
+                                </t>
+                                <t t-else="">
+                                    If you would like to receive your donation receipt for tax deduction purposes, please
+                                    enter the information below.
+                                </t>
+                            </h5>
+                        </div>
+
+                        <!-- Delivery Address Section -->
+                        <div t-if="order._has_deliverable_products()" class="mb-4">
+                            <h4 class="text-uppercase small fs-6 fw-bold mb-3">
+                                <t t-if="is_german">Lieferadresse</t>
+                                <t t-else="">Delivery Address</t>
+                            </h4>
+                            <t t-call="website_sale.delivery_address_row">
+                                <t t-set="addresses" t-value="delivery_addresses"/>
+                            </t>
+                            <t t-call="website_sale.delivery_form">
+                                <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+                            </t>
+                        </div>
+
+                        <!-- User Info Section -->
+                        <div class="mb-4">
+                            <!-- <h4 class="text-uppercase small fs-6 fw-bold mt-3" style="color:green;">User Info</h4> -->
+
+                            <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+
+                            <div t-if="has_delivery" class="form-check form-switch mt-2 mb-3">
+                                <label id="use_delivery_as_billing_label">
+                                    <input type="checkbox"
+                                           id="use_delivery_as_billing"
+                                           class="form-check-input"
+                                           t-att-checked="use_delivery_as_billing"/>
+                                    <t t-if="is_german">Gleich wie Lieferadresse</t>
+                                    <t t-else="">Same as delivery address</t>
+                                </label>
+                            </div>
+
+                            <div id="billing_container"
+                                 t-attf-class="{{'d-none' if use_delivery_as_billing and has_delivery else ''}}">
+
+                                <!-- Anonymous User Form -->
+                                <t t-if="order._is_anonymous_cart()">
+                                    <div id="errors_billing" class="mb-3"></div>
+                                    <form id="billing_address_form" action="/shop/address/submit" method="post"
+                                          class="checkout_autoformat"
+                                          t-att-data-company-country-code="order.company_id.country_id.code"
+                                          onsubmit="return false;">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" name="address_type" value="billing"/>
+                                        <input type="hidden" name="use_delivery_as_billing"
+                                               t-att-value="'true' if has_delivery and use_delivery_as_billing else 'false'"/>
+                                        <input type="hidden" name="callback" value="/shop/donate_payment"/>
+
+                                        <!-- Form Fields (Email, Name, Street, City, Zip, Country) -->
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="col-form-label" style="color:green;">
+                                                    <t t-if="is_german">E-Mail</t>
+                                                    <t t-else="">Email</t>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="email" name="email" class="form-control"
+                                                       t-att-value="order.partner_id.email"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label" style="color:green;">
+                                                    <t t-if="is_german">Vollständiger Name</t>
+                                                    <t t-else="">Full name</t>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" name="name" class="form-control"
+                                                       t-att-value="order.partner_id.name"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label" style="color:green;">
+                                                    <t t-if="is_german">Straße</t>
+                                                    <t t-else="">Street</t>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" name="street" class="form-control"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="col-form-label" style="color:green;">
+                                                    <t t-if="is_german">Stadt</t>
+                                                    <t t-else="">City</t>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" name="city" class="form-control"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="col-form-label" style="color:green;">
+                                                    <t t-if="is_german">Postleitzahl</t>
+                                                    <t t-else="">Zip</t>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" name="zip" class="form-control"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="col-form-label" style="color:green;">
+                                                    <t t-if="is_german">Land</t>
+                                                    <t t-else="">Country</t>
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <select name="country_id" class="form-control">
+                                                    <option value="">
+                                                        <t t-if="is_german">Land auswählen</t>
+                                                        <t t-else="">Select Country</t>
+                                                    </option>
+                                                    <t t-foreach="request.env['res.country'].sudo().search([])"
+                                                       t-as="country">
+                                                        <option t-att-value="country.id" t-esc="country.name"
+                                                                t-att-selected="order.partner_id.country_id.id == country.id and 'selected' or ''"/>
+                                                    </t>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="btn btn-success mt-3">
+                                            <i class="fa fa-save me-2"></i>
+                                            <t t-if="is_german">Benutzerinformationen speichern</t>
+                                            <t t-else="">Save User Info</t>
+                                        </button>
+
+                                    </form>
+                                </t>
+
+                                <!-- Logged in user -->
+                                <t t-else="">
+                                    <t t-call="website_sale.address_row">
+                                        <t t-set="is_invoice" t-value="True"/>
+                                        <t t-set="addresses" t-value="billing_addresses"/>
+                                        <t t-set="selected_address" t-value="order.partner_invoice_id"/>
+                                    </t>
+                                </t>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-md-6">
+
+                        <div t-if="not errors and website_sale_order and website_sale_order.amount_total"
+                             name="website_sale_non_free_cart"
+                             class="mt-2">
+
+                            <div id="payment_method" class="o_not_editable">
+
+                                <style>
+                                    /* ================= PAYMENT OPTIONS ================= */
+                                    #payment_method .payment_method_option,
+                                    #payment_method .payment_method_option.selected,
+                                    #payment_method .payment_method_option:hover {
+                                    border-color: #28a745 !important;
+                                    }
+
+                                    #payment_method .payment_method_option.selected {
+                                    background-color: #d4edda !important;
+                                    }
+
+                                    #payment_method .payment_method_option:hover:not(.selected) {
+                                    background-color: #f0f9f2 !important;
+                                    }
+
+                                    /* ================= BUTTON COLORS ================= */
+                                    #payment_method .btn-primary,
+                                    #payment_method button[type="submit"] {
+                                    background-color: #28a745 !important;
+                                    border-color: #28a745 !important;
+                                    color: #ffffff !important;
+                                    }
+
+                                    #payment_method .btn-primary:hover,
+                                    #payment_method button[type="submit"]:hover {
+                                    background-color: #218838 !important;
+                                    border-color: #1e7e34 !important;
+                                    color: #ffffff !important;
+                                    }
+
+                                    /* ================= 🔥 MAIN FIX ================= */
+                                    /* Expand ALL Odoo internal wrappers */
+                                    #payment_method form,
+                                    #payment_method .o_payment_form,
+                                    #payment_method .o_payment_submit_container {
+                                    width: 100% !important;
+                                    max-width: 100% !important;
+                                    }
+
+                                    /* Make button EXACT width of payment box */
+                                    #payment_method .o_payment_submit,
+                                    #payment_method button[type="submit"] {
+                                    width: 100% !important;
+                                    max-width: 100% !important;
+                                    display: block !important;
+                                    margin: 0 !important;
+                                    text-align: center !important;
+                                    }
+
+                                    /* Remove Odoo centering */
+                                    #payment_method .text-center,
+                                    #payment_method .justify-content-center {
+                                    text-align: left !important;
+                                    justify-content: flex-start !important;
+                                    }
+                                </style>
+                                <t t-call="payment.form">
+                                    <t t-set="display_submit_button" t-value="True"/>
+                                    <t t-set="submit_button_class"
+                                       t-value="'btn btn-success btn-lg text-white o_payment_submit'"/>
+                                    <t t-set="submit_button_label">
+                                        <i class="fa fa-heart me-2"></i>
+                                        <t t-if="is_german">Klicken Sie, um die Spende abzuschließen</t>
+                                        <t t-else="">Click to Complete Donation</t>
+                                    </t>
+                                </t>
+
+                            </div>
+
+                            <!-- Odoo Payment Form -->
+
+
+                            <t t-if="not (payment_methods_sudo or tokens_sudo)"
+                               t-set="hide_payment_button"
+                               t-value="True"/>
+                        </div>
+                        <!-- ================= BANK TRANSFER DETAILS ================= -->
+                        <div class="mt-4 p-3 border rounded bg-light">
+
+
+                            <p class="mb-2 mt-2">
+                                <t t-if="is_german">
+                                    Sie können von überall auf der Welt per Banküberweisung spenden, indem Sie die unten stehenden Details verwenden:
+                                </t>
+                                <t t-else="">
+                                    You can donate via bank transfer from anywhere in the world using the details below:
+                                </t>
+                            </p>
+
+                            <ul class="list-unstyled mb-2">
+                                <li>
+                                    <strong>
+                                        <t t-if="is_german">Bankname:</t>
+                                        <t t-else="">Bank Name:</t>
+                                    </strong>
+                                    Kreissparkasse Cologne
+                                </li>
+<!--                                <li>-->
+<!--                                    <strong>-->
+<!--                                        <t t-if="is_german">Bankname auf Deutsch:</t>-->
+<!--                                        <t t-else="">Bank Name In German:</t>-->
+<!--                                    </strong>-->
+<!--                                    Kreissparkasse Köln-->
+<!--                                </li>-->
+                                <li>
+                                    <strong>IBAN:</strong>
+                                    DE77 3705 0299 0000 5830 64
+                                </li>
+                                <li>
+                                    <strong>BIC / SWIFT:</strong>
+                                    COKSDE33XXX
+                                </li>
+                                <li>
+                                    <strong>
+                                        <t t-if="is_german">Adresse:</t>
+                                        <t t-else="">Address:</t>
+                                    </strong>
+                                    Neumarkt 18-24, 50667, Köln, Deutschland
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- JavaScript to handle combined address saving and payment -->
+                <script>
+                    var isGerman = <t t-esc="'true' if is_german else 'false'"/>;
+                    var translations = {
+                        saving: isGerman ? 'Speichern...' : 'Saving...',
+                        selectState: isGerman ? 'Wählen Sie einen Bundesstaat...' : 'Select a state...',
+                        userInfoSaved: isGerman ? 'Benutzerinformationen erfolgreich gespeichert!' : 'User info saved successfully!',
+                        unexpectedResponse: isGerman ? 'Unerwartete Antwort vom Server. Bitte versuchen Sie es erneut.' : 'Unexpected response from server. Please try again.',
+                        errorOccurred: isGerman ? 'Ein Fehler ist aufgetreten: ' : 'An error occurred: ',
+                        pleaseTryAgain: isGerman ? 'Bitte versuchen Sie es erneut.' : 'Please try again.',
+                        processing: isGerman ? 'Verarbeitung...' : 'Processing...'
+                    };
+                    
+                    document.addEventListener('DOMContentLoaded', function() {
+                    // Add callback parameter to all address edit/add links
+                    var addressLinks = document.querySelectorAll('a[href*="/shop/address"]');
+                    addressLinks.forEach(function(link) {
+                    var href = link.getAttribute('href');
+                    if (href &amp;&amp; !href.includes('callback=')) {
+                    var separator = href.includes('?') ? '&amp;' : '?';
+                    link.setAttribute('href', href + separator + 'callback=/shop/donate_payment');
+                    }
+                    });
+
+                    // Handle country change for state dropdown
+                    var countrySelect = document.getElementById('o_country_id_billing');
+                    var stateSelect = document.getElementById('o_state_id_billing');
+
+                    if (countrySelect &amp;&amp; stateSelect) {
+                    countrySelect.addEventListener('change', function() {
+                    var countryId = this.value;
+                    stateSelect.innerHTML = '&lt;option value=""&gt;' + translations.selectState + '&lt;/option&gt;';
+
+                    if (countryId) {
+                    fetch('/website/get_states?country_id=' + countryId)
+                    .then(function(response) {
+                    return response.json();
+                    })
+                    .then(function(data) {
+                    if (data.states) {
+                    data.states.forEach(function(state) {
+                    var option = document.createElement('option');
+                    option.value = state.id;
+                    option.textContent = state.name;
+                    stateSelect.appendChild(option);
+                    });
+                    }
+                    })
+                    .catch(function(error) {
+                    console.error('Error loading states:', error);
+                    });
+                    }
+                    });
+                    }
+
+                    // Handle optional "Save User Info" button
+                    var saveUserInfoBtn = document.getElementById('save_user_info_btn');
+                    var billingForm = document.getElementById('billing_address_form');
+                    var errorsDiv = document.getElementById('errors_billing');
+
+                    console.log('Save User Info button:', saveUserInfoBtn);
+                    console.log('Billing form:', billingForm);
+                    console.log('Errors div:', errorsDiv);
+
+                    if (saveUserInfoBtn &amp;&amp; billingForm) {
+                    console.log('Attaching click handler to Save User Info button');
+                    saveUserInfoBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Save User Info button clicked');
+
+                    // Validate form first
+                    if (!billingForm.checkValidity()) {
+                    console.log('Form validation failed');
+                    billingForm.reportValidity();
+                    return;
+                    }
+
+                    console.log('Form is valid, proceeding with save');
+
+                    var formData = new FormData(billingForm);
+                    var originalText = saveUserInfoBtn.innerHTML;
+
+                    // Disable button
+                    saveUserInfoBtn.disabled = true;
+                    saveUserInfoBtn.innerHTML = '&lt;i class="fa fa-spinner fa-spin me-2"&gt;&lt;/i&gt;' + translations.saving;
+
+                    // Clear previous errors
+                    if (errorsDiv) {
+                    errorsDiv.innerHTML = '';
+                    }
+
+                    // Save address
+                    console.log('Sending form data to /shop/address/submit');
+                    fetch('/shop/address/submit', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                    }
+                    })
+                    .then(function(response) {
+                    console.log('Response received:', response.status, response.statusText);
+                    // Check if response is ok
+                    if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    // Try to parse as JSON
+                    return response.text().then(function(text) {
+                    console.log('Response text:', text);
+                    try {
+                    var parsed = JSON.parse(text);
+                    console.log('Parsed JSON:', parsed);
+                    return parsed;
+                    } catch (e) {
+                    console.error('Failed to parse JSON response:', text);
+                    throw new Error('Invalid JSON response from server');
+                    }
+                    });
+                    })
+                    .then(function(data) {
+                    console.log('Processing response data:', data);
+                    if (data.successUrl) {
+                    console.log('Success! Redirecting to:', data.successUrl);
+                    // Show success message
+                    if (errorsDiv) {
+                    errorsDiv.innerHTML = '&lt;div class="alert alert-success"&gt;&lt;p class="mb-0"&gt;&lt;i class="fa
+                    fa-check me-2"&gt;&lt;/i&gt;' + translations.userInfoSaved + '&lt;/p&gt;&lt;/div&gt;';
+                    }
+                    // Reload page to show updated info
+                    setTimeout(function() {
+                    window.location.reload();
+                    }, 1000);
+                    } else if (data.invalid_fields || data.messages) {
+                    console.log('Validation errors:', data.invalid_fields, data.messages);
+                    // Show errors
+                    if (errorsDiv) {
+                    var errorHtml = '&lt;div class="alert alert-danger"&gt;';
+                    if (data.messages) {
+                    data.messages.forEach(function(msg) {
+                    errorHtml += '&lt;p class="mb-0"&gt;' + msg + '&lt;/p&gt;';
+                    });
+                    }
+                    errorHtml += '&lt;/div&gt;';
+                    errorsDiv.innerHTML = errorHtml;
+                    }
+
+                    // Highlight invalid fields
+                    if (data.invalid_fields) {
+                    data.invalid_fields.forEach(function(field) {
+                    var fieldElement = document.getElementById('div_' + field + '_billing') ||
+                    document.getElementById('o_' + field + '_billing');
+                    if (fieldElement) {
+                    fieldElement.classList.add('is-invalid');
+                    }
+                    });
+                    }
+
+                    // Re-enable button
+                    saveUserInfoBtn.disabled = false;
+                    saveUserInfoBtn.innerHTML = originalText;
+                    } else {
+                    // Unexpected response format
+                    console.error('Unexpected response format:', data);
+                    if (errorsDiv) {
+                    errorsDiv.innerHTML = '&lt;div class="alert alert-warning"&gt;&lt;p class="mb-0"&gt;' + translations.unexpectedResponse + '&lt;/p&gt;&lt;/div&gt;';
+                    }
+                    saveUserInfoBtn.disabled = false;
+                    saveUserInfoBtn.innerHTML = originalText;
+                    }
+                    })
+                    .catch(function(error) {
+                    console.error('Error saving user info:', error);
+                    console.error('Error stack:', error.stack);
+                    if (errorsDiv) {
+                    var errorMsg = error.message || translations.pleaseTryAgain;
+                    errorsDiv.innerHTML = '&lt;div class="alert alert-danger"&gt;&lt;p class="mb-0"&gt;' + translations.errorOccurred
+                    + errorMsg + '&lt;/p&gt;&lt;/div&gt;';
+                    }
+                    saveUserInfoBtn.disabled = false;
+                    saveUserInfoBtn.innerHTML = originalText;
+                    });
+                    });
+                    } else {
+                    console.error('Save User Info button or billing form not found!');
+                    console.error('Button:', saveUserInfoBtn);
+                    console.error('Form:', billingForm);
+                    }
+
+                    // Intercept payment form submission to save address first (for anonymous users)
+                    var paymentForm = document.getElementById('o_payment_form');
+                    var billingForm = document.getElementById('billing_address_form');
+                    var errorsDiv = document.getElementById('errors_billing');
+                    var paymentFormSubmitted = false;
+
+                    if (paymentForm) {
+                    paymentForm.addEventListener('submit', function(e) {
+                    // Prevent infinite loop
+                    if (paymentFormSubmitted) {
+                    return;
+                    }
+
+                    // Check if address form exists and needs to be saved
+                    if (billingForm) {
+                    e.preventDefault();
+
+                    // First validate and save address
+                    var formData = new FormData(billingForm);
+                    var submitBtn = paymentForm.querySelector('button[type="submit"]');
+
+                    // Disable payment button
+                    if (submitBtn) {
+                    submitBtn.disabled = true;
+                    var originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '&lt;i class="fa fa-spinner fa-spin me-2"&gt;&lt;/i&gt;' + translations.processing;
+
+                    // Clear previous errors
+                    if (errorsDiv) {
+                    errorsDiv.innerHTML = '';
+                    }
+
+                    // Validate address form first
+                    if (!billingForm.checkValidity()) {
+                    billingForm.reportValidity();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    return;
+                    }
+
+                    // Save address first
+                    fetch('/shop/address/submit', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                    }
+                    })
+                    .then(function(response) {
+                    return response.json();
+                    })
+                    .then(function(data) {
+                    if (data.successUrl) {
+                    // Address saved successfully, now proceed with payment
+                    // Order will be confirmed automatically after successful payment
+                    paymentFormSubmitted = true;
+                    paymentForm.submit();
+                    } else if (data.invalid_fields || data.messages) {
+                    // Show errors
+                    if (errorsDiv) {
+                    var errorHtml = '&lt;div class="alert alert-danger"&gt;';
+                    if (data.messages) {
+                    data.messages.forEach(function(msg) {
+                    errorHtml += '&lt;p class="mb-0"&gt;' + msg + '&lt;/p&gt;';
+                    });
+                    }
+                    errorHtml += '&lt;/div&gt;';
+                    errorsDiv.innerHTML = errorHtml;
+                    }
+
+                    // Highlight invalid fields
+                    if (data.invalid_fields) {
+                    data.invalid_fields.forEach(function(field) {
+                    var fieldElement = document.getElementById('div_' + field + '_billing') ||
+                    document.getElementById('o_' + field + '_billing');
+                    if (fieldElement) {
+                    fieldElement.classList.add('is-invalid');
+                    }
+                    });
+                    }
+
+                    // Re-enable payment button
+                    if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    }
+                    }
+                    })
+                    .catch(function(error) {
+                    console.error('Error saving address:', error);
+                    if (errorsDiv) {
+                    errorsDiv.innerHTML = '&lt;div class="alert alert-danger"&gt;&lt;p class="mb-0"&gt;' + translations.errorOccurred + translations.pleaseTryAgain + '&lt;/p&gt;&lt;/div&gt;';
+                    }
+                    if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    }
+                    });
+                    }
+                    } else {
+                    // Logged in user - just need to confirm order before payment
+                    e.preventDefault();
+
+                    var submitBtn = paymentForm.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                    submitBtn.disabled = true;
+                    var originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '&lt;i class="fa fa-spinner fa-spin me-2"&gt;&lt;/i&gt;' + translations.processing;
+
+                    // For logged in users, proceed directly with payment
+                    // Order will be confirmed automatically after successful payment
+                    paymentFormSubmitted = true;
+                    paymentForm.submit();
+                    }
+                    }
+                    });
+                    }
+                    });
+                </script>
+
+
+                <!-- Free cart message -->
+                <div t-if="website_sale_order and website_sale_order.amount_total == 0" name="website_sale_free_cart" class="mt-4">
+                    <div class="alert alert-info" role="alert">
+                        <p class="mb-0">
+                            <t t-if="is_german">Ihr Spendenbetrag ist null. Bitte aktualisieren Sie den Betrag, um fortzufahren.</t>
+                            <t t-else="">Your donation amount is zero. Please update the amount to proceed.</t>
+                        </p>
+                    </div>
+                </div>
+
+            </t>
+        </template>
+
+        <!-- Hide Skip button from payment state header -->
+        <template id="hide_payment_skip_button" inherit_id="payment.state_header" name="Hide Skip Button" priority="20">
+            <!-- Remove Skip button -->
+            <xpath expr="//a[@t-if='is_processing' and contains(@class, 'alert-link') and contains(., 'Skip')]" position="replace">
+            </xpath>
+            <!-- Alternative: Hide using attributes if replace doesn't work -->
+            <xpath expr="//a[contains(@class, 'alert-link') and contains(., 'Skip')]" position="attributes">
+                <attribute name="style">display: none !important; visibility: hidden !important;</attribute>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

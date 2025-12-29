@@ -3,7 +3,7 @@
 
     <!-- Report Action -->
     <record id="action_report_sale_user" model="ir.actions.report">
-        <field name="name">Plot Sale </field>
+        <field name="name">Plot Sale</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">land_plot_manager.action_report_sale_user_document</field>
@@ -151,7 +151,20 @@
                             <div class="col-6" style="text-align:right;">
                                 <strong>Authorized Signatory</strong>
                                 <br/>
-                                <span>Signature &amp; Stamp</span>
+
+                                <p>
+                                    <img src="/land_plot_manager/static/src/img/sign.png"
+                                         style="width: 100%; max-width: 150px; height: auto;"/>
+                                </p>
+                                <p>
+                                    <strong>Administration</strong>
+                                </p>
+
+                                <p>
+                                    <strong>A &amp; A ASSOCIATES</strong>
+                                </p>
+
+
                             </div>
                         </div>
 

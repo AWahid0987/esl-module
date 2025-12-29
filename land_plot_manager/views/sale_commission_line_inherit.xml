@@ -43,6 +43,7 @@
                         <group>
                             <field name="name" readonly="1"/>
                             <field name="commission_category"/>
+                            <field name="bill_name"/>
                         </group>
                         <group>
                             <field name="sale_price"/>
@@ -81,9 +82,9 @@
     <!-- ==================== -->
     <!-- Menu Item -->
     <!-- ==================== -->
-<!--    <menuitem id="menu_land_plot_commission"-->
-<!--              name="Commissions"-->
-<!--              parent="sale.sale_menu_root"-->
-<!--              action="action_land_plot_commission"-->
-<!--              sequence="100"/>-->
+    <menuitem id="menu_land_plot_commission"
+              name="Commissions"
+              parent="sale.sale_menu_root"
+              action="action_land_plot_commission"
+              sequence="100"/>
 </odoo>

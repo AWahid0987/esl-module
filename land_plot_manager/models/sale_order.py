@@ -8,6 +8,7 @@ from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
+
 _logger = logging.getLogger(__name__)
 
 
@@ -24,12 +25,23 @@ class SaleOrder(models.Model):
     plan_type = fields.Selection([
         ("full", "Full Payment"),
         ("installment", "Installment"),
-    ], string="Plan Type", default="full", required=True)
+        ("full_navy_1", "Full Payment Navy 1"),
+        ("full_navy_2", "Full Payment Navy 2"),
+        ("installment_navy_1", "Installment Navy 1"),
+        ("installment_navy_2", "Installment Navy 2"),
+    ], string="Plan Type", default="installment", required=True)
+    app_no = fields.Char(string="Application No", required=True)
 
     allotment_no = fields.Char(string='Allotment No', readonly=True)
     any_invoice_exists = fields.Boolean(compute='_compute_any_invoice_exists', store=False)
-    land_project_id = fields.Many2one('land.project', string="Project Name")
-    reg_number = fields.Char(string="Registration Number")
+    project_type = fields.Selection([
+        ('anchorage', 'Anchorage Lahore'),
+    ], string="Project", default="anchorage", required=True)
+
+    land_project_id = fields.Selection([
+        ('anchorage lahore', 'Anchorage Lahore'),
+    ])
+    reg_number = fields.Char(string="Registration Number", required=True)
     pal_number = fields.Char(
         string="PAL Number",
         help="PAL Number for Regular and Possession payments."
@@ -65,6 +77,7 @@ class SaleOrder(models.Model):
     def create(self, vals):
         record = super(SaleOrder, self).create(vals)
         record._generate_allotment_no()
+        record._validate_plan_type_categories()
         return record
 
     def write(self, vals):
@@ -72,7 +85,58 @@ class SaleOrder(models.Model):
         if 'order_line' in vals or 'name' in vals:
             for rec in self:
                 rec._generate_allotment_no()
+        # Validate plan_type and categories after write
+        if 'plan_type' in vals or 'order_line' in vals:
+            for rec in self:
+                rec._validate_plan_type_categories()
         return res
+
+    def _validate_plan_type_categories(self):
+        """
+        Validate that Navy plan types only allow Residential 5 Marla and Residential 10 Marla categories.
+        Standard plans (full, installment) allow all 4 categories.
+        """
+        navy_plan_types = ['full_navy_1', 'full_navy_2', 'installment_navy_1', 'installment_navy_2']
+        allowed_navy_categories = ['Residential 5 Marla', 'Residential 10 Marla']
+        
+        for order in self:
+            if not order.plan_type:
+                continue
+                
+            # If plan_type is Navy type, validate categories
+            if order.plan_type in navy_plan_types:
+                if not order.order_line:
+                    continue
+                    
+                invalid_products = []
+                for line in order.order_line:
+                    if not line.product_id:
+                        continue
+                        
+                    product_category = line.product_id.categ_id.name if line.product_id.categ_id else None
+                    
+                    if not product_category:
+                        invalid_products.append({
+                            'product': line.product_id.display_name or 'Unknown',
+                            'category': 'No Category'
+                        })
+                    elif product_category not in allowed_navy_categories:
+                        invalid_products.append({
+                            'product': line.product_id.display_name or 'Unknown',
+                            'category': product_category
+                        })
+                
+                if invalid_products:
+                    error_msg = _(
+                        "For plan type '%s', only products with categories 'Residential 5 Marla' or 'Residential 10 Marla' are allowed.\n\n"
+                        "Invalid products found:\n"
+                    ) % order.plan_type
+                    
+                    for item in invalid_products:
+                        error_msg += _("- Product: %s (Category: %s)\n") % (item['product'], item['category'])
+                    
+                    error_msg += _("\nPlease remove these products or change the plan type.")
+                    raise ValidationError(error_msg)
 
     def _generate_allotment_no(self):
         """
@@ -87,6 +151,20 @@ class SaleOrder(models.Model):
                     ('allotment_no', 'like', f"{product_name}-%")
                 ])
                 order.allotment_no = f"{product_name}-{str(existing_count + 1).zfill(3)}"
+
+    @api.onchange('plan_type', 'order_line')
+    def _onchange_plan_type_validate_categories(self):
+        """Validate categories when plan_type or order_line changes"""
+        if self.plan_type and self.order_line:
+            try:
+                self._validate_plan_type_categories()
+            except ValidationError as e:
+                return {
+                    'warning': {
+                        'title': _('Invalid Product Category'),
+                        'message': str(e)
+                    }
+                }
 
     # ----------------------------------------------------------
     # Invoice Helpers
@@ -369,12 +447,16 @@ class SaleOrder(models.Model):
 
         @api.model
         def create(self, vals):
-            """Auto-fill PAL number on invoice from sale order"""
+            """Auto-fill PAL number and plan_type on invoice from sale order"""
             move = super().create(vals)
 
-            if move.sale_id and move.pal_number:
-                # Store PAL number on Sale Order (if not already saved)
-                move.sale_id.pal_number = move.pal_number
+            if move.sale_id:
+                if move.pal_number:
+                    # Store PAL number on Sale Order (if not already saved)
+                    move.sale_id.pal_number = move.pal_number
+                # Copy plan_type from sale order if not already set
+                if not move.plan_type and move.sale_id.plan_type:
+                    move.plan_type = move.sale_id.plan_type
 
             return move
 

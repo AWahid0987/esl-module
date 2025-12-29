@@ -1,0 +1,416 @@
+<odoo>
+    <template id="portal_donations_view_id">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+
+                <div class="row badge rounded-pill bg-primary text-white px-5 py-2 float-end"> Total Donation |<span class="text-white"><t t-esc="total_donations" /> Euro</span>
+                </div>
+            </div>
+            <div class="container-fluid py-4">
+
+
+                <div class="row g-4 mb-4">
+
+                    <div class="col-lg-12">
+
+
+                        <div class="glass-card py-4 rounded-3">
+                            <!-- <h5 class="mb-4">Your Donations</h5> -->
+                            <div t-if="donations">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Donation ID</th>
+                                            <th>Project</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                            <!-- <th>Status</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="donations" t-as="donation">
+                                            <td>
+                                                <t t-esc="donation.id" />
+                                            </td>
+                                            <td>
+                                                <t t-esc="donation.project_id.name" />
+                                            </td>
+                                            <td><t t-esc="donation.amount" /> Euro</td>
+                                            <td>
+                                                <t t-esc="donation.date" />
+                                            </td>
+                                            <!-- <td>
+                                                <t t-esc="donation.state" />
+                                            </td> -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div t-else="">
+                                <p class="text-muted">You have not made any donations yet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Main Stats Row -->
+                <!-- <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="d-flex glass-card metric-card p-4 rounded-3 justify-content-between">
+                            <div class=" align-items-center ">
+                                <p class="text-muted mb-2">Current Plan</p>
+                                <h5 class="mb-0">MTH-100</h5>
+                                <small class="text-primary mb-0">View Details</small>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <i class="fa fa-rocket fa-2x text-muted opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="d-flex glass-card metric-card p-4 rounded-3 justify-content-between">
+                            <div class=" align-items-center ">
+                                <p class="text-muted mb-2">Next Invoice</p>
+                                <h5 class="mb-0">$60.0</h5>
+                                <small class="text-primary mb-0">View Details</small>
+
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <i class="fa fa-money fa-2x text-muted opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="d-flex glass-card metric-card p-4 rounded-3 justify-content-between">
+                            <div class=" align-items-center ">
+                                <p class="text-muted mb-2">Active Tickets</p>
+                                <h5 class="mb-0">2</h5>
+                                <small class="text-primary mb-0">View Details</small>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <i class="fa fa-ticket fa-2x text-muted opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <div class="d-flex glass-card metric-card p-4 rounded-3 justify-content-between h-100">
+                            <div class=" align-items-center  ">
+                                <p class="text-muted mb-2">Data Usage</p>
+                                <h5 class="mb-0">850 GB / 1000 GB</h5>
+                                <div class="progress mt-3" style="height: 4px;">
+                                    <div class="progress-bar" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-2">
+                                <i class="fa fa-tachometer fa-2x text-muted opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Network Status & Speed -->
+                <!-- Connection Statistics -->
+                <!-- <div class="row g-4 mb-4">
+
+                    <div class="col-lg-8">
+                        <div class="glass-card p-4 rounded-3">
+                            <h5 class="mb-4">Connection Statistics</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-3">
+                                            <span class="text-muted">Uptime:</span>
+                                            <div class="fw-bold">99.9%</div>
+                                        </li>
+                                        <li class="mb-3">
+                                            <span class="text-muted">Latency:</span>
+                                            <div class="fw-bold">5ms</div>
+                                        </li>
+                                        <li class="mb-3">
+                                            <span class="text-muted">Signal Strength:</span>
+                                            <div class="fw-bold">-65 dBm</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-3">
+                                            <span class="text-muted">Last Outage:</span>
+                                            <div class="fw-bold">None</div>
+                                        </li>
+                                        <li class="mb-3">
+                                            <span class="text-muted">Peak Hours Usage:</span>
+                                            <div class="fw-bold">6PM - 10PM</div>
+                                        </li>
+                                        <li class="mb-3">
+                                            <span class="text-muted">Connection Type:</span>
+                                            <div class="fw-bold">FTTH</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="col-lg-4">
+                        <div class="glass-card p-4 rounded-3 h-100">
+                            <h5 class="mb-4">Quick Actions</h5>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary">Run Speed Test</button>
+                                <button class="btn btn-outline-primary">Request Plan Change</button>
+                                <button class="btn btn-outline-primary">Create Support Ticket</button>
+                                <button class="btn btn-outline-primary">View Invoices</button>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </div> -->
+
+                <!-- Network Diagnostics -->
+                <!-- <div class="row g-4 mb-4">
+                    <div class="col-lg-12">
+                        <div class="glass-card p-4 rounded-3">
+                            <h5 class="mb-4">Network Diagnostics</h5>
+                            <div class="row g-4">
+                                <div class="col-md-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6>Ping Test</h6>
+                                        <button class="btn btn-primary w-100" onclick="runPingTest()">Run Test</button>
+                                        <div class="mt-2 text-center">
+                                            <span class="display-6">5ms</span>
+                                            <small class="d-block text-muted">Last tested: 5 min ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6>DNS Status</h6>
+                                        <div class="text-center">
+                                            <span class="badge bg-success">Healthy</span>
+                                            <small class="d-block text-muted">Primary: 8.8.8.8</small>
+                                            <small class="d-block text-muted">Secondary: 8.8.4.4</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6>Packet Loss</h6>
+                                        <div class="text-center">
+                                            <span class="badge bg-success">0%</span>
+                                            <small class="d-block text-muted">Last tested: 5 min ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="border rounded p-3 h-100">
+                                        <h6>Jitter</h6>
+                                        <div class="text-center">
+                                            <span class="badge bg-success">1ms</span>
+                                            <small class="d-block text-muted">Last tested: 5 min ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+                    
+                    <div class="col-lg-12">
+                        <div class="glass-card p-4 rounded-3">
+                            <h5 class="mb-4">Usage Analytics</h5>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <canvas id="usageChart" height="200"></canvas>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h6>Usage Breakdown</h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Streaming</span>
+                                                    <span>45%</span>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar bg-primary" style="width: 45%"></div>
+                                                </div>
+                                            </li>
+                                            <li class="mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Downloads</span>
+                                                    <span>30%</span>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar bg-success" style="width: 30%"></div>
+                                                </div>
+                                            </li>
+                                            <li class="mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Browsing</span>
+                                                    <span>15%</span>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar bg-info" style="width: 15%"></div>
+                                                </div>
+                                            </li>
+                                            <li class="mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <span>Others</span>
+                                                    <span>10%</span>
+                                                </div>
+                                                <div class="progress" style="height: 5px;">
+                                                    <div class="progress-bar bg-warning" style="width: 10%"></div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                 
+                    <div class="col-lg-12">
+                        <div class="glass-card p-4 rounded-3">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="mb-0">Technical Support</h5>
+                                <button class="btn btn-primary">Create New Ticket</button>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h6>Common Issues</h6>
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <a href="#" class="text-decoration-none">🔹 Slow Connection</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="text-decoration-none">🔹 Router Configuration</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="text-decoration-none">🔹 Billing Questions</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="text-decoration-none">🔹 Package Upgrade</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h6>Contact Support</h6>
+                                        <ul class="list-unstyled">
+                                            <li>📞 Helpline: 1-800-123-4567</li>
+                                            <li>📧 Email: support@isp.com</li>
+                                            <li>💬 Live Chat: Available</li>
+                                            <li>⏰ Hours: 24/7</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="border rounded p-3">
+                                        <h6>Self Help</h6>
+                                        <ul class="list-unstyled">
+                                            <li>
+                                                <a href="#" class="text-decoration-none">📚 Knowledge Base</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="text-decoration-none">🎥 Video Tutorials</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="text-decoration-none">📝 User Guides</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="text-decoration-none">❓ FAQs</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+            </div>
+
+            <!-- JavaScript to hide done_msg div on payment status page -->
+            <script>
+                (function() {
+                    function hideDoneMessage() {
+                        // Hide all elements containing the done message text
+                        var allElements = document.querySelectorAll('*');
+                        allElements.forEach(function(el) {
+                            var text = el.textContent || el.innerText || '';
+                            if (text.trim() &amp;&amp; (
+                                text.includes('Your payment has been successfully processed') || 
+                                text.includes('payment has been successfully processed') ||
+                                text.includes('Ihre Zahlung wurde erfolgreich verarbeitet')
+                            )) {
+                                // Find the closest parent container (alert, notification, or div with background)
+                                var container = el;
+                                while (container &amp;&amp; container !== document.body) {
+                                    var bgColor = window.getComputedStyle(container).backgroundColor;
+                                    var classes = container.classList.toString();
+                                    
+                                    // Check if this is a container (alert, notification, or has green background)
+                                    if (container.tagName === 'DIV' &amp;&amp; (
+                                        classes.includes('alert') || 
+                                        classes.includes('notification') ||
+                                        classes.includes('o_notification') ||
+                                        bgColor === 'rgb(212, 237, 218)' ||
+                                        bgColor === 'rgb(209, 231, 221)' ||
+                                        bgColor.includes('212, 237, 218') ||
+                                        bgColor.includes('209, 231, 221')
+                                    )) {
+                                        container.style.display = 'none';
+                                        container.style.visibility = 'hidden';
+                                        container.style.height = '0';
+                                        container.style.overflow = 'hidden';
+                                        container.style.margin = '0';
+                                        container.style.padding = '0';
+                                        break;
+                                    }
+                                    container = container.parentElement;
+                                }
+                                
+                                // Also hide the element itself
+                                el.style.display = 'none';
+                                el.style.visibility = 'hidden';
+                            }
+                        });
+                    }
+                    
+                    // Run immediately and on DOM ready
+                    hideDoneMessage();
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', hideDoneMessage);
+                    }
+                    
+                    // Run multiple times to catch dynamically loaded content
+                    setTimeout(hideDoneMessage, 50);
+                    setTimeout(hideDoneMessage, 100);
+                    setTimeout(hideDoneMessage, 300);
+                    setTimeout(hideDoneMessage, 500);
+                    setTimeout(hideDoneMessage, 1000);
+                    setTimeout(hideDoneMessage, 2000);
+                    
+                    // Use MutationObserver to catch dynamically added content
+                    var observer = new MutationObserver(function(mutations) {
+                        hideDoneMessage();
+                    });
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                })();
+            </script>
+
+        </t>
+    </template>
+</odoo>

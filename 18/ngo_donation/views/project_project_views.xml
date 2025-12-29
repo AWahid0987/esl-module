@@ -1,0 +1,25 @@
+<odoo>
+    <record id="view_project_form_inherit_ngo" model="ir.ui.view">
+        <field name="name">project.project.form.ngo.donation</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Donations">
+                    <group>
+                        <field name="total_donations" readonly="1" />
+                        <field name="remaining_balance" readonly="1" />
+                    </group>
+                    <field name="donation_ids">
+                        <list>
+                            <field name="date" />
+                            <field name="donor_id" />
+                            <field name="amount" />
+                            <field name="payment_status" />
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
