@@ -201,10 +201,13 @@
                         <table style="width:100%; border-collapse:none;  border: 0px solid #fff; margin-top:6px;">
                             <tr style="border:0;">
                                 <td style="width:70%; font-size:14px; vertical-align:top; padding:10px; border:0;">
-                                    <p>
-                                        <strong>APP NO.</strong>
-                                        _____________________
-                                    </p>
+                                    <t t-if="o.app_no">
+                                        <p>
+                                            <strong>APP NO.</strong>
+                                            <span t-esc="o.app_no"/>
+                                        </p>
+                                    </t>
+
 
                                     <t t-if="o.reg_number">
                                         <p>
@@ -483,57 +486,57 @@
                             </table>
                         </div>
 
-                        <!-- PAYMENT DETAILS (first page) -->
-                        <h3>PAYMENT DETAILS</h3>
-                        <table style="width:100%; border:1px solid #000; border-collapse:collapse; font-size:13px;">
-                            <tr>
-                                <!--  Left Column  -->
-                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
-                                    <div style="margin-bottom:6px;">
-                                        <strong style="margin-right:10px;">Mode of payment:</strong>
-                                        <label style="margin-right:20px;">
-                                            <input type="checkbox" style="transform:scale(1.1); margin-right:5px;"/>
-                                            Installment Plan
-                                        </label>
-                                    </div>
-                                    <!-- DD/Pay Order -->
-                                    <div style="display:inline-block; margin-bottom:6px;">
-                                        <strong>DD/Pay Order #:</strong>
-                                        <div>
-                                            <t t-foreach="list(range(12))" t-as="dummy">
-                                                <div class="char-box"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                    <!-- Date -->
-                                    <div style="display:inline-block; margin-bottom:6px;">
-                                        <strong>Date:</strong>
-                                        <div>
-                                            <t t-foreach="list(range(8))" t-as="dummy">
-                                                <div class="char-box"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                    <!-- Total Amount -->
-                                    <div>
-                                        <strong>Total Amount (PKR):</strong>
-                                        <t t-esc="o.amount_total"/>
-                                    </div>
-                                </td>
+                        <!--                        &lt;!&ndash; PAYMENT DETAILS (first page) &ndash;&gt;-->
+                        <!--                        <h3>PAYMENT DETAILS</h3>-->
+                        <!--                        <table style="width:100%; border:1px solid #000; border-collapse:collapse; font-size:13px;">-->
+                        <!--                            <tr>-->
+                        <!--                                &lt;!&ndash;  Left Column  &ndash;&gt;-->
+                        <!--                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">-->
+                        <!--                                    <div style="margin-bottom:6px;">-->
+                        <!--                                        <strong style="margin-right:10px;">Mode of payment:</strong>-->
+                        <!--                                        <label style="margin-right:20px;">-->
+                        <!--                                            <input type="checkbox" style="transform:scale(1.1); margin-right:5px;"/>-->
+                        <!--                                            Installment Plan-->
+                        <!--                                        </label>-->
+                        <!--                                    </div>-->
+                        <!--                                    &lt;!&ndash; DD/Pay Order &ndash;&gt;-->
+                        <!--                                    <div style="display:inline-block; margin-bottom:6px;">-->
+                        <!--                                        <strong>DD/Pay Order #:</strong>-->
+                        <!--                                        <div>-->
+                        <!--                                            <t t-foreach="list(range(12))" t-as="dummy">-->
+                        <!--                                                <div class="char-box"/>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                    &lt;!&ndash; Date &ndash;&gt;-->
+                        <!--                                    <div style="display:inline-block; margin-bottom:6px;">-->
+                        <!--                                        <strong>Date:</strong>-->
+                        <!--                                        <div>-->
+                        <!--                                            <t t-foreach="list(range(8))" t-as="dummy">-->
+                        <!--                                                <div class="char-box"/>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                    &lt;!&ndash; Total Amount &ndash;&gt;-->
+                        <!--                                    <div>-->
+                        <!--                                        <strong>Total Amount (PKR):</strong>-->
+                        <!--                                        <t t-esc="o.amount_total"/>-->
+                        <!--                                    </div>-->
+                        <!--                                </td>-->
 
-                                <!--  Right Column  -->
-                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
-                                    <div style="margin-bottom:8px;">
-                                        <strong style="white-space:nowrap;">Drawn on Bank Branch:</strong>
-                                        <div>
-                                            <t t-foreach="list(range(12))" t-as="dummy">
-                                                <div class="char-box"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                        <!--                                &lt;!&ndash;  Right Column  &ndash;&gt;-->
+                        <!--                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">-->
+                        <!--                                    <div style="margin-bottom:8px;">-->
+                        <!--                                        <strong style="white-space:nowrap;">Drawn on Bank Branch:</strong>-->
+                        <!--                                        <div>-->
+                        <!--                                            <t t-foreach="list(range(12))" t-as="dummy">-->
+                        <!--                                                <div class="char-box"/>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                </td>-->
+                        <!--                            </tr>-->
+                        <!--                        </table>-->
 
                         <!-- Signatures (first page) -->
                         <table style="width:100%; border-collapse:none; margin-top:20px; font-size:13px; border: 0px solid #fff;">
@@ -549,11 +552,21 @@
                                     <div style="margin-top:5px;">
                                         <strong>Officer’s Signature</strong>
                                     </div>
+                                    <br/>
+                                    <p>
+                                        <img src="/land_plot_manager/static/src/img/sign.png"
+                                             style="width: 100%; max-width: 150px; height: auto;"/>
+                                    </p>
+                                    <p>
+                                        <strong>Administration</strong> <br/>
+                                        <strong>A &amp; A Associatess</strong>
+                                    </p>
                                 </td>
                                 <td style="width:33%; text-align:center; padding:20px 10px;">
                                     <div style="border-top:1px solid #000; width:80%; margin:0 auto; height:1px;"/>
                                     <div style="margin-top:5px;">
                                         <strong>Authorized Signatory</strong>
+
                                     </div>
                                 </td>
                             </tr>
@@ -568,8 +581,19 @@
                                 <!--  Left Section  -->
                                 <td style="width:25%; vertical-align:top; padding:5px;">
                                     <strong>Applicant Receipt</strong>
-                                    <div style="margin-top:5px;">APP NO. __________________</div>
-                                    <div style="margin-top:3px;">Name: _____________________</div>
+                                    <t t-if="o.app_no">
+                                        <p>
+                                            <strong>APP NO.</strong>
+                                            <span t-esc="o.app_no"/>
+                                        </p>
+                                    </t>
+<!--                                    <p>-->
+<!--                                        <strong>Name:</strong>-->
+<!--                                        <span style="border-bottom:1px solid #000; display:inline-block; width:70%;">-->
+<!--                                            <t t-esc="o.partner_id.name"/>-->
+<!--                                        </span>-->
+<!--                                    </p>-->
+
                                 </td>
                                 <!--  Center Section (Black Header)  -->
                                 <td style="width:75%; text-align:center; vertical-align:top; padding:5px;">
@@ -640,105 +664,123 @@
                         </div>
 
                         <!-- PAYMENT DETAILS (second page) -->
-                        <h3>PAYMENT DETAILS</h3>
-                        <table style="width:100%; border:1px solid #000; border-collapse:collapse; font-size:13px;">
-                            <tr>
-                                <!--  Left Column  -->
-                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
-                                    <div style="margin-bottom:6px;">
-                                        <strong style="margin-right:10px;">Mode of payment:</strong>
-                                        <label style="margin-right:20px;">
-                                            <input type="checkbox" style="transform:scale(1.1); margin-right:5px;"/>
-                                            Installment Plan
-                                        </label>
-                                    </div>
-                                    <!-- DD/Pay Order -->
-                                    <div style="margin-bottom:6px;">
-                                        <strong>DD/Pay Order #:</strong>
-                                        <div>
-                                            <t t-foreach="list(range(12))" t-as="dummy">
-                                                <div class="char-box"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                    <!-- Date -->
-                                    <div style="margin-bottom:6px;">
-                                        <strong>Date:</strong>
-                                        <div>
-                                            <t t-foreach="list(range(8))" t-as="dummy">
-                                                <div class="char-box"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                    <!-- Total Amount -->
-                                    <div>
-                                        <strong>Total Amount (PKR):</strong>
-                                        <t t-esc="o.amount_total"/>
-                                    </div>
-                                </td>
+                        <!--                        <h3>PAYMENT DETAILS</h3>-->
+                        <!--                        <table style="width:100%; border:1px solid #000; border-collapse:collapse; font-size:13px;">-->
+                        <!--                            <tr>-->
+                        <!--                                &lt;!&ndash;  Left Column  &ndash;&gt;-->
+                        <!--                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">-->
+                        <!--                                    <div style="margin-bottom:6px;">-->
+                        <!--                                        <strong style="margin-right:10px;">Mode of payment:</strong>-->
+                        <!--                                        <label style="margin-right:20px;">-->
+                        <!--                                            <input type="checkbox" style="transform:scale(1.1); margin-right:5px;"/>-->
+                        <!--                                            Installment Plan-->
+                        <!--                                        </label>-->
+                        <!--                                    </div>-->
+                        <!--                                    &lt;!&ndash; DD/Pay Order &ndash;&gt;-->
+                        <!--                                    <div style="margin-bottom:6px;">-->
+                        <!--                                        <strong>DD/Pay Order #:</strong>-->
+                        <!--                                        <div>-->
+                        <!--                                            <t t-foreach="list(range(12))" t-as="dummy">-->
+                        <!--                                                <div class="char-box"/>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                    &lt;!&ndash; Date &ndash;&gt;-->
+                        <!--                                    <div style="margin-bottom:6px;">-->
+                        <!--                                        <strong>Date:</strong>-->
+                        <!--                                        <div>-->
+                        <!--                                            <t t-foreach="list(range(8))" t-as="dummy">-->
+                        <!--                                                <div class="char-box"/>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                    &lt;!&ndash; Total Amount &ndash;&gt;-->
+                        <!--                                    <div>-->
+                        <!--                                        <strong>Total Amount (PKR):</strong>-->
+                        <!--                                        <t t-esc="o.amount_total"/>-->
+                        <!--                                    </div>-->
+                        <!--                                </td>-->
 
-                                <!--  Right Column  -->
-                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">
-                                    <div style="margin-bottom:8px;">
-                                        <strong style="white-space:nowrap;">Drawn on Bank Branch:</strong>
-                                        <div>
-                                            <t t-foreach="list(range(12))" t-as="dummy">
-                                                <div class="char-box"/>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                        <!--                                &lt;!&ndash;  Right Column  &ndash;&gt;-->
+                        <!--                                <td style="width:50%; vertical-align:top; padding:8px; border:1px solid #000;">-->
+                        <!--                                    <div style="margin-bottom:8px;">-->
+                        <!--                                        <strong style="white-space:nowrap;">Drawn on Bank Branch:</strong>-->
+                        <!--                                        <div>-->
+                        <!--                                            <t t-foreach="list(range(12))" t-as="dummy">-->
+                        <!--                                                <div class="char-box"/>-->
+                        <!--                                            </t>-->
+                        <!--                                        </div>-->
+                        <!--                                    </div>-->
+                        <!--                                </td>-->
+                        <!--                            </tr>-->
+                        <!--                        </table>-->
 
                         <!-- CUSTOMER INVOICES: only this Sale Order main invoice (amount_total == order total) -->
                         <h3>Customer Invoices</h3>
                         <t t-set="invoices"
-                           t-value="o.env['account.move'].search([                         ('sale_id', '=', o.id),                         ('move_type', 'in', ['out_invoice','out_refund'])                     ], order='invoice_date asc', limit=50)"/>
+                           t-value="o.env['account.move'].search([
+        ('sale_id', '=', o.id),
+        ('move_type', 'in', ['out_invoice','out_refund'])
+   ], order='name asc')"/>
+
+                        <!-- initialize counter -->
+                        <t t-set="sr" t-value="1"/>
+
                         <table style="width:100%; border-collapse:collapse; margin-top:10px; border:1px solid #000; font-size:11px;">
                             <thead>
                                 <tr>
+                                    <th style="border:1px solid #000; padding:4px;">Sr#</th>
                                     <th style="border:1px solid #000; padding:4px;">Invoice Number</th>
                                     <th style="border:1px solid #000; padding:4px; text-align:center;">Invoice Date</th>
                                     <th style="border:1px solid #000; padding:4px; text-align:center;">Due Date</th>
-                                    <th style="border:1px solid #000; padding:4px;">Label (Journal Items)</th>
+                                    <th style="border:1px solid #000; padding:4px;">Label</th>
                                     <th style="border:1px solid #000; padding:4px; text-align:right;">Amount (PKR)</th>
                                 </tr>
                             </thead>
+
                             <tbody>
-                                <t t-if="invoices and len(invoices) &gt; 0">
-                                    <t t-foreach="invoices" t-as="inv">
-                                        <tr>
-                                            <td style="border:1px solid #000; padding:3px;">
-                                                <t t-esc="inv.name or ''"/>
-                                            </td>
-                                            <td style="border:1px solid #000; padding:3px; text-align:center;">
-                                                <t t-esc="inv.invoice_date or ''"/>
-                                            </td>
-                                            <td style="border:1px solid #000; padding:3px; text-align:center;">
-                                                <t t-esc="inv.invoice_date_due or ''"/>
-                                            </td>
-                                            <td style="border:1px solid #000; padding:3px;">
-                                                <t t-if="inv.invoice_line_ids">
-                                                    <t t-esc="inv.invoice_line_ids[0].name or ''"/>
-                                                </t>
-                                            </td>
-                                            <td style="border:1px solid #000; padding:3px; text-align:right;">
-                                                <t t-esc="'{:,.2f}'.format(inv.amount_untaxed or 0.0)"/>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </t>
-                                <t t-else="">
+                                <t t-foreach="invoices" t-as="inv">
                                     <tr>
-                                        <td colspan="5"
-                                            style="border:1px solid #000; text-align:center; color:#888; padding:4px;">
+                                        <!-- Serial -->
+                                        <td style="border:1px solid #000; padding:3px; text-align:center;">
+                                            <t t-esc="sr"/>
+                                        </td>
+
+                                        <td style="border:1px solid #000; padding:3px;">
+                                            <t t-esc="inv.name"/>
+                                        </td>
+
+                                        <td style="border:1px solid #000; padding:3px; text-align:center;">
+                                            <t t-esc="inv.invoice_date.strftime('%d-%m-%Y')"/>
+                                        </td>
+
+                                        <td style="border:1px solid #000; padding:3px; text-align:center;">
+                                            <t t-esc="inv.invoice_date_due.strftime('%d-%m-%Y')"/>
+                                        </td>
+
+                                        <td style="border:1px solid #000; padding:3px;">
+                                            <t t-esc="inv.invoice_line_ids and inv.invoice_line_ids[0].name or ''"/>
+                                        </td>
+
+                                        <td style="border:1px solid #000; padding:3px; text-align:right;">
+                                            <t t-esc="'{:,.2f}'.format(inv.amount_untaxed or 0.0)"/>
+                                        </td>
+                                    </tr>
+
+                                    <!-- increment counter -->
+                                    <t t-set="sr" t-value="sr + 1"/>
+                                </t>
+
+                                <t t-if="not invoices">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center; color:#888;">
                                             No invoices found for this sale order.
                                         </td>
                                     </tr>
                                 </t>
                             </tbody>
                         </table>
+
                         <div style="page-break-after: always;"/>
 
                         <!-- TERMS & CONDITIONS + DECLARATION -->

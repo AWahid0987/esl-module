@@ -47,6 +47,7 @@
         "views/product_land_view.xml",
         "views/account_move.xml",
         "views/res_partner.xml",
+        "views/category_invoice_report_views.xml",
         "views/sale_advance_payment_inv_view.xml",
         "views/sale_commission_line_inherit.xml",
         "views/land_project_summary_views.xml",
@@ -57,6 +58,8 @@
         "report/file_report.xml",
         "report/email_template.xml",
         "report/challan_report.xml",
+        "report/category_payment_plan_report_1.xml",
+        "report/category_payment_plan_report_2.xml",
         "data/corn.xml",
         "data/ir_sequence_data.xml",
         "data/commission_sequence.xml",
@@ -65,9 +68,10 @@
 
     "assets": {
         "web.assets_backend": [
-            "land_plot_manager/static/src/js/hide_duplicate.js",
+            "land_plot_manager/static/src/js/sale_advance_payment_inv.js",
         ],
     },
+
     "images": [
         "static/description/icon.png",
     ],

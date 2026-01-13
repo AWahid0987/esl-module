@@ -49,19 +49,20 @@
                 <field name="plan_type"/>
                 <field name="pal_number" readonly="1"/>
                 <field name="reg_number"/>
+                <field name="app_no"/>
                 <field name="allotment_no"/>
-                <field name="land_project_id"/>
+                <field name="project_type"/>
             </xpath>
 
             <!-- Add commission creation button in header -->
-<!--            <xpath expr="//header" position="inside">-->
-<!--                <button name="action_create_commission"-->
-<!--                        type="object"-->
-<!--                        string="Calculate Commission"-->
-<!--                        class="btn-secondary"-->
-<!--                        icon="fa-calculator"-->
-<!--                        invisible="not order_line"/>-->
-<!--            </xpath>-->
+            <xpath expr="//header" position="inside">
+                <button name="action_create_commission"
+                        type="object"
+                        string="Calculate Commission"
+                        class="btn-secondary"
+                        icon="fa-calculator"
+                        invisible="not order_line"/>
+            </xpath>
 <!--            <xpath expr="//header" position="inside">-->
 <!--                <button-->
 <!--                        name="action_create_commission"-->
