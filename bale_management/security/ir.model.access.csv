@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_bale_user,product.bale user,model_product_bale,base.group_user,1,1,1,1
+access_product_bale_manager,product.bale manager,model_product_bale,stock.group_stock_manager,1,1,1,1
