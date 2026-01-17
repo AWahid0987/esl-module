@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_whatsapp_message" model="ir.sequence">
+        <field name="name">WhatsApp Message</field>
+        <field name="code">whatsapp.message</field>
+        <field name="prefix">WA/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

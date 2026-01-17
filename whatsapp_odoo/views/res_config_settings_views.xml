@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_whatsapp" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.whatsapp</field>
+        <field name="model">res.config.settings</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Settings">
+                <header>
+                    <button name="action_check_gateway_status" type="object" string="Check Status" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Cloud API">
+                            <field name="whatsapp_provider"/>
+                            <field name="whatsapp_base_url"/>
+                            <field name="whatsapp_phone_number_id"/>
+                            <field name="whatsapp_access_token" password="True"/>
+                            <field name="whatsapp_default_country_code"/>
+                        </group>
+                        <group string="QR Gateway">
+                            <field name="whatsapp_gateway_base_url"/>
+                            <field name="whatsapp_gateway_instance_id"/>
+                            <field name="whatsapp_gateway_api_header"/>
+                            <field name="whatsapp_gateway_api_prefix"/>
+                            <field name="whatsapp_gateway_api_key" password="True"/>
+                            <field name="whatsapp_gateway_qr_endpoint"/>
+                            <field name="whatsapp_gateway_status_endpoint"/>
+                            <field name="whatsapp_gateway_send_endpoint"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_whatsapp_settings" model="ir.actions.act_window">
+        <field name="name">WhatsApp Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="res_config_settings_view_form_whatsapp"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_whatsapp_settings"
+        name="Settings"
+        parent="menu_whatsapp_root"
+        action="action_whatsapp_settings"
+        sequence="5"
+    />
+</odoo>

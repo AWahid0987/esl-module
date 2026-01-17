@@ -1,0 +1,16 @@
+{
+  "name": "whatsapp-odoo-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Free WhatsApp Web gateway for Odoo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "puppeteer": "^24.35.0",
+    "qrcode": "^1.5.3",
+    "whatsapp-web.js": "^1.26.0"
+  }
+}

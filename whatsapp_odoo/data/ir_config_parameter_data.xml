@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="param_whatsapp_gateway_base_url" model="ir.config_parameter">
+        <field name="key">whatsapp_odoo.gateway_base_url</field>
+        <field name="value">http://localhost:3000</field>
+    </record>
+    <record id="param_whatsapp_gateway_qr_endpoint" model="ir.config_parameter">
+        <field name="key">whatsapp_odoo.gateway_qr_endpoint</field>
+        <field name="value">/qr</field>
+    </record>
+    <record id="param_whatsapp_gateway_status_endpoint" model="ir.config_parameter">
+        <field name="key">whatsapp_odoo.gateway_status_endpoint</field>
+        <field name="value">/status</field>
+    </record>
+    <record id="param_whatsapp_gateway_send_endpoint" model="ir.config_parameter">
+        <field name="key">whatsapp_odoo.gateway_send_endpoint</field>
+        <field name="value">/send</field>
+    </record>
+    <record id="param_whatsapp_provider" model="ir.config_parameter">
+        <field name="key">whatsapp_odoo.provider</field>
+        <field name="value">gateway</field>
+    </record>
+</odoo>
