@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_production_form_bale" model="ir.ui.view">
+        <field name="name">mrp.production.form.bale</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Bales" name="bales">
+                    <group>
+                        <field name="create_bales" widget="boolean_toggle" string="Create Bales Automatically"/>
+                    </group>
+                    <field name="bale_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="reference"/>
+                            <field name="barcode"/>
+                            <field name="product_id"/>
+                            <field name="weight_kg"/>
+                            <field name="quantity"/>
+                            <field name="location_id"/>
+                            <field name="state" widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
